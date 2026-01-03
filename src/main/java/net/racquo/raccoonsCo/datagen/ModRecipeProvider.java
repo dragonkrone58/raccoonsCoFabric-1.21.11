@@ -31,25 +31,7 @@ public class ModRecipeProvider extends FabricRecipeProvider {
 
                 offerSmelting(BOILED_EGG_COOKABLES, RecipeCategory.FOOD, ModItems.BOILED_EGG, 0.25f, 140, "boiled_egg");
 
-                for (ItemConvertible item : BOILED_EGG_COOKABLES) {
-                    offerFoodCookingRecipe( "campfire",
-                            RecipeSerializer.CAMPFIRE_COOKING,
-                            CampfireCookingRecipe::new,
-                            100,
-                            item,
-                            ModItems.BOILED_EGG,
-                            0.25f);
-                    offerFoodCookingRecipe( "smoking",
-                            RecipeSerializer.SMOKING,
-                            SmokingRecipe::new,
-                            100,
-                            item,
-                            ModItems.BOILED_EGG,
-                            0.25f);
-
-
-
-                }
+                //the offerFoodCookingRecipe is kinda scuffed sooo.... just do it manually T_T
 
 
 
