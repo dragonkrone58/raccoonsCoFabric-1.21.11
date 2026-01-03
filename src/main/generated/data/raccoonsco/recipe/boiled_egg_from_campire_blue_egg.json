@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:campfire_cooking",
+  "category": "food",
+  "cookingtime": 300,
+  "experience": 0.25,
+  "ingredient": "minecraft:blue_egg",
+  "result": {
+    "id": "raccoonsco:boiled_egg"
+  }
+}

@@ -1,6 +1,7 @@
 package net.racquo.raccoonsCo.item;
 
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
+import net.minecraft.component.type.TooltipDisplayComponent;
 import net.minecraft.item.*;
 import net.minecraft.item.ItemGroups;
 import net.minecraft.registry.Registry;
@@ -19,7 +20,8 @@ public class ModItems {
 
     public static final Item RACCOON_PELT = registerItem( "raccoon_pelt", Item :: new);
     public static final Item BANDIT_POTTERY_SHERD = registerItem( "bandit_pottery_sherd", Item :: new);
-
+    public static final Item BOILED_EGG = registerItem( "boiled_egg",
+            setting -> new Item(setting.food(ModFoodComponents.BOILED_EGG)));
 
 
     private static Item registerItem(String name, Function<Item.Settings, Item> function) {
@@ -37,6 +39,12 @@ public class ModItems {
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.INGREDIENTS).register(entries -> {
             entries.add(RACCOON_PELT);
             entries.add(BANDIT_POTTERY_SHERD);
+
+        });
+        ItemGroupEvents.modifyEntriesEvent(ItemGroups.FOOD_AND_DRINK).register(entries -> {
+            entries.add(BOILED_EGG);
+
+
         });
         }
     }

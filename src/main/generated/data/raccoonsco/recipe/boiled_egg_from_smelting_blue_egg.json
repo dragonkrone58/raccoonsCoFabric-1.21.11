@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:smelting",
+  "category": "food",
+  "cookingtime": 140,
+  "experience": 0.25,
+  "group": "boiled_egg",
+  "ingredient": "minecraft:blue_egg",
+  "result": {
+    "id": "raccoonsco:boiled_egg"
+  }
+}

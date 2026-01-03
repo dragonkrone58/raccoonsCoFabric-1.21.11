@@ -5,6 +5,7 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.racquo.raccoonsCo.datagen.ModItemTagProvider;
 import net.racquo.raccoonsCo.datagen.ModModelProvider;
+import net.racquo.raccoonsCo.datagen.ModRecipeProvider;
 
 public class RaccoonsCoDataGenerator implements DataGeneratorEntrypoint {
 	@Override
@@ -13,6 +14,7 @@ public class RaccoonsCoDataGenerator implements DataGeneratorEntrypoint {
         FabricDataGenerator.Pack pack = fabricDataGenerator.createPack();
 
         pack.addProvider(ModModelProvider :: new);
+        pack.addProvider(ModRecipeProvider::new);
 
 
 
