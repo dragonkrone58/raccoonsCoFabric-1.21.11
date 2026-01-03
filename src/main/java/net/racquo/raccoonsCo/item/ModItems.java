@@ -18,6 +18,8 @@ import java.util.function.Function;
 public class ModItems {
 
     public static final Item RACCOON_PELT = registerItem( "raccoon_pelt", Item :: new);
+    public static final Item BANDIT_POTTERY_SHERD = registerItem( "bandit_pottery_sherd", Item :: new);
+
 
 
     private static Item registerItem(String name, Function<Item.Settings, Item> function) {
@@ -34,6 +36,7 @@ public class ModItems {
         //add item(s) to creative tab(s)
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.INGREDIENTS).register(entries -> {
             entries.add(RACCOON_PELT);
+            entries.add(BANDIT_POTTERY_SHERD);
         });
         }
     }
