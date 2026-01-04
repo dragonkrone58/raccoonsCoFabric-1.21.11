@@ -38,6 +38,12 @@ public class ModBlocks {
                     .offset(AbstractBlock.OffsetType.XZ)
                     .pistonBehavior(PistonBehavior.DESTROY)));
 
+    public static final Block MARIGOLD_FLOWER_POT = registerBlockWithoutBlockItem("marigold_flower_pot",
+            properties -> new FlowerPotBlock(ModBlocks.MARIGOLD, properties
+                    .breakInstantly()
+                    .nonOpaque()
+                    .pistonBehavior(PistonBehavior.DESTROY)));
+
 
 
     //helper to register block w/ item

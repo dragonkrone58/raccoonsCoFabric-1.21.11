@@ -22,7 +22,7 @@ public class ModLanguageProvider extends FabricLanguageProvider {
         translationBuilder.add(ModItems.BOILED_EGG, "Boiled Egg");
         translationBuilder.add(ModBlocks.EXAMPLE_BLOCK, "Example Block");
         translationBuilder.add(ModBlocks.MARIGOLD, "Marigold");
-        //translationBuilder.add(ModBlocks.MARIGOLD_FLOWER_POT, "Marigold Flower Pot");
+        translationBuilder.add(ModBlocks.MARIGOLD_FLOWER_POT, "Marigold Flower Pot");
 
     }
 }

@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "raccoonsco:block/marigold"
+    "model": "raccoonsco:item/marigold"
   }
 }

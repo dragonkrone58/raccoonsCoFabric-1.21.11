@@ -12,6 +12,7 @@ import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.SmokingRecipe;
 import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.registry.RegistryWrapper;
+import net.racquo.raccoonsCo.block.ModBlocks;
 import net.racquo.raccoonsCo.item.ModItems;
 
 import java.util.List;
@@ -33,6 +34,11 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                 offerSmelting(BOILED_EGG_COOKABLES, RecipeCategory.FOOD, ModItems.BOILED_EGG, 0.25f, 140, "boiled_egg");
 
                 //the offerFoodCookingRecipe is kinda scuffed sooo.... done manually in resources/data/.../recipe
+
+                createShapeless(RecipeCategory.MISC, Items.ORANGE_DYE, 2)
+                        .input(ModBlocks.MARIGOLD)
+                        .criterion(hasItem(ModBlocks.MARIGOLD), conditionsFromItem(Items.ORANGE_DYE))
+                        .offerTo(exporter);
 
             }
         };
