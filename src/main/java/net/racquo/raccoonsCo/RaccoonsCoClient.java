@@ -14,6 +14,8 @@ public class RaccoonsCoClient implements ClientModInitializer {
 
         BlockRenderLayerMap.putBlock(ModBlocks.MARIGOLD, BlockRenderLayer.CUTOUT);
         BlockRenderLayerMap.putBlock(ModBlocks.MARIGOLD_FLOWER_POT, BlockRenderLayer.CUTOUT);
+        BlockRenderLayerMap.putBlock(ModBlocks.VIOLET, BlockRenderLayer.CUTOUT);
+        BlockRenderLayerMap.putBlock(ModBlocks.VIOLET_FLOWER_POT, BlockRenderLayer.CUTOUT);
 
 
     }

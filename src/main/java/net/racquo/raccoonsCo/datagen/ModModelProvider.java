@@ -20,7 +20,7 @@ public class ModModelProvider extends FabricModelProvider {
         blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.EXAMPLE_BLOCK);
 
         blockStateModelGenerator.registerFlowerPotPlantAndItem(ModBlocks.MARIGOLD, ModBlocks.MARIGOLD_FLOWER_POT, BlockStateModelGenerator.CrossType.NOT_TINTED );
-
+        blockStateModelGenerator.registerFlowerPotPlantAndItem(ModBlocks.VIOLET, ModBlocks.VIOLET_FLOWER_POT, BlockStateModelGenerator.CrossType.NOT_TINTED );
     }
 
     @Override

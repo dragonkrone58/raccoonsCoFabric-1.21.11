@@ -16,4 +16,14 @@ Creating Basic Block checklist:
     c. ModRecipeProvider & ModLootTableProvider
     d. ModLanguangeProvider
 
+
+Creating Basic Flower checklist:
+1. register block, block item & flower pot block in ModBlocks & add to item group(s)
+2. Datagen & generate:
+    a. ModBlockTagProvider if applicable
+    b. ModModelProvider for block state models
+    c. ModRecipeProvider & ModLootTableProvider
+    d. ModLanguangeProvider
+3. I
+
 ctrl + H to see class hierarchies & browse vanilla classes to see functionalities.

@@ -35,9 +35,16 @@ public class ModRecipeProvider extends FabricRecipeProvider {
 
                 //the offerFoodCookingRecipe is kinda scuffed sooo.... done manually in resources/data/.../recipe
 
-                createShapeless(RecipeCategory.MISC, Items.ORANGE_DYE, 2)
+                //marigold to orange dye recipe
+                createShapeless(RecipeCategory.MISC, Items.ORANGE_DYE, 1)
                         .input(ModBlocks.MARIGOLD)
                         .criterion(hasItem(ModBlocks.MARIGOLD), conditionsFromItem(Items.ORANGE_DYE))
+                        .offerTo(exporter);
+
+                //violet to purple dye recipe
+                createShapeless(RecipeCategory.MISC, Items.PURPLE_DYE, 1)
+                        .input(ModBlocks.VIOLET)
+                        .criterion(hasItem(ModBlocks.VIOLET), conditionsFromItem(Items.PURPLE_DYE))
                         .offerTo(exporter);
 
             }

@@ -44,6 +44,21 @@ public class ModBlocks {
                     .nonOpaque()
                     .pistonBehavior(PistonBehavior.DESTROY)));
 
+    public static final Block VIOLET = registerBlock("violet",
+            properties -> new FlowerBlock(
+                    StatusEffects.POISON, 4.0f, properties
+                    .mapColor(MapColor.PURPLE)
+                    .noCollision()
+                    .breakInstantly()
+                    .sounds(BlockSoundGroup.GRASS)
+                    .offset(AbstractBlock.OffsetType.XZ)
+                    .pistonBehavior(PistonBehavior.DESTROY)));
+
+    public static final Block VIOLET_FLOWER_POT = registerBlockWithoutBlockItem("violet_flower_pot",
+            properties -> new FlowerPotBlock(ModBlocks.VIOLET, properties
+                    .breakInstantly()
+                    .nonOpaque()
+                    .pistonBehavior(PistonBehavior.DESTROY)));
 
 
     //helper to register block w/ item
@@ -74,6 +89,7 @@ public class ModBlocks {
 
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.NATURAL).register(entries -> {
             entries.add(ModBlocks.MARIGOLD);
+            entries.add(ModBlocks.VIOLET);
         });
     }
 
