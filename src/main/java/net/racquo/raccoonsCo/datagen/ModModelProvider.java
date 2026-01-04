@@ -7,6 +7,7 @@ import net.minecraft.client.data.ItemModelGenerator;
 import net.minecraft.client.data.Models;
 import net.racquo.raccoonsCo.block.ModBlocks;
 import net.racquo.raccoonsCo.item.ModItems;
+import org.apache.commons.lang3.ObjectUtils;
 
 public class ModModelProvider extends FabricModelProvider {
     public ModModelProvider(FabricDataOutput output) {
@@ -15,8 +16,10 @@ public class ModModelProvider extends FabricModelProvider {
 
     @Override
     public void generateBlockStateModels(BlockStateModelGenerator blockStateModelGenerator) {
-        //blockStateModelGenerator.registerFlowerPotPlant(ModBlocks.MARIGOLD, ModBlocks.MARIGOLD_POT, BlockStateModelGenerator.CrossType.NOT_TINTED);
+
         blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.EXAMPLE_BLOCK);
+
+        blockStateModelGenerator.registerTintableCrossBlockState(ModBlocks.MARIGOLD, BlockStateModelGenerator.CrossType.NOT_TINTED );
 
     }
 

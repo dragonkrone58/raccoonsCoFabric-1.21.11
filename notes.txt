@@ -16,3 +16,4 @@ Creating Basic Block checklist:
     c. ModRecipeProvider & ModLootTableProvider
     d. ModLanguangeProvider
 
+ctrl + H to see class hierarchies & browse vanilla classes to see functionalities.

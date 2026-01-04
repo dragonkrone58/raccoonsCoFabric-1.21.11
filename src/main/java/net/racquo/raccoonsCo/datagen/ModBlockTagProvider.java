@@ -19,5 +19,8 @@ public class ModBlockTagProvider extends FabricTagProvider.BlockTagProvider {
 
        valueLookupBuilder(BlockTags.PICKAXE_MINEABLE).add(ModBlocks.EXAMPLE_BLOCK);
 
+       valueLookupBuilder(BlockTags.SMALL_FLOWERS).add(ModBlocks.MARIGOLD);
+       //valueLookupBuilder(BlockTags.FLOWER_POTS).add(ModBlocks.MARIGOLD_FLOWER_POT);
+
     }
 }

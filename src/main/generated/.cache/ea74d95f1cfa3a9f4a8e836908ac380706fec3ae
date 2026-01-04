@@ -1,10 +1,13 @@
 // 1.21.11	-999999999-01-01T00:00:00	Raccoons & Co./Model Definitions
 6b6305314a60ce8fe4e12ba717e7fdfb5bf3400c assets/raccoonsco/blockstates/example_block.json
+2aff93814b1d4161994654339646a6591c8616ac assets/raccoonsco/blockstates/marigold.json
 697b9100c873b90ece9acc29f22c6fff80037e57 assets/raccoonsco/items/bandit_pottery_sherd.json
 c737e71a9fbc1809567f6afb68039bcda540dd2c assets/raccoonsco/items/boiled_egg.json
 a975633516b4073a6744e38cb5a7c38cc459415c assets/raccoonsco/items/example_block.json
+b17f620f5598c0532975f555213d867d3c921f73 assets/raccoonsco/items/marigold.json
 506de74e18d213f27d6e3f20ca3a6560c6caaae0 assets/raccoonsco/items/raccoon_pelt.json
 c58339e4b2a8c634364abb4ab4fc0fa2176d025c assets/raccoonsco/models/block/example_block.json
+db0ae2bd90b8b22e65357f4b47d7b1da245a76eb assets/raccoonsco/models/block/marigold.json
 215e02b8818a217f45caf7994d193faa144e4b37 assets/raccoonsco/models/item/bandit_pottery_sherd.json
 0ba50f7896eae644ab8606d553aa20d1a30ea428 assets/raccoonsco/models/item/boiled_egg.json
 4a6cf81af1e56dcbc123358a1eaa569b13020d35 assets/raccoonsco/models/item/raccoon_pelt.json

@@ -1,5 +1,6 @@
 package net.racquo.raccoonsCo.block;
 
+import jdk.jshell.Snippet;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.block.*;
 import net.minecraft.block.piston.PistonBehavior;
@@ -24,37 +25,20 @@ public class ModBlocks {
 
     //create block(s)
 
-
-
-
     public static final Block EXAMPLE_BLOCK = registerBlock("example_block",
             properties -> new Block(properties.strength(4f).requiresTool().sounds(BlockSoundGroup.COPPER)));
 
-    /*public static final Block MARIGOLD = registerBlockWithoutBlockItem("marigold",
-            properties-> new FlowerBlock(
-                StatusEffects.SPEED,
-                4f,
-                AbstractBlock.Settings.create()
-                .mapColor(MapColor.ORANGE)
-                .noCollision()
-                .breakInstantly()
-                .sounds(BlockSoundGroup.GRASS)
-                .offset(AbstractBlock.OffsetType.XZ).pistonBehavior(PistonBehavior.DESTROY)));
-
-    public static final Block MARIGOLD_POT = registerBlock("marigold_pot", properties-> createFlowerPotBlock(MARIGOLD));
+    public static final Block MARIGOLD = registerBlock("marigold",
+            properties -> new FlowerBlock(
+            StatusEffects.SPEED, 4.0f, properties
+                    .mapColor(MapColor.ORANGE)
+                    .noCollision()
+                    .breakInstantly()
+                    .sounds(BlockSoundGroup.GRASS)
+                    .offset(AbstractBlock.OffsetType.XZ)
+                    .pistonBehavior(PistonBehavior.DESTROY)));
 
 
-    //flower pot creator helper method because i cannot be arsed
-    private static Block createFlowerPotBlock(Block flower){
-        return new FlowerPotBlock(
-                flower,
-                AbstractBlock.Settings.create()
-                .breakInstantly()
-                .nonOpaque()
-                .pistonBehavior(PistonBehavior.DESTROY));
-    }
-
-*/
 
     //helper to register block w/ item
     private static Block registerBlock(String name, Function<AbstractBlock.Settings, Block> function) {
@@ -63,6 +47,10 @@ public class ModBlocks {
         return Registry.register(Registries.BLOCK, Identifier.of(RaccoonsCo.MOD_ID, name), toRegister);
     }
 
+    private static Block registerBlockWithoutBlockItem(String name, Function<AbstractBlock.Settings, Block> function) {
+        return Registry.register(Registries.BLOCK, Identifier.of(RaccoonsCo.MOD_ID, name),
+                function.apply(AbstractBlock.Settings.create().registryKey(RegistryKey.of(RegistryKeys.BLOCK, Identifier.of(RaccoonsCo.MOD_ID, name)))));
+    }
 
     //helper to register block item
     private static void registerBlockItem(String name, Block block) {
@@ -76,6 +64,10 @@ public class ModBlocks {
 
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.BUILDING_BLOCKS).register(entries -> {
             entries.add(ModBlocks.EXAMPLE_BLOCK);
+        });
+
+        ItemGroupEvents.modifyEntriesEvent(ItemGroups.NATURAL).register(entries -> {
+            entries.add(ModBlocks.MARIGOLD);
         });
     }
 

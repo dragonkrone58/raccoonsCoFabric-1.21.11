@@ -17,5 +17,7 @@ public class ModLootTableProvider extends FabricBlockLootTableProvider {
     @Override
     public void generate() {
         addDrop(ModBlocks.EXAMPLE_BLOCK);
+        addDrop(ModBlocks.MARIGOLD);
+        //addPottedPlantDrops(ModBlocks.MARIGOLD_FLOWER_POT);
     }
 }
