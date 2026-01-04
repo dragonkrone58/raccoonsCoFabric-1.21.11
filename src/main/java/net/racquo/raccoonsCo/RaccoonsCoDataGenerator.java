@@ -22,6 +22,7 @@ public class RaccoonsCoDataGenerator implements DataGeneratorEntrypoint {
         pack.addProvider(ModLanguageProvider :: new);
         pack.addProvider(ModLootTableProvider :: new);
         pack.addProvider(ModRegistryDataGenerator :: new);
+        pack.addProvider(ModItemTagProvider::new);
 
 	}
 

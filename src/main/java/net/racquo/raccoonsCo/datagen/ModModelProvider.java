@@ -6,6 +6,7 @@ import net.minecraft.client.data.BlockStateModelGenerator;
 import net.minecraft.client.data.ItemModelGenerator;
 import net.minecraft.client.data.Models;
 import net.racquo.raccoonsCo.block.ModBlocks;
+import net.racquo.raccoonsCo.item.ModArmorMaterials;
 import net.racquo.raccoonsCo.item.ModItems;
 import org.apache.commons.lang3.ObjectUtils;
 
@@ -30,5 +31,10 @@ public class ModModelProvider extends FabricModelProvider {
         itemModelGenerator.register(ModItems.BANDIT_POTTERY_SHERD, Models.GENERATED);
         itemModelGenerator.register(ModItems.BOILED_EGG, Models.GENERATED);
 
+        itemModelGenerator.registerArmor(ModItems.RACCOON_PELT_HELMET, ModArmorMaterials.RACCOON_PELT_KEY,
+                ItemModelGenerator.HELMET_TRIM_ID_PREFIX, false);
+
+
     }
 }
+

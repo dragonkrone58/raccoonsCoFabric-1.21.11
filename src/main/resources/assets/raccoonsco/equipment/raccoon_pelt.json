@@ -1,0 +1,15 @@
+{
+  "layers": {
+
+    "humanoid": [
+      {
+        "texture": "raccoonsco:raccoon_pelt"
+      }
+    ],
+    "humanoid_leggings": [
+      {
+        "texture": "raccoonsco:raccoon_pelt"
+      }
+    ]
+  }
+}

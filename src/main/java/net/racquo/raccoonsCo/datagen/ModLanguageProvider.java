@@ -20,6 +20,9 @@ public class ModLanguageProvider extends FabricLanguageProvider {
         translationBuilder.add(ModItems.RACCOON_PELT, "Raccoon Pelt");
         translationBuilder.add(ModItems.BANDIT_POTTERY_SHERD, "Bandit Pottery Sherd");
         translationBuilder.add(ModItems.BOILED_EGG, "Boiled Egg");
+        translationBuilder.add(ModItems.RACCOON_PELT_HELMET, "Raccoon Skin Cap");
+
+
         translationBuilder.add(ModBlocks.EXAMPLE_BLOCK, "Example Block");
         translationBuilder.add(ModBlocks.MARIGOLD, "Marigold");
         translationBuilder.add(ModBlocks.MARIGOLD_FLOWER_POT, "Marigold Flower Pot");
@@ -27,6 +30,7 @@ public class ModLanguageProvider extends FabricLanguageProvider {
         translationBuilder.add(ModBlocks.VIOLET_FLOWER_POT, "Violet Flower Pot");
         translationBuilder.add(ModBlocks.LUPINE, "Lupine");
         translationBuilder.add(ModBlocks.LUPINE_FLOWER_POT, "Lupine Flower Pot");
+
 
     }
 }
