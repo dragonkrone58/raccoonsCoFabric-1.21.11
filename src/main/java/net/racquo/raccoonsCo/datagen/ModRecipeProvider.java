@@ -7,6 +7,7 @@ import net.minecraft.data.recipe.RecipeGenerator;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.CampfireCookingRecipe;
+import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.SmokingRecipe;
 import net.minecraft.recipe.book.RecipeCategory;
@@ -27,13 +28,11 @@ public class ModRecipeProvider extends FabricRecipeProvider {
 
             @Override
             public void generate(){
-                List<ItemConvertible> BOILED_EGG_COOKABLES = List.of(Items.EGG, Items.BLUE_EGG, Items.BROWN_EGG);
+                List<ItemConvertible> BOILED_EGG_COOKABLES = List.of(Items.EGG, Items.BLUE_EGG, Items.BROWN_EGG, Items.TURTLE_EGG);
 
                 offerSmelting(BOILED_EGG_COOKABLES, RecipeCategory.FOOD, ModItems.BOILED_EGG, 0.25f, 140, "boiled_egg");
 
-                //the offerFoodCookingRecipe is kinda scuffed sooo.... just do it manually T_T
-
-
+                //the offerFoodCookingRecipe is kinda scuffed sooo.... done manually in resources/data/.../recipe
 
             }
         };

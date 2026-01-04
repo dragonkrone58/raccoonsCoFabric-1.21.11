@@ -1,9 +1,9 @@
 {
   "type": "minecraft:smoking",
   "category": "food",
-  "cookingtime": 50,
+  "cookingtime": 80,
   "experience": 0.25,
-  "ingredient": "minecraft:egg",
+  "ingredient": "minecraft:turtle_egg",
   "result": {
     "id": "raccoonsco:boiled_egg"
   }

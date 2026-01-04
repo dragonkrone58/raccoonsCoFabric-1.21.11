@@ -2,6 +2,7 @@ package net.racquo.raccoonsCo;
 
 import net.fabricmc.api.ModInitializer;
 
+import net.racquo.raccoonsCo.block.ModBlocks;
 import net.racquo.raccoonsCo.item.ModItems;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +15,7 @@ public class RaccoonsCo implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		ModItems.registerModItems();
+        ModBlocks.registerModBlocks();
 
 	}
 }

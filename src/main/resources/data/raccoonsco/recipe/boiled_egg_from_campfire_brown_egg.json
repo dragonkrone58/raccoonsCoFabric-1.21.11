@@ -1,7 +1,7 @@
 {
-  "type": "minecraft:smoking",
+  "type": "minecraft:campfire_cooking",
   "category": "food",
-  "cookingtime": 50,
+  "cookingtime": 200,
   "experience": 0.25,
   "ingredient": "minecraft:brown_egg",
   "result": {
