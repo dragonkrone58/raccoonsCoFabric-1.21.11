@@ -47,6 +47,12 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                         .criterion(hasItem(ModBlocks.VIOLET), conditionsFromItem(Items.PURPLE_DYE))
                         .offerTo(exporter);
 
+                //lupine to magenta dye recipe
+                createShapeless(RecipeCategory.MISC, Items.MAGENTA_DYE, 2)
+                        .input(ModBlocks.LUPINE)
+                        .criterion(hasItem(ModBlocks.LUPINE), conditionsFromItem(Items.MAGENTA_DYE))
+                        .offerTo(exporter);
+
             }
         };
 

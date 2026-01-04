@@ -60,6 +60,21 @@ public class ModBlocks {
                     .nonOpaque()
                     .pistonBehavior(PistonBehavior.DESTROY)));
 
+    public static final Block LUPINE = registerBlock("lupine",
+            properties -> new FlowerBlock(
+                    StatusEffects.NIGHT_VISION, 4.0f, properties
+                    .mapColor(MapColor.PURPLE)
+                    .noCollision()
+                    .breakInstantly()
+                    .sounds(BlockSoundGroup.GRASS)
+                    .offset(AbstractBlock.OffsetType.XZ)
+                    .pistonBehavior(PistonBehavior.DESTROY)));
+
+    public static final Block LUPINE_FLOWER_POT = registerBlockWithoutBlockItem("lupine_flower_pot",
+            properties -> new FlowerPotBlock(ModBlocks.LUPINE, properties
+                    .breakInstantly()
+                    .nonOpaque()
+                    .pistonBehavior(PistonBehavior.DESTROY)));
 
     //helper to register block w/ item
     private static Block registerBlock(String name, Function<AbstractBlock.Settings, Block> function) {
@@ -90,6 +105,7 @@ public class ModBlocks {
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.NATURAL).register(entries -> {
             entries.add(ModBlocks.MARIGOLD);
             entries.add(ModBlocks.VIOLET);
+            entries.add(ModBlocks.LUPINE);
         });
     }
 

@@ -25,6 +25,8 @@ public class ModLanguageProvider extends FabricLanguageProvider {
         translationBuilder.add(ModBlocks.MARIGOLD_FLOWER_POT, "Marigold Flower Pot");
         translationBuilder.add(ModBlocks.VIOLET, "Violet");
         translationBuilder.add(ModBlocks.VIOLET_FLOWER_POT, "Violet Flower Pot");
+        translationBuilder.add(ModBlocks.LUPINE, "Lupine");
+        translationBuilder.add(ModBlocks.LUPINE_FLOWER_POT, "Lupine Flower Pot");
 
     }
 }

@@ -1,9 +1,9 @@
 {
-  "feature": "raccoonsco:violet",
+  "feature": "raccoonsco:lupine",
   "placement": [
     {
       "type": "minecraft:rarity_filter",
-      "chance": 20
+      "chance": 15
     },
     {
       "type": "minecraft:in_square"

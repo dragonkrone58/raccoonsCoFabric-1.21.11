@@ -9,10 +9,18 @@ import net.racquo.raccoonsCo.world.ModPlacedFeatures;
 
 public class ModFlowerGeneration {
     public static void generateFlowers(){
-        BiomeModifications.addFeature(BiomeSelectors.includeByKey(BiomeKeys.FLOWER_FOREST, BiomeKeys.MEADOW),
+        //define biome(s) flowers generate into
+
+        BiomeModifications.addFeature(BiomeSelectors.includeByKey(
+                BiomeKeys.FLOWER_FOREST),
                 GenerationStep.Feature.VEGETAL_DECORATION, ModPlacedFeatures.MARIGOLD_PLACED_KEY);
 
-        BiomeModifications.addFeature(BiomeSelectors.includeByKey(BiomeKeys.TAIGA, BiomeKeys.OLD_GROWTH_SPRUCE_TAIGA),
+        BiomeModifications.addFeature(BiomeSelectors.includeByKey(
+                BiomeKeys.MEADOW, BiomeKeys.WINDSWEPT_HILLS),
                 GenerationStep.Feature.VEGETAL_DECORATION, ModPlacedFeatures.VIOLET_PLACED_KEY);
+
+        BiomeModifications.addFeature(BiomeSelectors.includeByKey(
+                BiomeKeys.TAIGA, BiomeKeys.OLD_GROWTH_SPRUCE_TAIGA, BiomeKeys.OLD_GROWTH_PINE_TAIGA),
+                GenerationStep.Feature.VEGETAL_DECORATION, ModPlacedFeatures.LUPINE_PLACED_KEY);
     }
 }

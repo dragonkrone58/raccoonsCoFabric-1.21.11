@@ -16,14 +16,19 @@ public class ModConfiguredFeatures {
 
     public static final RegistryKey<ConfiguredFeature<?, ?>> MARIGOLD_KEY = registerKey("marigold");
     public static final RegistryKey<ConfiguredFeature<?, ?>> VIOLET_KEY = registerKey("violet");
+    public static final RegistryKey<ConfiguredFeature<?, ?>> LUPINE_KEY = registerKey("lupine");
+
 
     public static void bootstrap(Registerable<ConfiguredFeature<?, ?>> context){
-
+        //define generation parameters
         register(context, MARIGOLD_KEY, Feature.RANDOM_PATCH, ConfiguredFeatures.createRandomPatchFeatureConfig(Feature.SIMPLE_BLOCK,
                 new SimpleBlockFeatureConfig(BlockStateProvider.of(ModBlocks.MARIGOLD.getDefaultState())), List.of(Blocks.GRASS_BLOCK)));
 
         register(context, VIOLET_KEY, Feature.RANDOM_PATCH, ConfiguredFeatures.createRandomPatchFeatureConfig(Feature.SIMPLE_BLOCK,
-                new SimpleBlockFeatureConfig(BlockStateProvider.of(ModBlocks.VIOLET.getDefaultState())), List.of(Blocks.GRASS_BLOCK, Blocks.PODZOL)));
+                new SimpleBlockFeatureConfig(BlockStateProvider.of(ModBlocks.VIOLET.getDefaultState())), List.of(Blocks.GRASS_BLOCK)));
+
+        register(context, LUPINE_KEY, Feature.RANDOM_PATCH, ConfiguredFeatures.createRandomPatchFeatureConfig(Feature.SIMPLE_BLOCK,
+                new SimpleBlockFeatureConfig(BlockStateProvider.of(ModBlocks.LUPINE.getDefaultState())), List.of(Blocks.GRASS_BLOCK, Blocks.PODZOL)));
 
     }
 
