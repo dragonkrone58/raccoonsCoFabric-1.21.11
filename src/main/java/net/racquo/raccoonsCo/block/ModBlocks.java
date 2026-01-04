@@ -24,7 +24,11 @@ public class ModBlocks {
 
     //create block(s)
 
-    //public static final Block EXAMPLE_BLOCK = registerBlock("example_block",properties -> new Block(properties.strength(1.0F).requiresTool().sounds(BlockSoundGroup.STONE)));
+
+
+
+    public static final Block EXAMPLE_BLOCK = registerBlock("example_block",
+            properties -> new Block(properties.strength(4f).requiresTool().sounds(BlockSoundGroup.COPPER)));
 
     /*public static final Block MARIGOLD = registerBlockWithoutBlockItem("marigold",
             properties-> new FlowerBlock(
@@ -53,30 +57,25 @@ public class ModBlocks {
 */
 
     //helper to register block w/ item
-    private static Block registerBlock(String name, Function<AbstractBlock.Settings, Block> function)  {
+    private static Block registerBlock(String name, Function<AbstractBlock.Settings, Block> function) {
         Block toRegister = function.apply(AbstractBlock.Settings.create().registryKey(RegistryKey.of(RegistryKeys.BLOCK, Identifier.of(RaccoonsCo.MOD_ID, name))));
         registerBlockItem(name, toRegister);
         return Registry.register(Registries.BLOCK, Identifier.of(RaccoonsCo.MOD_ID, name), toRegister);
     }
 
-    //helper to register block w/out item
-    private static Block registerBlockWithoutBlockItem(String name, Function<AbstractBlock.Settings, Block> function) {
-        return Registry.register(Registries.BLOCK, Identifier.of(RaccoonsCo.MOD_ID, name),
-                function.apply(AbstractBlock.Settings.create().registryKey(RegistryKey.of(RegistryKeys.BLOCK, Identifier.of(RaccoonsCo.MOD_ID, name)))));
-    }
 
     //helper to register block item
     private static void registerBlockItem(String name, Block block) {
-        Registry.register(Registries.ITEM, Identifier.of(RaccoonsCo.MOD_ID, name), new BlockItem(block, new Item.Settings()));
+        Registry.register(Registries.ITEM, Identifier.of(RaccoonsCo.MOD_ID, name),
+                new BlockItem(block, new Item.Settings().useBlockPrefixedTranslationKey()
+                        .registryKey(RegistryKey.of(RegistryKeys.ITEM, Identifier.of(RaccoonsCo.MOD_ID, name)))));
     }
 
     public static void registerModBlocks(){
         RaccoonsCo.LOGGER.info("Registering ModBlocks for " + RaccoonsCo.MOD_ID);
 
-        ItemGroupEvents.modifyEntriesEvent(ItemGroups.NATURAL).register(entries -> {
-            //entries.add(ModBlocks.EXAMPLE_BLOCK);
-            //entries.add(ModBlocks.MARIGOLD);
-            //entries.add(ModBlocks.MARIGOLD_POT);
+        ItemGroupEvents.modifyEntriesEvent(ItemGroups.BUILDING_BLOCKS).register(entries -> {
+            entries.add(ModBlocks.EXAMPLE_BLOCK);
         });
     }
 

@@ -1,0 +1,18 @@
+Creating Basic Item checklist:
+
+1. register item in ModItems & add to item group(s)
+2. Datagen ModModelProvider & generate json file(s)
+3.  a. generate recipe
+    b.
+4. Datagen generate & build lang name
+
+
+Creating Basic Block checklist:
+
+1. register block & block item in ModBlocks & add to item group(s)
+2. Datagen & generate:
+    a. ModBlockTagProvider if applicable
+    b. ModModelProvider for block state models
+    c. ModRecipeProvider & ModLootTableProvider
+    d. ModLanguangeProvider
+

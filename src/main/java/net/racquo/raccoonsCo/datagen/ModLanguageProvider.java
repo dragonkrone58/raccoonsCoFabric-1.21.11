@@ -20,7 +20,7 @@ public class ModLanguageProvider extends FabricLanguageProvider {
         translationBuilder.add(ModItems.RACCOON_PELT, "Raccoon Pelt");
         translationBuilder.add(ModItems.BANDIT_POTTERY_SHERD, "Bandit Pottery Sherd");
         translationBuilder.add(ModItems.BOILED_EGG, "Boiled Egg");
-        //translationBuilder.add(ModBlocks.EXAMPLE_BLOCK, "Example Block");
+        translationBuilder.add(ModBlocks.EXAMPLE_BLOCK, "Example Block");
 
     }
 }

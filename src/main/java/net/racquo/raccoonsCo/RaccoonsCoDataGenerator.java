@@ -11,10 +11,12 @@ public class RaccoonsCoDataGenerator implements DataGeneratorEntrypoint {
 
         FabricDataGenerator.Pack pack = fabricDataGenerator.createPack();
 
+        //datagen
         pack.addProvider(ModModelProvider :: new);
         pack.addProvider(ModRecipeProvider::new);
         pack.addProvider(ModBlockTagProvider::new);
         pack.addProvider(ModLanguageProvider :: new);
+        pack.addProvider(ModLootTableProvider :: new);
 
 
 

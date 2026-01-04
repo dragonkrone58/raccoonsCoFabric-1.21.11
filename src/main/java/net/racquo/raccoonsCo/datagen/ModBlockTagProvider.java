@@ -17,7 +17,7 @@ public class ModBlockTagProvider extends FabricTagProvider.BlockTagProvider {
     @Override
     protected void configure(RegistryWrapper.WrapperLookup wrapperLookup) {
 
-       //valueLookupBuilder(BlockTags.PICKAXE_MINEABLE).add(ModBlocks.EXAMPLE_BLOCK);
+       valueLookupBuilder(BlockTags.PICKAXE_MINEABLE).add(ModBlocks.EXAMPLE_BLOCK);
 
     }
 }

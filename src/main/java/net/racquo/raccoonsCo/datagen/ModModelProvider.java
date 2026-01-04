@@ -16,7 +16,7 @@ public class ModModelProvider extends FabricModelProvider {
     @Override
     public void generateBlockStateModels(BlockStateModelGenerator blockStateModelGenerator) {
         //blockStateModelGenerator.registerFlowerPotPlant(ModBlocks.MARIGOLD, ModBlocks.MARIGOLD_POT, BlockStateModelGenerator.CrossType.NOT_TINTED);
-        //blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.EXAMPLE_BLOCK);
+        blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.EXAMPLE_BLOCK);
 
     }
 
