@@ -1,4 +1,5 @@
 // 1.21.11	-999999999-01-01T00:00:00	Raccoons & Co./RaccoonsCoModRecipeProvider
+d6f198749019715769ea77cf438a709f3a1788e3 data/raccoonsco/advancement/recipes/combat/raccoon_pelt_helmet.json
 1ca8bb8f4f00eb88899cf965aaaab224a190a13e data/raccoonsco/advancement/recipes/food/boiled_egg_from_smelting_blue_egg.json
 649e81d0f183c83c5f44c08a8b3769cd6b7786f8 data/raccoonsco/advancement/recipes/food/boiled_egg_from_smelting_brown_egg.json
 52ca9dcb0c5e83f37bf54d298669db0d540c73d3 data/raccoonsco/advancement/recipes/food/boiled_egg_from_smelting_egg.json
@@ -13,3 +14,4 @@ ab345ae1e4a9a8e047c82d4deb7d475d419f3e67 data/raccoonsco/advancement/recipes/mis
 8e1d3e239d2d65ab1bbe7bc276eaf448a1d504fb data/raccoonsco/recipe/magenta_dye.json
 d9370cb180907fa205bad31e75c9d6905c5e8898 data/raccoonsco/recipe/orange_dye.json
 f881a81e41b9c20fe253da8e39e803b8a002ac1d data/raccoonsco/recipe/purple_dye.json
+00b3192ca4d4e32fdb5265a0aafba980e4445c99 data/raccoonsco/recipe/raccoon_pelt_helmet.json

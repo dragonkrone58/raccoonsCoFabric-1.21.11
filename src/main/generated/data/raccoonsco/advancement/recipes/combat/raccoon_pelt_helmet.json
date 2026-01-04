@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_leather_helmet": {
+      "conditions": {
+        "items": [
+          {
+            "items": "raccoonsco:raccoon_pelt_helmet"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_raccoon_pelt": {
+      "conditions": {
+        "items": [
+          {
+            "items": "raccoonsco:raccoon_pelt_helmet"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "raccoonsco:raccoon_pelt_helmet"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_raccoon_pelt",
+      "has_leather_helmet"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "raccoonsco:raccoon_pelt_helmet"
+    ]
+  }
+}

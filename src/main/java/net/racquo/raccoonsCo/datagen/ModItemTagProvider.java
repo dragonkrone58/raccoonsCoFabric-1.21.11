@@ -23,7 +23,7 @@ public class ModItemTagProvider extends FabricTagProvider.ItemTagProvider{
     protected void configure(RegistryWrapper.WrapperLookup wrapperLookup) {
         valueLookupBuilder(ItemTags.HEAD_ARMOR).add(ModItems.RACCOON_PELT_HELMET);
         valueLookupBuilder(ItemTags.TRIMMABLE_ARMOR).add(ModItems.RACCOON_PELT_HELMET);
-        valueLookupBuilder(ModTags.Items.RACCOON_PELT_REPAIR).add(ModItems.RACCOON_PELT_HELMET);
+        valueLookupBuilder(ModTags.Items.RACCOON_PELT_REPAIR).add(ModItems.RACCOON_PELT);
         valueLookupBuilder(ItemTags.MAP_INVISIBILITY_EQUIPMENT).add(ModItems.RACCOON_PELT_HELMET);
     }
 }

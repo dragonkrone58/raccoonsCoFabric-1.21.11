@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "L": "minecraft:leather_helmet",
+    "R": "raccoonsco:raccoon_pelt"
+  },
+  "pattern": [
+    "R",
+    "L"
+  ],
+  "result": {
+    "count": 1,
+    "id": "raccoonsco:raccoon_pelt_helmet"
+  }
+}

@@ -30,4 +30,17 @@ Creating Basic Flower checklist:
     b. ModPlacedFeatures: Register key and in bootstrap
     c. ModFlowerGeneration: define parameters to generation
 
+
+Creating Basic Armor Checklist:
+1. register armor in ModItems
+2. define key, durability & armor material in ModArmorMaterials
+3. Datagen & generate:
+    a. ModModelProvider
+    b. ModRecipeProvider
+    c. ModItemTagProvider
+    d. ModLanguageProvider
+4. Manually add JSON file to resources/assets/raccoonsco/equipment
+5. add textures to resources/assets/raccoonsco/textures/entity/equipment/humanoid & /humanoid_leggings
+6. add item textures
+
 ctrl + H to see class hierarchies & browse vanilla classes to see functionalities.

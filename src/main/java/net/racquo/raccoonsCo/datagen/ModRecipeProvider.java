@@ -35,6 +35,7 @@ public class ModRecipeProvider extends FabricRecipeProvider {
 
                 //the offerFoodCookingRecipe is kinda scuffed sooo.... done manually in resources/data/.../recipe
 
+
                 //marigold to orange dye recipe
                 createShapeless(RecipeCategory.MISC, Items.ORANGE_DYE, 1)
                         .input(ModBlocks.MARIGOLD)
@@ -51,6 +52,15 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                 createShapeless(RecipeCategory.MISC, Items.MAGENTA_DYE, 2)
                         .input(ModBlocks.LUPINE)
                         .criterion(hasItem(ModBlocks.LUPINE), conditionsFromItem(Items.MAGENTA_DYE))
+                        .offerTo(exporter);
+
+                createShaped(RecipeCategory.COMBAT, ModItems.RACCOON_PELT_HELMET)
+                        .pattern("R")
+                        .pattern("L")
+                        .input('R', ModItems.RACCOON_PELT)
+                        .input('L', Items.LEATHER_HELMET)
+                        .criterion(hasItem(ModItems.RACCOON_PELT), conditionsFromItem(ModItems.RACCOON_PELT_HELMET))
+                        .criterion(hasItem(Items.LEATHER_HELMET), conditionsFromItem(ModItems.RACCOON_PELT_HELMET))
                         .offerTo(exporter);
 
             }
