@@ -16,11 +16,11 @@ public class ModFlowerGeneration {
                 GenerationStep.Feature.VEGETAL_DECORATION, ModPlacedFeatures.MARIGOLD_PLACED_KEY);
 
         BiomeModifications.addFeature(BiomeSelectors.includeByKey(
-                BiomeKeys.MEADOW, BiomeKeys.WINDSWEPT_HILLS),
+                BiomeKeys.TAIGA, BiomeKeys.OLD_GROWTH_SPRUCE_TAIGA, BiomeKeys.OLD_GROWTH_PINE_TAIGA),
                 GenerationStep.Feature.VEGETAL_DECORATION, ModPlacedFeatures.VIOLET_PLACED_KEY);
 
         BiomeModifications.addFeature(BiomeSelectors.includeByKey(
-                BiomeKeys.TAIGA, BiomeKeys.OLD_GROWTH_SPRUCE_TAIGA, BiomeKeys.OLD_GROWTH_PINE_TAIGA),
+                BiomeKeys.MEADOW, BiomeKeys.WINDSWEPT_HILLS),
                 GenerationStep.Feature.VEGETAL_DECORATION, ModPlacedFeatures.LUPINE_PLACED_KEY);
     }
 }

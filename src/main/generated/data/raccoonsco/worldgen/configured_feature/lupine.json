@@ -25,10 +25,7 @@
               },
               {
                 "type": "minecraft:matching_blocks",
-                "blocks": [
-                  "minecraft:grass_block",
-                  "minecraft:podzol"
-                ],
+                "blocks": "minecraft:grass_block",
                 "offset": [
                   0,
                   -1,

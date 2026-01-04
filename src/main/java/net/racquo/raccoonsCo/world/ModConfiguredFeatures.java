@@ -25,10 +25,10 @@ public class ModConfiguredFeatures {
                 new SimpleBlockFeatureConfig(BlockStateProvider.of(ModBlocks.MARIGOLD.getDefaultState())), List.of(Blocks.GRASS_BLOCK)));
 
         register(context, VIOLET_KEY, Feature.RANDOM_PATCH, ConfiguredFeatures.createRandomPatchFeatureConfig(Feature.SIMPLE_BLOCK,
-                new SimpleBlockFeatureConfig(BlockStateProvider.of(ModBlocks.VIOLET.getDefaultState())), List.of(Blocks.GRASS_BLOCK)));
+                new SimpleBlockFeatureConfig(BlockStateProvider.of(ModBlocks.VIOLET.getDefaultState())), List.of(Blocks.GRASS_BLOCK, Blocks.PODZOL, Blocks.COARSE_DIRT)));
 
         register(context, LUPINE_KEY, Feature.RANDOM_PATCH, ConfiguredFeatures.createRandomPatchFeatureConfig(Feature.SIMPLE_BLOCK,
-                new SimpleBlockFeatureConfig(BlockStateProvider.of(ModBlocks.LUPINE.getDefaultState())), List.of(Blocks.GRASS_BLOCK, Blocks.PODZOL)));
+                new SimpleBlockFeatureConfig(BlockStateProvider.of(ModBlocks.LUPINE.getDefaultState())), List.of(Blocks.GRASS_BLOCK)));
 
     }
 

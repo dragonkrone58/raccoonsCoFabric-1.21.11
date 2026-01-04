@@ -49,7 +49,7 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                         .offerTo(exporter);
 
                 //lupine to magenta dye recipe
-                createShapeless(RecipeCategory.MISC, Items.MAGENTA_DYE, 2)
+                createShapeless(RecipeCategory.MISC, Items.MAGENTA_DYE, 1)
                         .input(ModBlocks.LUPINE)
                         .criterion(hasItem(ModBlocks.LUPINE), conditionsFromItem(Items.MAGENTA_DYE))
                         .offerTo(exporter);
