@@ -24,6 +24,9 @@ Creating Basic Flower checklist:
     b. ModModelProvider for block state models
     c. ModRecipeProvider & ModLootTableProvider
     d. ModLanguageProvider
-3. I
+3. Generate in World:
+    a. ModConfiguredFeatures: Register key and in bootstrap
+    b. ModPlacedFeatures: Register key and in bootstrap
+    c. ModFlowerGeneration: define parameters to generation
 
 ctrl + H to see class hierarchies & browse vanilla classes to see functionalities.
