@@ -6,6 +6,7 @@ import net.minecraft.registry.RegistryWrapper;
 import net.racquo.raccoonsCo.block.ModBlocks;
 import net.racquo.raccoonsCo.entity.ModEntities;
 import net.racquo.raccoonsCo.item.ModItems;
+import net.racquo.raccoonsCo.sound.ModSounds;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -33,6 +34,7 @@ public class ModLanguageProvider extends FabricLanguageProvider {
         translationBuilder.add(ModBlocks.LUPINE_FLOWER_POT, "Lupine Flower Pot");
 
         translationBuilder.add(ModEntities.RACCOON, "Raccoon");
+        translationBuilder.add(ModSounds.RACCOON_IDLE, "Raccoon Chitters");
 
 
 

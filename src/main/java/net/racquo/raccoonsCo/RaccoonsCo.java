@@ -7,6 +7,7 @@ import net.racquo.raccoonsCo.block.ModBlocks;
 import net.racquo.raccoonsCo.entity.ModEntities;
 import net.racquo.raccoonsCo.entity.custom.RaccoonEntity;
 import net.racquo.raccoonsCo.item.ModItems;
+import net.racquo.raccoonsCo.sound.ModSounds;
 import net.racquo.raccoonsCo.world.gen.ModWorldGeneration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +22,7 @@ public class RaccoonsCo implements ModInitializer {
 		ModItems.registerModItems();
         ModBlocks.registerModBlocks();
         ModWorldGeneration.generateModWorldGen();
-
+        ModSounds.registerSounds();
         ModEntities.registerModEntities();
 
         FabricDefaultAttributeRegistry.register(ModEntities.RACCOON, RaccoonEntity.createAttributes());
