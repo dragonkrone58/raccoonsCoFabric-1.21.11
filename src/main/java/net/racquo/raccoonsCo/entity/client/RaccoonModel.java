@@ -29,6 +29,11 @@ public class RaccoonModel extends EntityModel<RaccoonRenderState> {
         this.walkingAnimation = RaccoonAnimations.ANIM_RACCOON_WALK.createAnimation(root);
         this.idlingAnimation = RaccoonAnimations.ANIM_RACCOON_IDLE.createAnimation(root);
     }
+    /*
+    Note: Issue with Blockbench java exported file: turn .pivot -> .of and add 'default' rotation in radians?
+
+     */
+
     public static TexturedModelData getTexturedModelData() {
         ModelData modelData = new ModelData();
         ModelPartData modelPartData = modelData.getRoot();
