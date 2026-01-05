@@ -19,6 +19,7 @@ public class RaccoonModel extends EntityModel<RaccoonRenderState> {
 
     private final Animation walkingAnimation;
     private final Animation idlingAnimation;
+    private final Animation sittingAnimation;
 
 
     public RaccoonModel(ModelPart root) {
@@ -28,6 +29,7 @@ public class RaccoonModel extends EntityModel<RaccoonRenderState> {
         this.head = this.raccoon.getChild("head");
         this.walkingAnimation = RaccoonAnimations.ANIM_RACCOON_WALK.createAnimation(root);
         this.idlingAnimation = RaccoonAnimations.ANIM_RACCOON_IDLE.createAnimation(root);
+        this.sittingAnimation = RaccoonAnimations.ANIM_RACCOON_SIT.createAnimation(root);
     }
     /*
     Note: Issue with Blockbench java exported file: turn .pivot -> .of and add 'default' rotation in radians?
@@ -75,6 +77,7 @@ public class RaccoonModel extends EntityModel<RaccoonRenderState> {
 
         this.walkingAnimation.applyWalking(state.limbSwingAnimationProgress, state.limbSwingAmplitude, 2f, 2.5f);
         this.idlingAnimation.apply(state.idleAnimationState, state.age, 1f);
+        this.sittingAnimation.apply(state.sittingAnimationState, state.age, 1f);
 
     }
     private void setHeadAngles(float headYaw, float headPitch) {
