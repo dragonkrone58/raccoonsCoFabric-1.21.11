@@ -2,7 +2,10 @@ package net.racquo.raccoonsCo;
 
 import net.fabricmc.api.ModInitializer;
 
+import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.racquo.raccoonsCo.block.ModBlocks;
+import net.racquo.raccoonsCo.entity.ModEntities;
+import net.racquo.raccoonsCo.entity.custom.RaccoonEntity;
 import net.racquo.raccoonsCo.item.ModItems;
 import net.racquo.raccoonsCo.world.gen.ModWorldGeneration;
 import org.slf4j.Logger;
@@ -18,6 +21,10 @@ public class RaccoonsCo implements ModInitializer {
 		ModItems.registerModItems();
         ModBlocks.registerModBlocks();
         ModWorldGeneration.generateModWorldGen();
+
+        ModEntities.registerModEntities();
+
+        FabricDefaultAttributeRegistry.register(ModEntities.RACCOON, RaccoonEntity.createAttributes());
 
 	}
 }

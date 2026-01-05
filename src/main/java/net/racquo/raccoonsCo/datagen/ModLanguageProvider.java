@@ -4,6 +4,7 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
 import net.minecraft.registry.RegistryWrapper;
 import net.racquo.raccoonsCo.block.ModBlocks;
+import net.racquo.raccoonsCo.entity.ModEntities;
 import net.racquo.raccoonsCo.item.ModItems;
 
 import java.util.concurrent.CompletableFuture;
@@ -21,7 +22,7 @@ public class ModLanguageProvider extends FabricLanguageProvider {
         translationBuilder.add(ModItems.BANDIT_POTTERY_SHERD, "Bandit Pottery Sherd");
         translationBuilder.add(ModItems.BOILED_EGG, "Boiled Egg");
         translationBuilder.add(ModItems.RACCOON_PELT_HELMET, "Raccoon Skin Cap");
-
+        translationBuilder.add(ModItems.RACCOON_SPAWN_EGG, "Raccoon Spawn Egg");
 
         translationBuilder.add(ModBlocks.EXAMPLE_BLOCK, "Example Block");
         translationBuilder.add(ModBlocks.MARIGOLD, "Marigold");
@@ -30,6 +31,9 @@ public class ModLanguageProvider extends FabricLanguageProvider {
         translationBuilder.add(ModBlocks.VIOLET_FLOWER_POT, "Violet Flower Pot");
         translationBuilder.add(ModBlocks.LUPINE, "Lupine");
         translationBuilder.add(ModBlocks.LUPINE_FLOWER_POT, "Lupine Flower Pot");
+
+        translationBuilder.add(ModEntities.RACCOON, "Raccoon");
+
 
 
     }

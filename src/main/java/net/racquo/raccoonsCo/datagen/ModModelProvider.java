@@ -4,11 +4,15 @@ import net.fabricmc.fabric.api.client.datagen.v1.provider.FabricModelProvider;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.minecraft.client.data.BlockStateModelGenerator;
 import net.minecraft.client.data.ItemModelGenerator;
+import net.minecraft.client.data.Model;
 import net.minecraft.client.data.Models;
+import net.minecraft.util.Identifier;
 import net.racquo.raccoonsCo.block.ModBlocks;
 import net.racquo.raccoonsCo.item.ModArmorMaterials;
 import net.racquo.raccoonsCo.item.ModItems;
 import org.apache.commons.lang3.ObjectUtils;
+
+import java.util.Optional;
 
 public class ModModelProvider extends FabricModelProvider {
     public ModModelProvider(FabricDataOutput output) {
@@ -33,6 +37,8 @@ public class ModModelProvider extends FabricModelProvider {
 
         itemModelGenerator.registerArmor(ModItems.RACCOON_PELT_HELMET, ModArmorMaterials.RACCOON_PELT_KEY,
                 ItemModelGenerator.HELMET_TRIM_ID_PREFIX, false);
+
+        itemModelGenerator.register(ModItems.RACCOON_SPAWN_EGG, Models.GENERATED);
 
 
     }

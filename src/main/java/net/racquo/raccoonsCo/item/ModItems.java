@@ -15,6 +15,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 import net.racquo.raccoonsCo.RaccoonsCo;
+import net.racquo.raccoonsCo.entity.ModEntities;
 
 
 import java.util.function.Consumer;
@@ -34,6 +35,8 @@ public class ModItems {
             setting -> new Item(setting.armor(ModArmorMaterials.RACCOON_PELT_ARMOR_MATERIAL, EquipmentType.HELMET)));
 
 
+    public static final Item RACCOON_SPAWN_EGG = registerItem("raccoon_spawn_egg",
+            setting-> new SpawnEggItem(setting.spawnEgg(ModEntities.RACCOON)));
     //register item helper
 
     private static Item registerItem(String name, Function<Item.Settings, Item> function) {
@@ -59,7 +62,12 @@ public class ModItems {
             entries.add(RACCOON_PELT_HELMET);
         });
 
+        ItemGroupEvents.modifyEntriesEvent(ItemGroups.SPAWN_EGGS).register(entries -> {
+            entries.add(RACCOON_SPAWN_EGG);
+        });
 
-        }
+
+
+    }
     }
 
