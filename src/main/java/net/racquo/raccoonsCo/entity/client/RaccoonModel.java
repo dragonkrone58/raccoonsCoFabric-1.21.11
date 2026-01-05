@@ -26,42 +26,40 @@ public class RaccoonModel extends EntityModel<RaccoonRenderState> {
         this.root = root.getChild("root");
         this.raccoon = this.root.getChild("raccoon");
         this.head = this.raccoon.getChild("head");
-
         this.walkingAnimation = RaccoonAnimations.ANIM_RACCOON_WALK.createAnimation(root);
         this.idlingAnimation = RaccoonAnimations.ANIM_RACCOON_IDLE.createAnimation(root);
-
     }
     public static TexturedModelData getTexturedModelData() {
         ModelData modelData = new ModelData();
         ModelPartData modelPartData = modelData.getRoot();
-        ModelPartData root = modelPartData.addChild("root", ModelPartBuilder.create(), ModelTransform.rotation(0.0F, 24.0F, 0.0F));
+        ModelPartData root = modelPartData.addChild("root", ModelPartBuilder.create(), ModelTransform.of(0.0F, 24.0F, 0.0F, 0F, 0F, 0F));
 
-        ModelPartData raccoon = root.addChild("raccoon", ModelPartBuilder.create(), ModelTransform.rotation(0.0F, 0.0F, 0.0F));
+        ModelPartData raccoon = root.addChild("raccoon", ModelPartBuilder.create(), ModelTransform.of(0.0F, -8.0F, 0.0F, 0F, 0f, 0F));
 
-        ModelPartData frontLegL = raccoon.addChild("frontLegL", ModelPartBuilder.create().uv(0, 36).cuboid(-0.5F, 0.0F, -1.0F, 2.0F, 6.0F, 2.0F, new Dilation(0.0F)), ModelTransform.rotation(2.0F, -6.0F, -4.0F));
+        ModelPartData frontLegL = raccoon.addChild("frontLegL", ModelPartBuilder.create().uv(0, 36).cuboid(-0.5F, 0.0F, -1.0F, 2.0F, 6.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(2.0F, 2.0F, -4.0F, 0F, 0F, 0F));
 
-        ModelPartData frontLegR = raccoon.addChild("frontLegR", ModelPartBuilder.create().uv(8, 36).cuboid(-1.5F, 0.0F, -1.0F, 2.0F, 6.0F, 2.0F, new Dilation(0.0F)), ModelTransform.rotation(-3.0F, -6.0F, -4.0F));
+        ModelPartData frontLegR = raccoon.addChild("frontLegR", ModelPartBuilder.create().uv(8, 36).cuboid(-1.5F, 0.0F, -1.0F, 2.0F, 6.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(-3.0F, 2.0F, -4.0F,  0F, 0F, 0F));
 
-        ModelPartData backLegL = raccoon.addChild("backLegL", ModelPartBuilder.create().uv(16, 36).cuboid(-1.0F, 0.0F, -1.0F, 2.0F, 6.0F, 2.0F, new Dilation(0.0F)), ModelTransform.rotation(3.0F, -6.0F, 6.0F));
+        ModelPartData backLegL = raccoon.addChild("backLegL", ModelPartBuilder.create().uv(16, 36).cuboid(-1.0F, 0.0F, -1.0F, 2.0F, 6.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(3.0F, 2.0F, 6.0F,  0F, 0F, 0F));
 
-        ModelPartData backLegR = raccoon.addChild("backLegR", ModelPartBuilder.create().uv(24, 36).cuboid(-1.0F, 0.0F, -1.0F, 2.0F, 6.0F, 2.0F, new Dilation(0.0F)), ModelTransform.rotation(-4.0F, -6.0F, 6.0F));
+        ModelPartData backLegR = raccoon.addChild("backLegR", ModelPartBuilder.create().uv(24, 36).cuboid(-1.0F, 0.0F, -1.0F, 2.0F, 6.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(-4.0F, 2.0F, 6.0F,  0F, 0F, 0F));
 
-        ModelPartData tail = raccoon.addChild("tail", ModelPartBuilder.create().uv(0, 20).cuboid(-1.7F, -2.0F, 0.5F, 4.0F, 4.0F, 12.0F, new Dilation(0.0F)), ModelTransform.rotation(-0.7962F, -8.3656F, 6.83F));
+        ModelPartData tail = raccoon.addChild("tail", ModelPartBuilder.create().uv(0, 20).cuboid(-1.7F, -2.0F, 0.5F, 4.0F, 4.0F, 12.0F, new Dilation(0.0F)), ModelTransform.of(-0.7962F, -0.3656F, 6.83F,  0F, 0F, 0F));
 
-        ModelPartData body = raccoon.addChild("body", ModelPartBuilder.create().uv(0, 0).cuboid(-5.4962F, -5.3656F, -1.17F, 10.0F, 8.0F, 12.0F, new Dilation(0.0F)), ModelTransform.rotation(0.0F, -7.0F, -2.0F));
+        ModelPartData body = raccoon.addChild("body", ModelPartBuilder.create().uv(0, 0).cuboid(-5.5F, -5.5F, -2.0F, 10.0F, 8.0F, 12.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 1.0F, -2.0F,  0F, 0F, 0F));
 
-        ModelPartData neck = body.addChild("neck", ModelPartBuilder.create().uv(32, 31).cuboid(-4.5F, -3.5F, -4.0F, 9.0F, 7.0F, 4.0F, new Dilation(0.0F)), ModelTransform.rotation(-0.4962F, -1.3656F, -1.17F));
+        ModelPartData neck = body.addChild("neck", ModelPartBuilder.create().uv(32, 31).cuboid(-4.5F, -4.0F, -3.0F, 9.0F, 7.0F, 4.0F, new Dilation(0.0F)), ModelTransform.of(-0.5F, -1.0F, -2.0F,  0F, 0F, 0F));
 
-        ModelPartData head = raccoon.addChild("head", ModelPartBuilder.create().uv(32, 20).cuboid(-4.0F, -3.0F, -3.0F, 8.0F, 6.0F, 5.0F, new Dilation(0.0F)), ModelTransform.rotation(-0.5F, -9.0F, -8.0F));
+        ModelPartData head = raccoon.addChild("head", ModelPartBuilder.create().uv(32, 20).cuboid(-4.0F, -2.5F, -3.0F, 8.0F, 6.0F, 5.0F, new Dilation(0.0F)), ModelTransform.of(-0.5F, -1.0F, -8.0F, 0F, 0F, 0F));
 
-        ModelPartData earL = head.addChild("earL", ModelPartBuilder.create().uv(0, 44).cuboid(-1.5F, -2.0F, -1.0F, 2.0F, 2.0F, 1.0F, new Dilation(0.0F)), ModelTransform.rotation(-2.5F, -3.0F, -1.0F));
+        ModelPartData earL = head.addChild("earL", ModelPartBuilder.create().uv(0, 44).cuboid(-1.5F, -1.5F, -1.0F, 2.0F, 2.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(-2.5F, -3.0F, -1.0F,  0F, 0F, 0F));
 
-        ModelPartData earR = head.addChild("earR", ModelPartBuilder.create().uv(44, 0).cuboid(-0.5F, -2.0F, -1.0F, 2.0F, 2.0F, 1.0F, new Dilation(0.0F)), ModelTransform.rotation(2.5F, -3.0F, -1.0F));
+        ModelPartData earR = head.addChild("earR", ModelPartBuilder.create().uv(44, 0).cuboid(-0.5F, -1.5F, -1.0F, 2.0F, 2.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(2.5F, -3.0F, -1.0F,  0F, 0F, 0F));
 
-        ModelPartData nose = head.addChild("nose", ModelPartBuilder.create().uv(32, 42).cuboid(-2.0F, -1.0F, -1.5F, 4.0F, 2.0F, 2.0F, new Dilation(0.0F)), ModelTransform.rotation(0.0F, 2.0F, -3.5F));
+        ModelPartData nose = head.addChild("nose", ModelPartBuilder.create().uv(32, 42).cuboid(-2.0F, -0.5F, -1.5F, 4.0F, 2.0F, 2.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 2.0F, -3.5F,  0F, 0F, 0F));
 
         ModelPartData eyelids = head.addChild("eyelids", ModelPartBuilder.create().uv(4, 4).cuboid(1.0F, -1.0F, 0.0F, 2.0F, 1.0F, 0.0F, new Dilation(0.0F))
-                .uv(4, 4).cuboid(-4.0F, -1.0F, 0.0F, 2.0F, 1.0F, 0.0F, new Dilation(0.0F)), ModelTransform.rotation(0.5F, 1.0F, -2.0F));
+                .uv(4, 4).cuboid(-4.0F, -1.0F, 0.0F, 2.0F, 1.0F, 0.0F, new Dilation(0.0F)), ModelTransform.of(0.5F, 1.0F, -2.0F,  0F, 0F, 0F));
         return TexturedModelData.of(modelData, 64, 64);
     }
 
