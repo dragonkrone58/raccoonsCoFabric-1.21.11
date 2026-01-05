@@ -4,6 +4,7 @@ import com.google.common.collect.Maps;
 import net.minecraft.client.render.command.OrderedRenderCommandQueue;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.MobEntityRenderer;
+import net.minecraft.client.render.entity.model.BabyModelTransformer;
 import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.client.render.entity.state.EntityRenderState;
 import net.minecraft.client.render.entity.state.LivingEntityRenderState;
@@ -16,6 +17,7 @@ import net.racquo.raccoonsCo.entity.custom.RaccoonEntity;
 import net.racquo.raccoonsCo.entity.custom.RaccoonVariant;
 
 import java.util.Map;
+import java.util.Set;
 
 public class RaccoonRenderer extends MobEntityRenderer<RaccoonEntity, RaccoonRenderState, RaccoonModel> {
 
@@ -40,7 +42,7 @@ public class RaccoonRenderer extends MobEntityRenderer<RaccoonEntity, RaccoonRen
     public void render(RaccoonRenderState state, MatrixStack matrixStack,
                        OrderedRenderCommandQueue orderedRenderCommandQueue, CameraRenderState cameraRenderState) {
         if (state.baby) {
-            matrixStack.scale(0.5f, 0.5f, 0.5f);
+            matrixStack.scale(0.7f, 0.7f, 0.7f);
         } else {
             matrixStack.scale(1f, 1f, 1f);
         }
