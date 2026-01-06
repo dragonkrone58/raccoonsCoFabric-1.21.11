@@ -48,10 +48,20 @@ public class RaccoonEntity extends TameableEntity {
     public final AnimationState sittingAnimationState = new AnimationState();
 
 
-    private int idleAnimationTimeout = 0;
+
     private static final List<ItemConvertible> RACCOON_EATABLES =
             List.of(ModItems.BOILED_EGG, Items.SWEET_BERRIES, Items.COOKIE, Items.APPLE);
     private static final Ingredient RACCOON_TEMPT_INGREDIENT = Ingredient.ofItems(RACCOON_EATABLES.toArray(ItemConvertible[]::new));
+
+    private static final RaccoonVariant[] RARE_VARIANTS = {
+            RaccoonVariant.BLACK,
+            RaccoonVariant.ALBINO
+    };
+
+    private static final RaccoonVariant[] UNCOMMON_VARIANTS = {
+            RaccoonVariant.BLOND,
+            RaccoonVariant.CINNAMON,
+    };
 
     private static final TrackedData<Integer> DATA_ID_TYPE_VARIANT =
             DataTracker.registerData(RaccoonEntity.class, TrackedDataHandlerRegistry.INTEGER);
@@ -59,7 +69,6 @@ public class RaccoonEntity extends TameableEntity {
 
     public RaccoonEntity(EntityType<? extends TameableEntity> entityType, World world) {
         super(entityType, world);
-        this.setTamed(false, false);
         this.setPathfindingPenalty(PathNodeType.POWDER_SNOW, -1.0F);
         this.setPathfindingPenalty(PathNodeType.DANGER_POWDER_SNOW, -1.0F);
 
@@ -73,8 +82,8 @@ public class RaccoonEntity extends TameableEntity {
         this.goalSelector.add(0, new SwimGoal(this));
         this.goalSelector.add(1, new TameableEntity.TameableEscapeDangerGoal(1.5, DamageTypeTags.PANIC_ENVIRONMENTAL_CAUSES));
         this.goalSelector.add(2, new SitGoal(this));
-        this.goalSelector.add(3, new EscapeDangerGoal(this, 1.25));
-        this.goalSelector.add(4, new FollowOwnerGoal(this, 1.0, 10.0F, 2.0F));
+        this.goalSelector.add(3, new EscapeDangerGoal(this, 1.6));
+        this.goalSelector.add(4, new FollowOwnerGoal(this, 1.2, 10.0F, 2.0F));
 
         this.goalSelector.add(5, new AnimalMateGoal(this, 1.15D));
         this.goalSelector.add(6, new TemptGoal(this, 1.25D,
@@ -196,24 +205,6 @@ public class RaccoonEntity extends TameableEntity {
         }
     }
 
-    /*
-    SITTING LOGIC
-     */
-
-    @Override
-    public void setSitting(boolean sitting) {
-        super.setSitting(sitting);
-
-        this.jumping = false;
-        this.navigation.stop();
-        setTarget(null);
-
-        if (sitting) {
-            setPose(EntityPose.SITTING);
-        } else {
-            setPose(EntityPose.STANDING);
-        }
-    }
 
     /*
         SOUNDS
@@ -274,9 +265,43 @@ public class RaccoonEntity extends TameableEntity {
     public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason,
                                  @Nullable EntityData entityData) {
 
-        //RACCOON VARIANT IS RANDOMLY INITIALISED
-        RaccoonVariant variant = Util.getRandom(RaccoonVariant.values(), this.random);
-        setVariant(variant);
+        if(this.random.nextFloat() < 0.02F){
+            setVariant(Util.getRandom(RARE_VARIANTS, this.random));
+            return super.initialize(world, difficulty, spawnReason, entityData);
+        }
+
+        if(this.random.nextFloat() < 0.1F){
+            setVariant(Util.getRandom(UNCOMMON_VARIANTS, this.random));
+            return super.initialize(world, difficulty, spawnReason, entityData);
+        }
+
+        var biomeKey = world.getBiome(this.getBlockPos()).getKey().orElse(null);
+
+        if(biomeKey == null){
+            setVariant(RaccoonVariant.DEFAULT);
+            return super.initialize(world, difficulty, spawnReason, entityData);
+        }
+
+        if (biomeKey.equals(net.minecraft.world.biome.BiomeKeys.TAIGA)) {
+            setVariant(this.random.nextBoolean()
+                    ? RaccoonVariant.DEFAULT
+                    : RaccoonVariant.GRAY);
+
+        } else if (biomeKey.equals(net.minecraft.world.biome.BiomeKeys.FOREST)) {
+            setVariant(this.random.nextBoolean()
+                    ? RaccoonVariant.GRAY
+                    : RaccoonVariant.BROWN);
+
+        } else if (biomeKey.equals(net.minecraft.world.biome.BiomeKeys.MANGROVE_SWAMP)) {
+            setVariant(this.random.nextBoolean()
+                    ? RaccoonVariant.SWAMP
+                    : RaccoonVariant.DEFAULT);
+
+        } else {
+            // Fallback for other biomes
+            setVariant(RaccoonVariant.DEFAULT);
+        }
+
         return super.initialize(world, difficulty, spawnReason, entityData);
     }
 }
