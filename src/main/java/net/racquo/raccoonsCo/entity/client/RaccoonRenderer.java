@@ -27,6 +27,19 @@ public class RaccoonRenderer extends MobEntityRenderer<RaccoonEntity, RaccoonRen
                         Identifier.of(RaccoonsCo.MOD_ID, "textures/entity/raccoon/raccoon.png"));
                 map.put(RaccoonVariant.GRAY,
                         Identifier.of(RaccoonsCo.MOD_ID, "textures/entity/raccoon/gray_raccoon.png"));
+                map.put(RaccoonVariant.BROWN,
+                        Identifier.of(RaccoonsCo.MOD_ID, "textures/entity/raccoon/brown_raccoon.png"));
+                map.put(RaccoonVariant.CINNAMON,
+                        Identifier.of(RaccoonsCo.MOD_ID, "textures/entity/raccoon/cinnamon_raccoon.png"));
+                map.put(RaccoonVariant.BLOND,
+                        Identifier.of(RaccoonsCo.MOD_ID, "textures/entity/raccoon/blond_raccoon.png"));
+                map.put(RaccoonVariant.ALBINO,
+                        Identifier.of(RaccoonsCo.MOD_ID, "textures/entity/raccoon/albino_raccoon.png"));
+                map.put(RaccoonVariant.SWAMP,
+                        Identifier.of(RaccoonsCo.MOD_ID, "textures/entity/raccoon/swamp_raccoon.png"));
+                map.put(RaccoonVariant.BLACK,
+                        Identifier.of(RaccoonsCo.MOD_ID, "textures/entity/raccoon/black_raccoon.png"));
+
             });
 
     public RaccoonRenderer(EntityRendererFactory.Context context) {

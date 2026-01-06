@@ -273,6 +273,8 @@ public class RaccoonEntity extends TameableEntity {
     @Override
     public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason,
                                  @Nullable EntityData entityData) {
+
+        //RACCOON VARIANT IS RANDOMLY INITIALISED
         RaccoonVariant variant = Util.getRandom(RaccoonVariant.values(), this.random);
         setVariant(variant);
         return super.initialize(world, difficulty, spawnReason, entityData);
