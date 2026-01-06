@@ -146,6 +146,8 @@ public class RaccoonEntity extends TameableEntity {
         return baby;
     }
 
+
+
     /* TAMING & MOB INTERACTION*/
 
     @Override

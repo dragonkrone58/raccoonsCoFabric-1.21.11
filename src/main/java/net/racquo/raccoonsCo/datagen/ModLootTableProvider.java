@@ -2,8 +2,10 @@ package net.racquo.raccoonsCo.datagen;
 
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricBlockLootTableProvider;
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricEntityLootTableProvider;
 import net.minecraft.registry.RegistryWrapper;
 import net.racquo.raccoonsCo.block.ModBlocks;
+import net.racquo.raccoonsCo.entity.ModEntities;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -26,3 +28,5 @@ public class ModLootTableProvider extends FabricBlockLootTableProvider {
         addPottedPlantDrops(ModBlocks.LUPINE_FLOWER_POT);
     }
 }
+
+
