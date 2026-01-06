@@ -12,11 +12,12 @@ import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.*;
+import net.minecraft.particle.ItemStackParticleEffect;
+import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.registry.tag.DamageTypeTags;
 import net.minecraft.server.world.ServerWorld;
@@ -24,15 +25,14 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.storage.ReadView;
 import net.minecraft.storage.WriteView;
-import net.minecraft.text.StyleSpriteSource;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.DyeColor;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Util;
 import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
 import net.racquo.raccoonsCo.entity.ModEntities;
+import net.racquo.raccoonsCo.entity.ai.RaccoonFollowParentGoal;
 import net.racquo.raccoonsCo.item.ModItems;
 import net.racquo.raccoonsCo.sound.ModSounds;
 import org.jspecify.annotations.Nullable;
@@ -46,6 +46,9 @@ public class RaccoonEntity extends TameableEntity {
     private static final Logger log = LoggerFactory.getLogger(RaccoonEntity.class);
     public final AnimationState idleAnimationState = new AnimationState();
     public final AnimationState sittingAnimationState = new AnimationState();
+    public final AnimationState eatingAnimationState = new AnimationState();
+
+    private int eatingTicks = 0;
 
 
 
@@ -89,7 +92,7 @@ public class RaccoonEntity extends TameableEntity {
         this.goalSelector.add(6, new TemptGoal(this, 1.25D,
                 RACCOON_TEMPT_INGREDIENT, false));
 
-        this.goalSelector.add(7, new FollowParentGoal(this, 1.1D));
+        this.goalSelector.add(7, new RaccoonFollowParentGoal(this, 1.1D));
 
         this.goalSelector.add(8, new WanderAroundFarGoal(this, 1.0D));
         this.goalSelector.add(9, new LookAtEntityGoal(this, PlayerEntity.class, 4.0F));
@@ -136,6 +139,13 @@ public class RaccoonEntity extends TameableEntity {
     public void tick() {
         super.tick();
 
+        if(this.eatingTicks > 0){
+            this.eatingTicks--;
+            if(this.eatingTicks == 0){
+                this.eatingAnimationState.stop();
+            }
+        }
+
         if (this.getEntityWorld().isClient()) {
             this.setupAnimationStates();
         }
@@ -161,11 +171,13 @@ public class RaccoonEntity extends TameableEntity {
 
     @Override
     public ActionResult interactMob(PlayerEntity player, Hand hand) {
+
         ItemStack itemStack = player.getStackInHand(hand);
-        Item item = itemStack.getItem();
+
         if (this.isTamed()) {
             if (this.isBreedingItem(itemStack) && this.getHealth() < this.getMaxHealth()) {
                 this.eat(player, hand, itemStack);
+                this.eatingEffect(itemStack);
                 FoodComponent foodComponent = itemStack.get(DataComponentTypes.FOOD);
                 float f = foodComponent != null ? foodComponent.nutrition() : 1.0F;
                 this.heal(2.0F * f);
@@ -187,15 +199,15 @@ public class RaccoonEntity extends TameableEntity {
         //tame raccoon with sweet berries
         } else if (!this.getEntityWorld().isClient() && itemStack.isOf(Items.SWEET_BERRIES)) {
             itemStack.decrementUnlessCreative(1, player);
-            this.tryTame(player);
+            this.tryTame(player, itemStack);
             return ActionResult.SUCCESS_SERVER;
         }
 
         return super.interactMob(player, hand);
     }
     //the taming attempt method
-    private void tryTame(PlayerEntity player) {
-        this.playSound(SoundEvents.ENTITY_FOX_EAT, 1.0F, 0.8F);
+    private void tryTame(PlayerEntity player, ItemStack itemStack) {
+        this.eatingEffect(itemStack);
         if (this.random.nextInt(3) == 0) {
             this.setTamedBy(player);
             this.navigation.stop();
@@ -209,6 +221,21 @@ public class RaccoonEntity extends TameableEntity {
         }
     }
 
+   private void eatingEffect(ItemStack itemStack){
+       this.playSound(SoundEvents.ENTITY_FOX_EAT, 1.0F, 0.8F);
+
+       if (!this.getEntityWorld().isClient()) {
+           ((ServerWorld) this.getEntityWorld()).spawnParticles(
+                   new ItemStackParticleEffect(ParticleTypes.ITEM, itemStack),
+                   this.getX(),
+                   this.getBodyY(0.6),
+                   this.getZ(),
+                   6,
+                   0.2, 0.2, 0.2,
+                   0.05
+           );
+       }
+   }
 
     /*
         SOUNDS
