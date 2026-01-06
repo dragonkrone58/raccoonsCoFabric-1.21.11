@@ -32,6 +32,7 @@ import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
 import net.racquo.raccoonsCo.entity.ModEntities;
+import net.racquo.raccoonsCo.entity.ai.RaccoonEatFoodGoal;
 import net.racquo.raccoonsCo.entity.ai.RaccoonFollowParentGoal;
 import net.racquo.raccoonsCo.item.ModItems;
 import net.racquo.raccoonsCo.sound.ModSounds;
@@ -47,8 +48,19 @@ public class RaccoonEntity extends TameableEntity {
     public final AnimationState idleAnimationState = new AnimationState();
     public final AnimationState sittingAnimationState = new AnimationState();
     public final AnimationState eatingAnimationState = new AnimationState();
+    public final AnimationState sleepingAnimationState = new AnimationState();
 
+    private ItemStack currentEatingStack;
     private int eatingTicks = 0;
+    private int eatingCooldown = 0;
+    private static final TrackedData<Boolean> DATA_EATING =
+            DataTracker.registerData(RaccoonEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+
+    private static final int EATING_COOLDOWN_TICKS = 200;
+    private static final int EATING_ANIMATION_DURATION = 70;
+    private static final int EATING_SOUND_START = 20;
+    private static final int EATING_SOUND_END = 50;
+    private static final int BURP_TICK = 60;
 
 
 
@@ -92,6 +104,7 @@ public class RaccoonEntity extends TameableEntity {
         this.goalSelector.add(5, new AnimalMateGoal(this, 1.15D));
         this.goalSelector.add(6, new TemptGoal(this, 1.25D,
                 RACCOON_TEMPT_INGREDIENT, false));
+        this.goalSelector.add(6, new RaccoonEatFoodGoal(this));
 
         this.goalSelector.add(7, new RaccoonFollowParentGoal(this, 1.1D));
 
@@ -114,9 +127,21 @@ public class RaccoonEntity extends TameableEntity {
     }
 
 
-    //raccoon animation states
+    //RACCOON ANIMATION STATES
 
     private void setupAnimationStates() {
+
+        if(this.dataTracker.get(DATA_EATING)) {
+            idleAnimationState.stop();
+            sittingAnimationState.stop();
+
+            if(!eatingAnimationState.isRunning()){
+                eatingAnimationState.start(this.age);
+            }
+            return;
+        }
+
+        eatingAnimationState.stop();
 
         boolean sitting = this.isInSittingPose();
 
@@ -140,10 +165,32 @@ public class RaccoonEntity extends TameableEntity {
     public void tick() {
         super.tick();
 
+        if(this.eatingCooldown > 0){
+            this.eatingCooldown--;
+        }
         if(this.eatingTicks > 0){
             this.eatingTicks--;
-            if(this.eatingTicks == 0){
-                this.eatingAnimationState.stop();
+
+            // Stop navigation while eating
+            if (!this.getEntityWorld().isClient()) {
+                this.getNavigation().stop();
+            }
+
+            int elapsed = EATING_ANIMATION_DURATION - this.eatingTicks;
+            if(elapsed >= EATING_SOUND_START && elapsed <= EATING_SOUND_END){
+                if(elapsed % 4 == 0 ){
+                    eatingEffect(currentEatingStack);
+                }
+
+            }
+
+            if(elapsed == BURP_TICK){
+                playSound(SoundEvents.ENTITY_PLAYER_BURP, 1.0F, 1.0F);
+            }
+
+            if(this.eatingTicks == 0 && !this.getEntityWorld().isClient()){
+                this.dataTracker.set(DATA_EATING, false);
+                this.currentEatingStack = ItemStack.EMPTY;
             }
         }
 
@@ -165,7 +212,9 @@ public class RaccoonEntity extends TameableEntity {
 
 
 
-    /* TAMING & MOB INTERACTION*/
+    /*
+        TAMING & MOB INTERACTION
+    */
 
     @Override
     public ActionResult interactMob(PlayerEntity player, Hand hand) {
@@ -230,12 +279,18 @@ public class RaccoonEntity extends TameableEntity {
         }
     }
 
-    //breeding criteria
+    /*
+        BREEDING
+     */
     @Override
     public boolean isBreedingItem(ItemStack stack) {
         return this.isTamed() && this.getHealth() >= this.getMaxHealth()
                 && RACCOON_TEMPT_INGREDIENT.test(stack);
     }
+
+    /*
+        EATING PARTICLE & SOUND EFFECTS
+     */
 
    private void eatingEffect(ItemStack itemStack){
        this.playSound(SoundEvents.ENTITY_FOX_EAT, 1.0F, 0.8F);
@@ -252,6 +307,52 @@ public class RaccoonEntity extends TameableEntity {
            );
        }
    }
+
+   /*
+    EATING DROPPED ITEMS
+    */
+
+    public boolean canEatItem(ItemStack itemStack) {
+        return RACCOON_TEMPT_INGREDIENT.test(itemStack);
+    }
+
+    public boolean canEatDroppedFood() {
+        return this.eatingCooldown <= 0;
+    }
+
+    public void resetEatCooldown() {
+        this.eatingCooldown = EATING_COOLDOWN_TICKS;
+    }
+
+    public void consumeDroppedFood(ItemEntity itemEntity) {
+        if (this.getEntityWorld().isClient()) return;
+        if (this.isInSittingPose()) return;
+
+        ItemStack itemStack = itemEntity.getStack();
+
+
+        this.getNavigation().stop();
+        this.eatingTicks = EATING_ANIMATION_DURATION;
+        this.dataTracker.set(DATA_EATING, true);
+        this.currentEatingStack = itemStack.copyWithCount(1);
+
+
+        // Remove 1 item
+        itemStack.decrement(1);
+        if (itemStack.isEmpty()) {
+            itemEntity.discard();
+        }
+
+        // Heal ONLY if not full health
+        if (this.getHealth() < this.getMaxHealth()) {
+            FoodComponent food = itemStack.get(DataComponentTypes.FOOD);
+            float nutrition = food != null ? food.nutrition() : 1.0F;
+            this.heal(2.0F * nutrition);
+        }
+        this.resetEatCooldown();
+    }
+
+
 
     /*
         SOUNDS
@@ -282,6 +383,7 @@ public class RaccoonEntity extends TameableEntity {
     protected void initDataTracker(DataTracker.Builder builder) {
         super.initDataTracker(builder);
         builder.add(DATA_ID_TYPE_VARIANT, 0);
+        builder.add(DATA_EATING, false);
     }
 
     public RaccoonVariant getVariant(){
