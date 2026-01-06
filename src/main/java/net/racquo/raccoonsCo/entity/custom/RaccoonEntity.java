@@ -169,6 +169,7 @@ public class RaccoonEntity extends TameableEntity {
                 FoodComponent foodComponent = itemStack.get(DataComponentTypes.FOOD);
                 float f = foodComponent != null ? foodComponent.nutrition() : 1.0F;
                 this.heal(2.0F * f);
+                this.playSound(SoundEvents.ENTITY_FOX_EAT, 1.0F, 1.0F);
                 return ActionResult.SUCCESS;
             }
 
@@ -194,6 +195,7 @@ public class RaccoonEntity extends TameableEntity {
     }
     //the taming attempt method
     private void tryTame(PlayerEntity player) {
+        this.playSound(SoundEvents.ENTITY_FOX_EAT, 1.0F, 0.8F);
         if (this.random.nextInt(3) == 0) {
             this.setTamedBy(player);
             this.navigation.stop();
@@ -202,6 +204,8 @@ public class RaccoonEntity extends TameableEntity {
             this.getEntityWorld().sendEntityStatus(this, EntityStatuses.ADD_POSITIVE_PLAYER_REACTION_PARTICLES);
         } else {
             this.getEntityWorld().sendEntityStatus(this, EntityStatuses.ADD_NEGATIVE_PLAYER_REACTION_PARTICLES);
+
+
         }
     }
 
