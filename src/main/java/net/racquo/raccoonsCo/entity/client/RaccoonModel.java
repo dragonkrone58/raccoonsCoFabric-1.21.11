@@ -20,7 +20,8 @@ public class RaccoonModel extends EntityModel<RaccoonRenderState> {
     private final Animation walkingAnimation;
     private final Animation idlingAnimation;
     private final Animation sittingAnimation;
-    //private final Animation eatingAnimation;
+    private final Animation eatingAnimation;
+    //private final Animation sleepingAnimation
 
 
 
@@ -32,7 +33,8 @@ public class RaccoonModel extends EntityModel<RaccoonRenderState> {
         this.walkingAnimation = RaccoonAnimations.ANIM_RACCOON_WALK.createAnimation(root);
         this.idlingAnimation = RaccoonAnimations.ANIM_RACCOON_IDLE.createAnimation(root);
         this.sittingAnimation = RaccoonAnimations.ANIM_RACCOON_SIT.createAnimation(root);
-        //this.eatingAnimation = RaccoonAnimations.ANIM_RACCOON_EAT.createAnimation(root);
+        this.eatingAnimation = RaccoonAnimations.ANIM_RACCOON_EAT.createAnimation(root);
+        //this.sleepingAnimation = RaccoonAnimations.ANIM_RACCOON_SLEEP.createAnimation(root);
 
     }
     /*
@@ -82,7 +84,8 @@ public class RaccoonModel extends EntityModel<RaccoonRenderState> {
         this.walkingAnimation.applyWalking(state.limbSwingAnimationProgress, state.limbSwingAmplitude, 2f, 2.5f);
         this.idlingAnimation.apply(state.idleAnimationState, state.age, 1f);
         this.sittingAnimation.apply(state.sittingAnimationState, state.age, 1f);
-        //this.eatingAnimation.apply(state.eatingAnimationState, state.age, 1f);
+        this.eatingAnimation.apply(state.eatingAnimationState, state.age, 1f);
+        //this.sleepingAnimation.apply(state.sleepingAnimationState, state.age, 1f);
 
 
     }

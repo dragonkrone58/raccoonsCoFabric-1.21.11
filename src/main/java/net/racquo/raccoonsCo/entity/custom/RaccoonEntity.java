@@ -53,7 +53,8 @@ public class RaccoonEntity extends TameableEntity {
 
 
     private static final List<ItemConvertible> RACCOON_EATABLES =
-            List.of(ModItems.BOILED_EGG, Items.SWEET_BERRIES, Items.COOKIE, Items.APPLE);
+            List.of(ModItems.BOILED_EGG, Items.SWEET_BERRIES, Items.COOKIE, Items.APPLE, Items.MELON_SLICE,
+                Items.GLOW_BERRIES, Items.PUMPKIN_PIE);
     private static final Ingredient RACCOON_TEMPT_INGREDIENT = Ingredient.ofItems(RACCOON_EATABLES.toArray(ItemConvertible[]::new));
 
     private static final RaccoonVariant[] RARE_VARIANTS = {
@@ -152,10 +153,7 @@ public class RaccoonEntity extends TameableEntity {
     }
 
 
-    @Override
-    public boolean isBreedingItem(ItemStack stack) {
-        return RACCOON_TEMPT_INGREDIENT.test(stack);
-    }
+
 
     @Override
     public @Nullable PassiveEntity createChild(ServerWorld world, PassiveEntity entity) {
@@ -174,18 +172,35 @@ public class RaccoonEntity extends TameableEntity {
 
         ItemStack itemStack = player.getStackInHand(hand);
 
+        if (!this.isTamed() && itemStack.isOf(Items.SWEET_BERRIES)) {
+            if(!this.getEntityWorld().isClient()) {
+                itemStack.decrementUnlessCreative(1, player);
+                this.tryTame(player, itemStack);
+            }
+            return ActionResult.SUCCESS;
+        }
+
         if (this.isTamed()) {
-            if (this.isBreedingItem(itemStack) && this.getHealth() < this.getMaxHealth()) {
+
+            //RACCOON HEALING
+            if (RACCOON_TEMPT_INGREDIENT.test(itemStack)
+                    && this.getHealth() < this.getMaxHealth()) {
+
                 this.eat(player, hand, itemStack);
                 this.eatingEffect(itemStack);
+
                 FoodComponent foodComponent = itemStack.get(DataComponentTypes.FOOD);
                 float f = foodComponent != null ? foodComponent.nutrition() : 1.0F;
                 this.heal(2.0F * f);
                 this.playSound(SoundEvents.ENTITY_FOX_EAT, 1.0F, 1.0F);
+
                 return ActionResult.SUCCESS;
             }
 
+            //BREEDING @ FULL HEALTH ONLY
             ActionResult actionResult = super.interactMob(player, hand);
+
+            //OWNER SITTING & STANDING
             if (!actionResult.isAccepted() && this.isOwner(player)) {
                 this.setSitting(!this.isSitting());
                 this.jumping = false;
@@ -195,12 +210,6 @@ public class RaccoonEntity extends TameableEntity {
             }
 
             return actionResult;
-
-        //tame raccoon with sweet berries
-        } else if (!this.getEntityWorld().isClient() && itemStack.isOf(Items.SWEET_BERRIES)) {
-            itemStack.decrementUnlessCreative(1, player);
-            this.tryTame(player, itemStack);
-            return ActionResult.SUCCESS_SERVER;
         }
 
         return super.interactMob(player, hand);
@@ -219,6 +228,13 @@ public class RaccoonEntity extends TameableEntity {
 
 
         }
+    }
+
+    //breeding criteria
+    @Override
+    public boolean isBreedingItem(ItemStack stack) {
+        return this.isTamed() && this.getHealth() >= this.getMaxHealth()
+                && RACCOON_TEMPT_INGREDIENT.test(stack);
     }
 
    private void eatingEffect(ItemStack itemStack){
