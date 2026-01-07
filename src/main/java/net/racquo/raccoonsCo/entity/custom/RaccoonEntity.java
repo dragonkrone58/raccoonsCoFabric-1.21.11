@@ -19,7 +19,9 @@ import net.minecraft.item.*;
 import net.minecraft.particle.ItemStackParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.Ingredient;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.tag.DamageTypeTags;
+import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
@@ -31,6 +33,7 @@ import net.minecraft.util.Util;
 import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.Biome;
 import net.racquo.raccoonsCo.entity.ModEntities;
 import net.racquo.raccoonsCo.entity.ai.RaccoonEatFoodGoal;
 import net.racquo.raccoonsCo.entity.ai.RaccoonFollowParentGoal;
@@ -41,6 +44,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import net.minecraft.util.math.random.Random;
+
 
 public class RaccoonEntity extends TameableEntity {
 
@@ -49,6 +54,9 @@ public class RaccoonEntity extends TameableEntity {
     public final AnimationState sittingAnimationState = new AnimationState();
     public final AnimationState eatingAnimationState = new AnimationState();
     public final AnimationState sleepingAnimationState = new AnimationState();
+
+    private static final float WILD_MAX_HEALTH = 8.0F;
+    private static final float TAMED_MAX_HEALTH = 40.0F;
 
     private ItemStack currentEatingStack;
     private int eatingTicks = 0;
@@ -66,7 +74,8 @@ public class RaccoonEntity extends TameableEntity {
 
     private static final List<ItemConvertible> RACCOON_EATABLES =
             List.of(ModItems.BOILED_EGG, Items.SWEET_BERRIES, Items.COOKIE, Items.APPLE, Items.MELON_SLICE,
-                Items.GLOW_BERRIES, Items.PUMPKIN_PIE);
+                Items.GLOW_BERRIES, Items.PUMPKIN_PIE, Items.POTATO, Items.BAKED_POTATO, Items.SALMON, Items.COOKED_SALMON,
+                    Items.COD, Items.COOKED_COD, Items.CHICKEN, Items.COOKED_CHICKEN);
     private static final Ingredient RACCOON_TEMPT_INGREDIENT = Ingredient.ofItems(RACCOON_EATABLES.toArray(ItemConvertible[]::new));
 
     private static final RaccoonVariant[] RARE_VARIANTS = {
@@ -102,15 +111,16 @@ public class RaccoonEntity extends TameableEntity {
         this.goalSelector.add(4, new FollowOwnerGoal(this, 1.2, 10.0F, 2.0F));
 
         this.goalSelector.add(5, new AnimalMateGoal(this, 1.15D));
-        this.goalSelector.add(6, new TemptGoal(this, 1.25D,
-                RACCOON_TEMPT_INGREDIENT, false));
         this.goalSelector.add(6, new RaccoonEatFoodGoal(this));
+        this.goalSelector.add(7, new TemptGoal(this, 1.25D,
+                RACCOON_TEMPT_INGREDIENT, false));
 
-        this.goalSelector.add(7, new RaccoonFollowParentGoal(this, 1.1D));
 
-        this.goalSelector.add(8, new WanderAroundFarGoal(this, 1.0D));
-        this.goalSelector.add(9, new LookAtEntityGoal(this, PlayerEntity.class, 4.0F));
-        this.goalSelector.add(10, new LookAroundGoal(this));
+        this.goalSelector.add(8, new RaccoonFollowParentGoal(this, 1.1D));
+
+        this.goalSelector.add(9, new WanderAroundFarGoal(this, 1.0D));
+        this.goalSelector.add(10, new LookAtEntityGoal(this, PlayerEntity.class, 4.0F));
+        this.goalSelector.add(11, new LookAroundGoal(this));
 
 
     }
@@ -119,9 +129,9 @@ public class RaccoonEntity extends TameableEntity {
         return MobEntity.createMobAttributes()
                 .add(EntityAttributes.MAX_HEALTH, 10.0D)
                 .add(EntityAttributes.MOVEMENT_SPEED, 0.25D)
-                .add(EntityAttributes.FOLLOW_RANGE, 20.0D)
+                .add(EntityAttributes.FOLLOW_RANGE, 32.0D)
                 .add(EntityAttributes.TEMPT_RANGE, 12)
-                .add(EntityAttributes.FALL_DAMAGE_MULTIPLIER, 0.5D);
+                .add(EntityAttributes.SAFE_FALL_DISTANCE, 5.0F);
                 //.add(EntityAttributes.WAYPOINT_TRANSMIT_RANGE, 1.0D)
                 //MAY BE USEFUL FOR COONSKIN CAP mechanic
     }
@@ -205,8 +215,13 @@ public class RaccoonEntity extends TameableEntity {
     @Override
     public @Nullable PassiveEntity createChild(ServerWorld world, PassiveEntity entity) {
         RaccoonEntity baby = ModEntities.RACCOON.create(world, SpawnReason.BREEDING);
-        RaccoonVariant variant = Util.getRandom(RaccoonVariant.values(), this.random);
-        baby.setVariant(variant);
+        if (baby == null) return null;
+
+        RegistryKey<Biome> biomeKey =
+                world.getBiome(this.getBlockPos()).getKey().orElse(null);
+
+        baby.setVariant(pickVariant(this.random, biomeKey));
+
         return baby;
     }
 
@@ -408,48 +423,50 @@ public class RaccoonEntity extends TameableEntity {
     public void readData(ReadView view) {
         super.readData(view);
         this.dataTracker.set(DATA_ID_TYPE_VARIANT, view.getInt("Variant", 0));
+
     }
+
+    private static RaccoonVariant pickVariant(Random random, @Nullable RegistryKey<Biome> biomeKey){
+        if(random.nextFloat() < 0.02F){
+            return Util.getRandom(RARE_VARIANTS, random);
+        }
+
+        if(random.nextFloat() < 0.1F){
+            return Util.getRandom(UNCOMMON_VARIANTS, random);
+        }
+
+        if(biomeKey == null){
+            return RaccoonVariant.DEFAULT;
+        }
+
+        if (biomeKey.equals(net.minecraft.world.biome.BiomeKeys.TAIGA)) {
+            return random.nextBoolean()
+                    ? RaccoonVariant.DEFAULT
+                    : RaccoonVariant.GRAY;
+
+        } else if (biomeKey.equals(net.minecraft.world.biome.BiomeKeys.FOREST)) {
+            return random.nextBoolean()
+                    ? RaccoonVariant.GRAY
+                    : RaccoonVariant.BROWN;
+
+        } else if (biomeKey.equals(net.minecraft.world.biome.BiomeKeys.SWAMP)) {
+            return random.nextBoolean()
+                    ? RaccoonVariant.SWAMP
+                    : RaccoonVariant.DEFAULT;
+
+        } else {
+            // Fallback for other biomes
+            return RaccoonVariant.DEFAULT;
+        }
+    }
+
 
     @Override
     public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason,
                                  @Nullable EntityData entityData) {
-
-        if(this.random.nextFloat() < 0.02F){
-            setVariant(Util.getRandom(RARE_VARIANTS, this.random));
-            return super.initialize(world, difficulty, spawnReason, entityData);
-        }
-
-        if(this.random.nextFloat() < 0.1F){
-            setVariant(Util.getRandom(UNCOMMON_VARIANTS, this.random));
-            return super.initialize(world, difficulty, spawnReason, entityData);
-        }
-
-        var biomeKey = world.getBiome(this.getBlockPos()).getKey().orElse(null);
-
-        if(biomeKey == null){
-            setVariant(RaccoonVariant.DEFAULT);
-            return super.initialize(world, difficulty, spawnReason, entityData);
-        }
-
-        if (biomeKey.equals(net.minecraft.world.biome.BiomeKeys.TAIGA)) {
-            setVariant(this.random.nextBoolean()
-                    ? RaccoonVariant.DEFAULT
-                    : RaccoonVariant.GRAY);
-
-        } else if (biomeKey.equals(net.minecraft.world.biome.BiomeKeys.FOREST)) {
-            setVariant(this.random.nextBoolean()
-                    ? RaccoonVariant.GRAY
-                    : RaccoonVariant.BROWN);
-
-        } else if (biomeKey.equals(net.minecraft.world.biome.BiomeKeys.MANGROVE_SWAMP)) {
-            setVariant(this.random.nextBoolean()
-                    ? RaccoonVariant.SWAMP
-                    : RaccoonVariant.DEFAULT);
-
-        } else {
-            // Fallback for other biomes
-            setVariant(RaccoonVariant.DEFAULT);
-        }
+        RegistryKey<Biome> biomeKey =
+                world.getBiome(this.getBlockPos()).getKey().orElse(null);
+        setVariant(pickVariant(this.random, biomeKey));
 
         return super.initialize(world, difficulty, spawnReason, entityData);
     }

@@ -6,6 +6,7 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.item.Item;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.ItemTags;
+import net.racquo.raccoonsCo.block.ModBlocks;
 import net.racquo.raccoonsCo.item.ModItems;
 import net.racquo.raccoonsCo.util.ModTags;
 import org.jspecify.annotations.Nullable;
@@ -25,5 +26,8 @@ public class ModItemTagProvider extends FabricTagProvider.ItemTagProvider{
         valueLookupBuilder(ItemTags.TRIMMABLE_ARMOR).add(ModItems.RACCOON_PELT_HELMET);
         valueLookupBuilder(ModTags.Items.RACCOON_PELT_REPAIR).add(ModItems.RACCOON_PELT);
         valueLookupBuilder(ItemTags.MAP_INVISIBILITY_EQUIPMENT).add(ModItems.RACCOON_PELT_HELMET);
+        valueLookupBuilder(ItemTags.BEE_FOOD).add(ModBlocks.LUPINE.asItem());
+        valueLookupBuilder(ItemTags.BEE_FOOD).add(ModBlocks.MARIGOLD.asItem());
+        valueLookupBuilder(ItemTags.BEE_FOOD).add(ModBlocks.VIOLET.asItem());
     }
 }
