@@ -21,7 +21,6 @@ import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.tag.DamageTypeTags;
-import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
@@ -54,9 +53,6 @@ public class RaccoonEntity extends TameableEntity {
     public final AnimationState sittingAnimationState = new AnimationState();
     public final AnimationState eatingAnimationState = new AnimationState();
     public final AnimationState sleepingAnimationState = new AnimationState();
-
-    private static final float WILD_MAX_HEALTH = 8.0F;
-    private static final float TAMED_MAX_HEALTH = 40.0F;
 
     private ItemStack currentEatingStack;
     private int eatingTicks = 0;
