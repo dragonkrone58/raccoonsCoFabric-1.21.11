@@ -1,6 +1,6 @@
 {
 "raccoon_idle": {
-  "subtitle": "sounds.raccoonsco.raccoon_idle",
+  "subtitle": "Raccoon Chitters",
   "sounds": [
     "raccoonsco:raccoon_idle1",
     "raccoonsco:raccoon_idle2",
@@ -8,8 +8,34 @@
     "raccoonsco:raccoon_idle5",
     "raccoonsco:raccoon_idle6"
   ]
-}
+},
 
 
 
+  "raccoon_hurt": {
+    "subtitle": "Raccoon hurt",
+    "sounds": [
+      "raccoonsco:raccoon_hurt1",
+      "raccoonsco:raccoon_hurt2",
+      "raccoonsco:raccoon_hurt3",
+      "raccoonsco:raccoon_hurt4"
+    ]
+  },
+
+  "raccoon_death": {
+    "subtitle": "Raccoon dies",
+    "sounds": [
+      "raccoonsco:raccoon_death1",
+      "raccoonsco:raccoon_death2"
+    ]
+  },
+
+  "raccoon_eats": {
+    "subtitle": "Raccoon eats",
+    "sounds": [
+      "raccoonsco:raccoon_eats1",
+      "raccoonsco:raccoon_eats2",
+      "raccoonsco:raccoon_eats3"
+    ]
+  }
 }

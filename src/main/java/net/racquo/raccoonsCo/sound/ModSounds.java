@@ -11,6 +11,7 @@ public class ModSounds {
     public static final SoundEvent RACCOON_IDLE = registerSoundEvent("raccoon_idle");
     public static final SoundEvent RACCOON_HURT = registerSoundEvent("raccoon_hurt");
     public static final SoundEvent RACCOON_DEATH = registerSoundEvent("raccoon_death");
+    public static final SoundEvent RACCOON_EATS = registerSoundEvent("raccoon_eats");
 
     private static SoundEvent registerSoundEvent(String name) {
         Identifier id = Identifier.of(RaccoonsCo.MOD_ID, name);
