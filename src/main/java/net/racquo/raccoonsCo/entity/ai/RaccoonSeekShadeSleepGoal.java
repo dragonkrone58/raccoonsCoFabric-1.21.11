@@ -1,7 +1,6 @@
 package net.racquo.raccoonsCo.entity.ai;
 
 import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.entity.mob.PathAwareEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
@@ -93,7 +92,7 @@ public class RaccoonSeekShadeSleepGoal extends Goal {
                     random.nextInt(25) - 12
             );
 
-            // Must be shaded, low light, and solid block below
+            // viable sleeping conditions:
             if (world.isSkyVisible(candidate)) continue;
             if (world.getLightLevel(candidate) > 11) continue;
             if (!world.getBlockState(candidate.down()).isSideSolidFullSquare(world, candidate.down(), Direction.UP)) continue;

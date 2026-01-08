@@ -46,6 +46,13 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import net.minecraft.util.math.random.Random;
 
+/*
+    NEXT STEPS: When sleep is interrupted by damage, raccoon will panic around. When settled back down, will
+    seek sleeping spot again without fullness being depleted.
+    fullness only reset if waking up 'naturally' rather than interrupted
+    split wake() into two
+ */
+
 
 public class RaccoonEntity extends TameableEntity {
 
@@ -89,8 +96,6 @@ public class RaccoonEntity extends TameableEntity {
             DataTracker.registerData(RaccoonEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     private int sleepTicks = 0;
 
-    //private int sleepCooldownTicks = 0;
-    //private static final int SLEEP_COOLDOWN = 40;
 
     //LIST OF FOOD ITEMS RACCOONS WILL EAT
     private static final List<ItemConvertible> RACCOON_EATABLES =
@@ -318,13 +323,11 @@ public class RaccoonEntity extends TameableEntity {
 
         //sleeping:
 
-       // if(sleepCooldownTicks > 0) sleepCooldownTicks--;
-
         if (!this.getEntityWorld().isClient() && this.isSleeping() && !this.isTamed()) {
             this.sleepTicks++;
 
             if (this.sleepTicks >= SLEEP_DURATION_TICKS) {
-                wake();
+                wakeNatural();
             }
         }
 
@@ -621,7 +624,6 @@ public class RaccoonEntity extends TameableEntity {
     }
 
     public boolean canSleepHere() {
-        //if(sleepCooldownTicks > 0) return false;
         if (this.isTamed()) return false;
         if (this.dataTracker.get(DATA_PANIC_MODE)) return false;
         if (!this.isFull()) return false;
@@ -631,21 +633,38 @@ public class RaccoonEntity extends TameableEntity {
     }
 
 
-    public void wake() {
+    public void wakeNatural() {
+        if(!isSleeping()) return;
+
         this.sleepTicks = 0;
         this.dataTracker.set(DATA_SLEEPING, false);
-        //this.sleepCooldownTicks = SLEEP_COOLDOWN;
 
         // Fully rested : reset fullness
         this.dataTracker.set(DATA_FULLNESS, 0);
 
         this.getNavigation().stop();
         this.velocityDirty = false;
+
         if (!this.getEntityWorld().isClient()) {
             log.info("Raccoon woken, fullness reset");
         }
-
     }
+
+    public void wakeInterrupted(){
+        if(!isSleeping()) return;
+
+        sleepTicks = 0;
+        dataTracker.set(DATA_SLEEPING, false);
+
+        getNavigation().stop();
+        velocityDirty = false;
+
+        if (!getEntityWorld().isClient()) {
+            log.info("Raccoon woke due to interruption, fullness preserved");
+        }
+    }
+
+
 
 
 
@@ -656,13 +675,9 @@ public class RaccoonEntity extends TameableEntity {
 
         if (result) {
             // Enter panic mode
-            wake();
+            wakeInterrupted();
             this.dataTracker.set(DATA_PANIC_MODE, true);
             this.panicTicks = PANIC_TICKS;
-
-            if (this.isSleeping()) {
-                wake();
-            }
         }
 
         return result;
@@ -672,8 +687,6 @@ public class RaccoonEntity extends TameableEntity {
     /*
         SOUNDS
      */
-
-
 
     @Nullable
     @Override
