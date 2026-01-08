@@ -73,6 +73,9 @@ public class RaccoonEntity extends TameableEntity {
     private static final int FULLNESS_COOLDOWN_TICKS = 20 * 60; // 1 minute
     private int fullnessCooldownTicks = 0;
 
+    private int tamedBuffTicks = 0;
+    private boolean hasTamedBuff = false;
+
 
     private static final int SLEEP_DURATION_TICKS = 20 * 60; // 1 minute
     private static final int MAX_SLEEP_LIGHT = 11;
@@ -84,7 +87,7 @@ public class RaccoonEntity extends TameableEntity {
 
     private static final List<ItemConvertible> RACCOON_EATABLES =
             List.of(ModItems.BOILED_EGG, Items.SWEET_BERRIES, Items.COOKIE, Items.APPLE, Items.MELON_SLICE,
-                Items.GLOW_BERRIES, Items.PUMPKIN_PIE, Items.POTATO, Items.BAKED_POTATO, Items.SALMON, Items.COOKED_SALMON,
+                    Items.GLOW_BERRIES, Items.PUMPKIN_PIE, Items.POTATO, Items.BAKED_POTATO, Items.SALMON, Items.COOKED_SALMON,
                     Items.COD, Items.COOKED_COD, Items.CHICKEN, Items.COOKED_CHICKEN);
     private static final Ingredient RACCOON_TEMPT_INGREDIENT = Ingredient.ofItems(RACCOON_EATABLES.toArray(ItemConvertible[]::new));
 
@@ -152,8 +155,8 @@ public class RaccoonEntity extends TameableEntity {
                 .add(EntityAttributes.FOLLOW_RANGE, 32.0D)
                 .add(EntityAttributes.TEMPT_RANGE, 12)
                 .add(EntityAttributes.SAFE_FALL_DISTANCE, 5.0F);
-                //.add(EntityAttributes.WAYPOINT_TRANSMIT_RANGE, 1.0D)
-                //MAY BE USEFUL FOR COONSKIN CAP mechanic
+        //.add(EntityAttributes.WAYPOINT_TRANSMIT_RANGE, 1.0D)
+        //MAY BE USEFUL FOR COONSKIN CAP mechanic
     }
 
 
@@ -226,6 +229,27 @@ public class RaccoonEntity extends TameableEntity {
 
                 if (!this.getEntityWorld().isClient()) {
                     log.info("Raccoon panic mode ended");
+                }
+            }
+        }
+        //getting buffed
+        if (!this.getEntityWorld().isClient() && hasTamedBuff) {
+            tamedBuffTicks--;
+
+            if (tamedBuffTicks <= 0) {
+                hasTamedBuff = false;
+
+                this.getAttributeInstance(EntityAttributes.MAX_HEALTH)
+                        .setBaseValue(10.0D);
+
+                if (this.getHealth() > 10.0F) {
+                    this.setHealth(10.0F);
+                }
+
+                this.dataTracker.set(DATA_FULLNESS, 0);
+
+                if (!this.getEntityWorld().isClient()) {
+                    log.info("Tamed raccoon fullness buff expired");
                 }
             }
         }
@@ -428,21 +452,21 @@ public class RaccoonEntity extends TameableEntity {
         EATING PARTICLE & SOUND EFFECTS
      */
 
-   private void eatingEffect(ItemStack itemStack){
-       this.playSound(ModSounds.RACCOON_EATS, 1.0F, 0.8F);
+    private void eatingEffect(ItemStack itemStack){
+        this.playSound(ModSounds.RACCOON_EATS, 1.0F, 0.8F);
 
-       if (!this.getEntityWorld().isClient()) {
-           ((ServerWorld) this.getEntityWorld()).spawnParticles(
-                   new ItemStackParticleEffect(ParticleTypes.ITEM, itemStack),
-                   this.getX(),
-                   this.getBodyY(0.6),
-                   this.getZ(),
-                   6,
-                   0.2, 0.2, 0.2,
-                   0.05
-           );
-       }
-   }
+        if (!this.getEntityWorld().isClient()) {
+            ((ServerWorld) this.getEntityWorld()).spawnParticles(
+                    new ItemStackParticleEffect(ParticleTypes.ITEM, itemStack),
+                    this.getX(),
+                    this.getBodyY(0.6),
+                    this.getZ(),
+                    6,
+                    0.2, 0.2, 0.2,
+                    0.05
+            );
+        }
+    }
 
     /*
         EATING DROPPED ITEMS HELPERS
@@ -500,8 +524,6 @@ public class RaccoonEntity extends TameableEntity {
             float nutrition = food != null ? food.nutrition() : 1.0F;
             this.heal(2.0F * nutrition);
         }
-        //this.increaseFullness();
-        //this.resetEatCooldown();
     }
 
     /*
@@ -528,8 +550,16 @@ public class RaccoonEntity extends TameableEntity {
 
         // If tamed and now full, start resistance period
         if (this.isTamed() && after >= MAX_FULLNESS) {
-            this.fullnessCooldownTicks = FULLNESS_COOLDOWN_TICKS;
-            playSound(SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0F, 1.0F);
+            hasTamedBuff = true;
+            tamedBuffTicks = FULLNESS_COOLDOWN_TICKS;
+
+            this.getAttributeInstance(EntityAttributes.MAX_HEALTH)
+                    .setBaseValue(20.0D);
+
+            if (this.getHealth() < 20.0F) {
+                this.setHealth(20.0F);
+            }
+            playSound(SoundEvents.ENTITY_PLAYER_LEVELUP, 1.0F, 1.0F);
             if (!this.getEntityWorld().isClient()) {
                 log.info("Tamed raccoon reached full fullness: resistance period started");
             }
