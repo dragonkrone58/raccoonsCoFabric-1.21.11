@@ -17,6 +17,7 @@ public class ModConfiguredFeatures {
     public static final RegistryKey<ConfiguredFeature<?, ?>> MARIGOLD_KEY = registerKey("marigold");
     public static final RegistryKey<ConfiguredFeature<?, ?>> VIOLET_KEY = registerKey("violet");
     public static final RegistryKey<ConfiguredFeature<?, ?>> LUPINE_KEY = registerKey("lupine");
+    public static final RegistryKey<ConfiguredFeature<?, ?>> MILKWEED_KEY = registerKey("milkweed");
 
 
     public static void bootstrap(Registerable<ConfiguredFeature<?, ?>> context){
@@ -29,6 +30,9 @@ public class ModConfiguredFeatures {
 
         register(context, LUPINE_KEY, Feature.RANDOM_PATCH, ConfiguredFeatures.createRandomPatchFeatureConfig(Feature.SIMPLE_BLOCK,
                 new SimpleBlockFeatureConfig(BlockStateProvider.of(ModBlocks.LUPINE.getDefaultState())), List.of(Blocks.GRASS_BLOCK)));
+
+        register(context, MILKWEED_KEY, Feature.RANDOM_PATCH, ConfiguredFeatures.createRandomPatchFeatureConfig(Feature.SIMPLE_BLOCK,
+                new SimpleBlockFeatureConfig(BlockStateProvider.of(ModBlocks.MILKWEED.getDefaultState())), List.of(Blocks.GRASS_BLOCK, Blocks.MUD)));
 
     }
 

@@ -76,6 +76,24 @@ public class ModBlocks {
                     .nonOpaque()
                     .pistonBehavior(PistonBehavior.DESTROY)));
 
+
+    public static final Block MILKWEED = registerBlock("milkweed",
+            properties -> new FlowerBlock(
+                    StatusEffects.POISON, 4.0f, properties
+                    .mapColor(MapColor.PINK)
+                    .noCollision()
+                    .breakInstantly()
+                    .sounds(BlockSoundGroup.GRASS)
+                    .offset(AbstractBlock.OffsetType.XZ)
+                    .pistonBehavior(PistonBehavior.DESTROY)));
+
+    public static final Block MILKWEED_FLOWER_POT = registerBlockWithoutBlockItem("milkweed_flower_pot",
+            properties -> new FlowerPotBlock(ModBlocks.MILKWEED, properties
+                    .breakInstantly()
+                    .nonOpaque()
+                    .pistonBehavior(PistonBehavior.DESTROY)));
+
+
     //helper to register block w/ item
     private static Block registerBlock(String name, Function<AbstractBlock.Settings, Block> function) {
         Block toRegister = function.apply(AbstractBlock.Settings.create().registryKey(RegistryKey.of(RegistryKeys.BLOCK, Identifier.of(RaccoonsCo.MOD_ID, name))));
@@ -106,6 +124,7 @@ public class ModBlocks {
             entries.add(ModBlocks.MARIGOLD);
             entries.add(ModBlocks.VIOLET);
             entries.add(ModBlocks.LUPINE);
+            entries.add(ModBlocks.MILKWEED);
         });
     }
 

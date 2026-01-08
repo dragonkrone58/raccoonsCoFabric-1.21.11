@@ -24,6 +24,8 @@ public class RaccoonsCoClient implements ClientModInitializer {
         BlockRenderLayerMap.putBlock(ModBlocks.VIOLET_FLOWER_POT, BlockRenderLayer.CUTOUT);
         BlockRenderLayerMap.putBlock(ModBlocks.LUPINE, BlockRenderLayer.CUTOUT);
         BlockRenderLayerMap.putBlock(ModBlocks.LUPINE_FLOWER_POT, BlockRenderLayer.CUTOUT);
+        BlockRenderLayerMap.putBlock(ModBlocks.MILKWEED, BlockRenderLayer.CUTOUT);
+        BlockRenderLayerMap.putBlock(ModBlocks.MILKWEED_FLOWER_POT, BlockRenderLayer.CUTOUT);
 
         EntityModelLayerRegistry.registerModelLayer(RaccoonModel.RACCOON, RaccoonModel::getTexturedModelData);
         EntityRendererRegistry.register(ModEntities.RACCOON, RaccoonRenderer::new);

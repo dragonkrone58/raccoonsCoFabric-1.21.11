@@ -4,6 +4,8 @@
   "block.raccoonsco.lupine_flower_pot": "Lupine Flower Pot",
   "block.raccoonsco.marigold": "Marigold",
   "block.raccoonsco.marigold_flower_pot": "Marigold Flower Pot",
+  "block.raccoonsco.milkweed": "Milkweed",
+  "block.raccoonsco.milkweed_flower_pot": "Milkweed Flower Pot",
   "block.raccoonsco.violet": "Violet",
   "block.raccoonsco.violet_flower_pot": "Violet Flower Pot",
   "entity.raccoonsco.raccoon": "Raccoon",
@@ -11,6 +13,5 @@
   "item.raccoonsco.boiled_egg": "Boiled Egg",
   "item.raccoonsco.raccoon_pelt": "Raccoon Pelt",
   "item.raccoonsco.raccoon_pelt_helmet": "Raccoon Skin Cap",
-  "item.raccoonsco.raccoon_spawn_egg": "Raccoon Spawn Egg",
-  "subtitles.raccoonsco.raccoon_idle": "Raccoon Chitters"
+  "item.raccoonsco.raccoon_spawn_egg": "Raccoon Spawn Egg"
 }

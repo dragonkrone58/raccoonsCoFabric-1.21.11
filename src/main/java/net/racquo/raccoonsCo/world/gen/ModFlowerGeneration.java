@@ -22,5 +22,9 @@ public class ModFlowerGeneration {
         BiomeModifications.addFeature(BiomeSelectors.includeByKey(
                 BiomeKeys.MEADOW, BiomeKeys.WINDSWEPT_HILLS),
                 GenerationStep.Feature.VEGETAL_DECORATION, ModPlacedFeatures.LUPINE_PLACED_KEY);
+
+        BiomeModifications.addFeature(BiomeSelectors.includeByKey(
+                        BiomeKeys.SWAMP, BiomeKeys.MANGROVE_SWAMP),
+                GenerationStep.Feature.VEGETAL_DECORATION, ModPlacedFeatures.MILKWEED_PLACED_KEY);
     }
 }

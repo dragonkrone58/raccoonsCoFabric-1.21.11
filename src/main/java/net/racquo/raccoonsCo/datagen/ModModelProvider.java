@@ -27,6 +27,7 @@ public class ModModelProvider extends FabricModelProvider {
         blockStateModelGenerator.registerFlowerPotPlantAndItem(ModBlocks.MARIGOLD, ModBlocks.MARIGOLD_FLOWER_POT, BlockStateModelGenerator.CrossType.NOT_TINTED );
         blockStateModelGenerator.registerFlowerPotPlantAndItem(ModBlocks.VIOLET, ModBlocks.VIOLET_FLOWER_POT, BlockStateModelGenerator.CrossType.NOT_TINTED );
         blockStateModelGenerator.registerFlowerPotPlantAndItem(ModBlocks.LUPINE, ModBlocks.LUPINE_FLOWER_POT, BlockStateModelGenerator.CrossType.NOT_TINTED );
+        blockStateModelGenerator.registerFlowerPotPlantAndItem(ModBlocks.MILKWEED, ModBlocks.MILKWEED_FLOWER_POT, BlockStateModelGenerator.CrossType.NOT_TINTED );
     }
 
     @Override

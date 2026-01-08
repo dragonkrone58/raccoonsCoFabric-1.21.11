@@ -757,9 +757,7 @@ public class RaccoonEntity extends TameableEntity {
                     : RaccoonVariant.BROWN;
 
         } else if (biomeKey.equals(net.minecraft.world.biome.BiomeKeys.SWAMP)) {
-            return random.nextBoolean()
-                    ? RaccoonVariant.SWAMP
-                    : RaccoonVariant.DEFAULT;
+            return RaccoonVariant.SWAMP;
 
         } else {
             // Fallback for other biomes

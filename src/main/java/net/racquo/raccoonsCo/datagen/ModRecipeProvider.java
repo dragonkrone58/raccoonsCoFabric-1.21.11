@@ -54,6 +54,11 @@ public class ModRecipeProvider extends FabricRecipeProvider {
                         .criterion(hasItem(ModBlocks.LUPINE), conditionsFromItem(Items.MAGENTA_DYE))
                         .offerTo(exporter);
 
+                createShapeless(RecipeCategory.MISC, Items.PINK_DYE, 1)
+                        .input(ModBlocks.MILKWEED)
+                        .criterion(hasItem(ModBlocks.MILKWEED), conditionsFromItem(Items.PINK_DYE))
+                        .offerTo(exporter);
+
                 createShaped(RecipeCategory.COMBAT, ModItems.RACCOON_PELT_HELMET)
                         .pattern("R")
                         .pattern("L")

@@ -16,6 +16,7 @@ public class ModPlacedFeatures {
     public static final RegistryKey<PlacedFeature> MARIGOLD_PLACED_KEY = registerKey("marigold_placed");
     public static final RegistryKey<PlacedFeature> VIOLET_PLACED_KEY = registerKey("violet_placed");
     public static final RegistryKey<PlacedFeature> LUPINE_PLACED_KEY = registerKey("lupine_placed");
+    public static final RegistryKey<PlacedFeature> MILKWEED_PLACED_KEY = registerKey("milkweed_placed");
 
 
     public static void bootstrap(Registerable<PlacedFeature> context) {
@@ -32,6 +33,11 @@ public class ModPlacedFeatures {
         register(context, LUPINE_PLACED_KEY, configuredFeatures.getOrThrow(ModConfiguredFeatures.LUPINE_KEY),
                 RarityFilterPlacementModifier.of(8), SquarePlacementModifier.of(), PlacedFeatures.MOTION_BLOCKING_HEIGHTMAP,
                 BiomePlacementModifier.of());
+
+        register(context, MILKWEED_PLACED_KEY, configuredFeatures.getOrThrow(ModConfiguredFeatures.MILKWEED_KEY),
+                RarityFilterPlacementModifier.of(15), SquarePlacementModifier.of(), PlacedFeatures.MOTION_BLOCKING_HEIGHTMAP,
+                BiomePlacementModifier.of());
+
 
     }
     public static RegistryKey<PlacedFeature> registerKey(String name) {

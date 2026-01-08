@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_milkweed": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:pink_dye"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "raccoonsco:pink_dye"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_milkweed"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "raccoonsco:pink_dye"
+    ]
+  }
+}

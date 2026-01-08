@@ -21,10 +21,10 @@ public class ModBlockTagProvider extends FabricTagProvider.BlockTagProvider {
 
        valueLookupBuilder(BlockTags.PICKAXE_MINEABLE).add(ModBlocks.EXAMPLE_BLOCK);
 
-        List<Block> MOD_FLOWERS = List.of(ModBlocks.MARIGOLD, ModBlocks.LUPINE, ModBlocks.VIOLET);
+        List<Block> MOD_FLOWERS = List.of(ModBlocks.MARIGOLD, ModBlocks.LUPINE, ModBlocks.VIOLET, ModBlocks.MILKWEED);
 
         List<Block> MOD_FLOWERPOTS = List.of(ModBlocks.LUPINE_FLOWER_POT,ModBlocks.MARIGOLD_FLOWER_POT,
-                ModBlocks.VIOLET_FLOWER_POT);
+                ModBlocks.VIOLET_FLOWER_POT, ModBlocks.MILKWEED_FLOWER_POT);
 
         for(Block block : MOD_FLOWERS){
             valueLookupBuilder(BlockTags.SMALL_FLOWERS).add(block);
@@ -41,6 +41,8 @@ public class ModBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         valueLookupBuilder(BlockTags.FLOWER_POTS).add(ModBlocks.VIOLET_FLOWER_POT);
         valueLookupBuilder(BlockTags.SMALL_FLOWERS).add(ModBlocks.LUPINE);
         valueLookupBuilder(BlockTags.FLOWER_POTS).add(ModBlocks.LUPINE_FLOWER_POT);
+        valueLookupBuilder(BlockTags.SMALL_FLOWERS).add(ModBlocks.MILKWEED);
+        valueLookupBuilder(BlockTags.FLOWER_POTS).add(ModBlocks.MILKWEED_FLOWER_POT);
 
 
     }
