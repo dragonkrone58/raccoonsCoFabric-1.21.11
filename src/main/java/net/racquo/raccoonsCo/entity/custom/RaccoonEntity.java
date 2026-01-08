@@ -49,12 +49,15 @@ import net.minecraft.util.math.random.Random;
 
 public class RaccoonEntity extends TameableEntity {
 
+
     private static final Logger log = LoggerFactory.getLogger(RaccoonEntity.class);
+    //ANIMATION STATES
     public final AnimationState idleAnimationState = new AnimationState();
     public final AnimationState sittingAnimationState = new AnimationState();
     public final AnimationState eatingAnimationState = new AnimationState();
     public final AnimationState sleepingAnimationState = new AnimationState();
 
+    //EATING
     private ItemStack currentEatingStack;
     private int eatingTicks = 0;
     private int eatingCooldown = 0;
@@ -67,28 +70,34 @@ public class RaccoonEntity extends TameableEntity {
     private static final int EATING_SOUND_END = 50;
     private static final int BURP_TICK = 60;
 
+    //FULLNESS
     public static final int MAX_FULLNESS = 3;
     private static final TrackedData<Integer> DATA_FULLNESS =
             DataTracker.registerData(RaccoonEntity.class, TrackedDataHandlerRegistry.INTEGER);
     private static final int FULLNESS_COOLDOWN_TICKS = 20 * 60; // 1 minute
     private int fullnessCooldownTicks = 0;
 
+    //TAMED BUFF
     private int tamedBuffTicks = 0;
     private boolean hasTamedBuff = false;
 
 
+    //SLEEPING
     private static final int SLEEP_DURATION_TICKS = 20 * 60; // 1 minute
     private static final int MAX_SLEEP_LIGHT = 11;
     private static final TrackedData<Boolean> DATA_SLEEPING =
             DataTracker.registerData(RaccoonEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     private int sleepTicks = 0;
 
-    //LIST OF FOOD ITEMS RACCOONS WILL EAT
+    //private int sleepCooldownTicks = 0;
+    //private static final int SLEEP_COOLDOWN = 40;
 
+    //LIST OF FOOD ITEMS RACCOONS WILL EAT
     private static final List<ItemConvertible> RACCOON_EATABLES =
             List.of(ModItems.BOILED_EGG, Items.SWEET_BERRIES, Items.COOKIE, Items.APPLE, Items.MELON_SLICE,
                     Items.GLOW_BERRIES, Items.PUMPKIN_PIE, Items.POTATO, Items.BAKED_POTATO, Items.SALMON, Items.COOKED_SALMON,
                     Items.COD, Items.COOKED_COD, Items.CHICKEN, Items.COOKED_CHICKEN);
+
     private static final Ingredient RACCOON_TEMPT_INGREDIENT = Ingredient.ofItems(RACCOON_EATABLES.toArray(ItemConvertible[]::new));
 
 
@@ -211,6 +220,11 @@ public class RaccoonEntity extends TameableEntity {
         }
     }
 
+    @Override
+    public boolean isImmobile() {
+        return this.isSleeping() || super.isImmobile();
+    }
+
 
     @Override
     public void tick() {
@@ -301,6 +315,10 @@ public class RaccoonEntity extends TameableEntity {
                 }
             }
         }
+
+        //sleeping:
+
+       // if(sleepCooldownTicks > 0) sleepCooldownTicks--;
 
         if (!this.getEntityWorld().isClient() && this.isSleeping() && !this.isTamed()) {
             this.sleepTicks++;
@@ -600,15 +618,10 @@ public class RaccoonEntity extends TameableEntity {
         this.getNavigation().stop();
         this.setVelocity(0, this.getVelocity().y, 0);
 
-
-
-        /*if (!this.getEntityWorld().isClient()) {
-            log.info("Raccoon started sleeping at light level {}",
-                    this.getEntityWorld().getLightLevel(this.getBlockPos()));
-        }*/
     }
 
     public boolean canSleepHere() {
+        //if(sleepCooldownTicks > 0) return false;
         if (this.isTamed()) return false;
         if (this.dataTracker.get(DATA_PANIC_MODE)) return false;
         if (!this.isFull()) return false;
@@ -621,6 +634,7 @@ public class RaccoonEntity extends TameableEntity {
     public void wake() {
         this.sleepTicks = 0;
         this.dataTracker.set(DATA_SLEEPING, false);
+        //this.sleepCooldownTicks = SLEEP_COOLDOWN;
 
         // Fully rested : reset fullness
         this.dataTracker.set(DATA_FULLNESS, 0);

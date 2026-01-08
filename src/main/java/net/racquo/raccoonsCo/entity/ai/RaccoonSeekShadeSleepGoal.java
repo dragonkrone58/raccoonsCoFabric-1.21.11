@@ -1,7 +1,6 @@
 package net.racquo.raccoonsCo.entity.ai;
 
 import net.minecraft.entity.ai.goal.Goal;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
@@ -13,6 +12,7 @@ public class RaccoonSeekShadeSleepGoal extends Goal {
 
     private final RaccoonEntity raccoon;
     private BlockPos targetPos;
+
 
     public RaccoonSeekShadeSleepGoal(RaccoonEntity raccoon) {
         this.raccoon = raccoon;
@@ -45,15 +45,20 @@ public class RaccoonSeekShadeSleepGoal extends Goal {
 
     @Override
     public boolean shouldContinue() {
-        return raccoon.isSleeping() || (targetPos != null && !raccoon.getNavigation().isIdle());
+        return targetPos != null
+                && !raccoon.isSleeping();
     }
 
     @Override
     public void tick() {
         if (targetPos == null) return;
 
-        // Start sleeping when reached
-        if (raccoon.getBlockPos().isWithinDistance(targetPos, 2.5)) {
+        double tx = targetPos.getX() + 0.5;
+        double ty = targetPos.getY() + 0.1;
+        double tz = targetPos.getZ() + 0.5;
+
+        if (raccoon.squaredDistanceTo(tx, ty, tz) < 0.75 * 0.75) {
+            raccoon.getNavigation().stop();
             raccoon.startSleeping();
         }
     }
