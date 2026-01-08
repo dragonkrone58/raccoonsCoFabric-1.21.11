@@ -36,7 +36,7 @@ import net.minecraft.world.biome.Biome;
 import net.racquo.raccoonsCo.entity.ModEntities;
 import net.racquo.raccoonsCo.entity.ai.RaccoonEatFoodGoal;
 import net.racquo.raccoonsCo.entity.ai.RaccoonFollowParentGoal;
-import net.racquo.raccoonsCo.entity.ai.RaccoonSleepGoal;
+import net.racquo.raccoonsCo.entity.ai.RaccoonSeekShadeSleepGoal;
 import net.racquo.raccoonsCo.item.ModItems;
 import net.racquo.raccoonsCo.sound.ModSounds;
 import org.jspecify.annotations.Nullable;
@@ -61,19 +61,20 @@ public class RaccoonEntity extends TameableEntity {
     private static final TrackedData<Boolean> DATA_EATING =
             DataTracker.registerData(RaccoonEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 
-    private static final int EATING_COOLDOWN_TICKS = 200;
+    private static final int EATING_COOLDOWN_TICKS = 100;
     private static final int EATING_ANIMATION_DURATION = 70;
     private static final int EATING_SOUND_START = 20;
     private static final int EATING_SOUND_END = 50;
     private static final int BURP_TICK = 60;
 
-    private static final int MAX_FULLNESS = 3;
+    public static final int MAX_FULLNESS = 3;
     private static final TrackedData<Integer> DATA_FULLNESS =
             DataTracker.registerData(RaccoonEntity.class, TrackedDataHandlerRegistry.INTEGER);
+    private static final int FULLNESS_COOLDOWN_TICKS = 20 * 60; // 1 minute
+    private int fullnessCooldownTicks = 0;
 
 
-    private static final int MIN_SLEEP_TICKS = 20 * 60 * 2; // 2 minutes
-    private static final int MAX_SLEEP_TICKS = 20 * 60 * 5; // 5 minutes
+    private static final int SLEEP_DURATION_TICKS = 20 * 60; // 1 minute
     private static final int MAX_SLEEP_LIGHT = 11;
     private static final TrackedData<Boolean> DATA_SLEEPING =
             DataTracker.registerData(RaccoonEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
@@ -122,7 +123,7 @@ public class RaccoonEntity extends TameableEntity {
         this.goalSelector.add(1, new TameableEntity.TameableEscapeDangerGoal(1.5, DamageTypeTags.PANIC_ENVIRONMENTAL_CAUSES));
         this.goalSelector.add(2, new SitGoal(this));
         this.goalSelector.add(3, new EscapeDangerGoal(this, 1.6));
-        this.goalSelector.add(4, new RaccoonSleepGoal(this));
+        this.goalSelector.add(4, new RaccoonSeekShadeSleepGoal(this));
         this.goalSelector.add(5, new FollowOwnerGoal(this, 1.2, 10.0F, 2.0F));
 
         this.goalSelector.add(6, new AnimalMateGoal(this, 1.15D));
@@ -210,7 +211,26 @@ public class RaccoonEntity extends TameableEntity {
 
     @Override
     public void tick() {
+
+
         super.tick();
+
+        //panic ticks
+
+        if (this.dataTracker.get(DATA_PANIC_MODE)) {
+            panicTicks--;
+
+            if (panicTicks <= 0) {
+                panicTicks = 0;
+                this.dataTracker.set(DATA_PANIC_MODE, false);
+
+                if (!this.getEntityWorld().isClient()) {
+                    log.info("Raccoon panic mode ended");
+                }
+            }
+        }
+
+        //eating:
 
         if(this.eatingCooldown > 0){
             this.eatingCooldown--;
@@ -240,28 +260,46 @@ public class RaccoonEntity extends TameableEntity {
             if(this.eatingTicks == 0 && !this.getEntityWorld().isClient()){
                 this.dataTracker.set(DATA_EATING, false);
                 this.currentEatingStack = ItemStack.EMPTY;
+
+                increaseFullness();
+                resetEatCooldown();
             }
         }
-        if (isSleeping()) {
+
+        // Handle fullness cooldown for tamed raccoons
+        if (this.isTamed() && this.fullnessCooldownTicks > 0) {
+            this.fullnessCooldownTicks--;
+
+            // End of resistance period
+            if (fullnessCooldownTicks == 0) {
+                this.dataTracker.set(DATA_FULLNESS, 0);
+                if (!this.getEntityWorld().isClient()) {
+                    log.info("Tamed raccoon fullness reset after resistance period");
+                }
+            }
+        }
+
+        if (!this.getEntityWorld().isClient() && this.isSleeping() && !this.isTamed()) {
             this.sleepTicks++;
 
-            boolean isNight = this.getEntityWorld().isNight();
-
-            // Minimum sleep enforced
-            if (sleepTicks < MIN_SLEEP_TICKS) {
-                return;
+            if (this.sleepTicks >= SLEEP_DURATION_TICKS) {
+                wake();
             }
+        }
 
-            // Wake rules
-            if (isNight) {
-                stopSleeping();
-                return;
-            }
+        // freeze while sleeping
+        if (this.isSleeping() && !this.isTamed()) {
+            float prevYaw = this.getYaw();
+            float prevHeadYaw = this.getHeadYaw();
+            float prevBodyYaw = this.getBodyYaw();
 
-            if (sleepTicks >= MAX_SLEEP_TICKS) {
-                stopSleeping();
-                return;
-            }
+            this.getNavigation().stop();
+            this.setVelocity(0.0, this.getVelocity().y, 0.0);
+            this.velocityDirty = true;
+
+            this.setYaw(prevYaw);
+            this.setHeadYaw(prevHeadYaw);
+            this.setBodyYaw(prevBodyYaw);
         }
 
 
@@ -278,6 +316,7 @@ public class RaccoonEntity extends TameableEntity {
         builder.add(DATA_EATING, false);
         builder.add(DATA_FULLNESS, 0);
         builder.add(DATA_SLEEPING, false);
+        builder.add(DATA_PANIC_MODE, false);
     }
 
 
@@ -306,6 +345,11 @@ public class RaccoonEntity extends TameableEntity {
 
     @Override
     public ActionResult interactMob(PlayerEntity player, Hand hand) {
+
+        if (isSleeping()) {
+            // ignore interactions while sleeping
+            return ActionResult.PASS;
+        }
 
         ItemStack itemStack = player.getStackInHand(hand);
 
@@ -406,18 +450,27 @@ public class RaccoonEntity extends TameableEntity {
 
     //item eating eligibility helper
     public boolean canEatItem(ItemStack itemStack) {
+
         return RACCOON_TEMPT_INGREDIENT.test(itemStack);
     }
 
     //item eating cooldown helper
     public boolean canEatDroppedFood() {
-        return this.eatingCooldown <= 0 && !this.isSleeping() && !this.isFull();
+
+        if(!this.isTamed()) return this.eatingCooldown <= 0 && !this.isSleeping();
+
+        return this.eatingCooldown <= 0 && fullnessCooldownTicks == 0;
     }
 
     //item eating cooldown reset helper
     public void resetEatCooldown() {
         this.eatingCooldown = EATING_COOLDOWN_TICKS;
     }
+
+    public boolean isEating() {
+        return this.dataTracker.get(DATA_EATING);
+    }
+
 
     //item eating method
 
@@ -447,8 +500,8 @@ public class RaccoonEntity extends TameableEntity {
             float nutrition = food != null ? food.nutrition() : 1.0F;
             this.heal(2.0F * nutrition);
         }
-        increaseFullness();
-        this.resetEatCooldown();
+        //this.increaseFullness();
+        //this.resetEatCooldown();
     }
 
     /*
@@ -462,21 +515,42 @@ public class RaccoonEntity extends TameableEntity {
         return getFullness() >= MAX_FULLNESS;
     }
 
-    public void increaseFullness(){
-        if(!isFull()){
-            int before = getFullness();
-            int after = before + 1;
-            this.dataTracker.set(DATA_FULLNESS, this.getFullness() + 1);
+    public void increaseFullness() {
+        if (isFull()) return; // Already full
 
+        int before = getFullness();
+        int after = before + 1;
+        this.dataTracker.set(DATA_FULLNESS, after);
+
+        if (!this.getEntityWorld().isClient()) {
+            log.info("Raccoon fullness increased: {} -> {}", before, after);
+        }
+
+        // If tamed and now full, start resistance period
+        if (this.isTamed() && after >= MAX_FULLNESS) {
+            this.fullnessCooldownTicks = FULLNESS_COOLDOWN_TICKS;
+            playSound(SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, 1.0F, 1.0F);
             if (!this.getEntityWorld().isClient()) {
-                log.info("Raccoon fullness increased: {} -> {}", before, after);
+                log.info("Tamed raccoon reached full fullness: resistance period started");
             }
         }
     }
 
+
     /*
         SLEEPING HELPERS
      */
+
+    private static final int PANIC_TICKS = 20 * 8;
+
+    private static final TrackedData<Boolean> DATA_PANIC_MODE =
+            DataTracker.registerData(RaccoonEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+
+    private int panicTicks = 0;
+
+    public boolean isPanic(){
+        return this.dataTracker.get(DATA_PANIC_MODE);
+    }
 
     public boolean isSleeping() {
         return this.dataTracker.get(DATA_SLEEPING);
@@ -486,40 +560,65 @@ public class RaccoonEntity extends TameableEntity {
 
         if(!canSleepHere()) return;
 
+
         this.sleepTicks = 0;
         this.dataTracker.set(DATA_SLEEPING, true);
+        this.setSitting(false);
         this.getNavigation().stop();
         this.setVelocity(0, this.getVelocity().y, 0);
 
-        this.setPose(EntityPose.SLEEPING);
 
-        if (!this.getEntityWorld().isClient()) {
+
+        /*if (!this.getEntityWorld().isClient()) {
             log.info("Raccoon started sleeping at light level {}",
                     this.getEntityWorld().getLightLevel(this.getBlockPos()));
-        }
+        }*/
     }
 
     public boolean canSleepHere() {
+        if (this.isTamed()) return false;
+        if (this.dataTracker.get(DATA_PANIC_MODE)) return false;
         if (!this.isFull()) return false;
-
-        // tamed raccoons must already be sitting
-        if (this.isTamed() && !this.isInSittingPose()) return false;
 
         int light = this.getEntityWorld().getLightLevel(this.getBlockPos());
         return light <= MAX_SLEEP_LIGHT;
     }
 
-    public void stopSleeping() {
+
+    public void wake() {
         this.sleepTicks = 0;
         this.dataTracker.set(DATA_SLEEPING, false);
 
-        // reset fullness on wake
-        if (!this.getEntityWorld().isClient()) {
-            log.info("Raccoon woke up, fullness reset from {} to 0", getFullness());
-        }
+        // Fully rested : reset fullness
         this.dataTracker.set(DATA_FULLNESS, 0);
 
-        this.setPose(this.isInSittingPose() ? EntityPose.SITTING : EntityPose.STANDING);
+        this.getNavigation().stop();
+        this.velocityDirty = false;
+        if (!this.getEntityWorld().isClient()) {
+            log.info("Raccoon woken, fullness reset");
+        }
+
+    }
+
+
+
+
+    @Override
+    public boolean damage(ServerWorld world, DamageSource source, float amount) {
+        boolean result = super.damage(world, source, amount);
+
+        if (result) {
+            // Enter panic mode
+            wake();
+            this.dataTracker.set(DATA_PANIC_MODE, true);
+            this.panicTicks = PANIC_TICKS;
+
+            if (this.isSleeping()) {
+                wake();
+            }
+        }
+
+        return result;
     }
 
 
@@ -528,9 +627,15 @@ public class RaccoonEntity extends TameableEntity {
      */
 
 
+
     @Nullable
     @Override
     protected SoundEvent getAmbientSound() {
+
+        if(this.isSleeping()){
+            return SoundEvents.ENTITY_FOX_SLEEP;
+        }
+
         return ModSounds.RACCOON_IDLE;
     }
 
