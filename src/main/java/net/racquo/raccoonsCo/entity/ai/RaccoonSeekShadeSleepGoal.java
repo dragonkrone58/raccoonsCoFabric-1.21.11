@@ -20,7 +20,7 @@ public class RaccoonSeekShadeSleepGoal extends Goal {
     private double targetZ;
     private final double speed;
 
-    private static final int MAX_ATTEMPTS = 10;
+    private static final int MAX_ATTEMPTS = 15;
 
     public RaccoonSeekShadeSleepGoal(RaccoonEntity raccoon, double speed) {
         this.raccoon = raccoon;
@@ -94,7 +94,7 @@ public class RaccoonSeekShadeSleepGoal extends Goal {
 
             // viable sleeping conditions:
             if (world.isSkyVisible(candidate)) continue;
-            if (world.getLightLevel(candidate) > 11) continue;
+            if (world.getLightLevel(candidate) > 12) continue;
             if (!world.getBlockState(candidate.down()).isSideSolidFullSquare(world, candidate.down(), Direction.UP)) continue;
             if (!world.getBlockState(candidate).isAir()) continue;
 

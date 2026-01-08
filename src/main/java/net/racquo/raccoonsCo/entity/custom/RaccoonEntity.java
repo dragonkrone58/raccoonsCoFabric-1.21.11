@@ -73,7 +73,8 @@ public class RaccoonEntity extends TameableEntity {
     public static final int MAX_FULLNESS = 3;
     private static final TrackedData<Integer> DATA_FULLNESS =
             DataTracker.registerData(RaccoonEntity.class, TrackedDataHandlerRegistry.INTEGER);
-    private static final int FULLNESS_COOLDOWN_TICKS = 20 * 60; // 1 minute
+    //ALTER TIMER FOR LONGER TAMED RACCOON BUFF
+    private static final int FULLNESS_COOLDOWN_TICKS = 20 * 300; // 5 minutes
     private int fullnessCooldownTicks = 0;
 
     //TAMED BUFF
@@ -82,14 +83,16 @@ public class RaccoonEntity extends TameableEntity {
 
 
     //SLEEPING
-    private static final int SLEEP_DURATION_TICKS = 20 * 60; // 1 minute
-    private static final int MAX_SLEEP_LIGHT = 11;
+    //ALTER TIMER FOR LONGER SLEEPING TIME
+    private static final int SLEEP_DURATION_TICKS = 20 * 300; // 5 minutes
+    private static final int MAX_SLEEP_LIGHT = 12;
     private static final TrackedData<Boolean> DATA_SLEEPING =
             DataTracker.registerData(RaccoonEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     private int sleepTicks = 0;
 
     // FULLNESS TIMEOUT
-    private static final int FULL_SLEEP_SEARCH_TICKS = 20 * 30; // 30 seconds
+    //ALTER TIMER FOR LONGER SLEEP SEARCHING TIME
+    private static final int FULL_SLEEP_SEARCH_TICKS = 20 * 120;
     private int fullSleepSearchTicks = 0;
 
     //LIST OF FOOD ITEMS RACCOONS WILL EAT
