@@ -12,6 +12,7 @@ import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.MobEntity;
+import net.minecraft.entity.passive.ChickenEntity;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -34,10 +35,7 @@ import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.racquo.raccoonsCo.entity.ModEntities;
-import net.racquo.raccoonsCo.entity.ai.RaccoonEatFoodGoal;
-import net.racquo.raccoonsCo.entity.ai.RaccoonFollowParentGoal;
-import net.racquo.raccoonsCo.entity.ai.RaccoonSeekShadeSleepGoal;
-import net.racquo.raccoonsCo.entity.ai.RaccoonTemptGoal;
+import net.racquo.raccoonsCo.entity.ai.*;
 import net.racquo.raccoonsCo.item.ModItems;
 import net.racquo.raccoonsCo.sound.ModSounds;
 import org.jspecify.annotations.Nullable;
@@ -90,6 +88,9 @@ public class RaccoonEntity extends TameableEntity {
             DataTracker.registerData(RaccoonEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     private int sleepTicks = 0;
 
+    // FULLNESS TIMEOUT
+    private static final int FULL_SLEEP_SEARCH_TICKS = 20 * 30; // 30 seconds
+    private int fullSleepSearchTicks = 0;
 
     //LIST OF FOOD ITEMS RACCOONS WILL EAT
     private static final List<ItemConvertible> RACCOON_EATABLES =
@@ -133,21 +134,27 @@ public class RaccoonEntity extends TameableEntity {
         this.goalSelector.add(0, new SwimGoal(this));
         this.goalSelector.add(1, new TameableEntity.TameableEscapeDangerGoal(1.5D, DamageTypeTags.PANIC_ENVIRONMENTAL_CAUSES));
         this.goalSelector.add(2, new SitGoal(this));
+        this.targetSelector.add(4, new ActiveTargetGoal<>(
+                this,
+                ChickenEntity.class,
+                true
+        ));
         this.goalSelector.add(3, new EscapeDangerGoal(this, 1.6D));
-        this.goalSelector.add(4, new RaccoonSeekShadeSleepGoal(this, 1.2D));
-        this.goalSelector.add(5, new FollowOwnerGoal(this, 1.2D, 10.0F, 2.0F));
+        this.goalSelector.add(5, new RaccoonSeekShadeSleepGoal(this, 1.2D));
+        this.goalSelector.add(6, new FollowOwnerGoal(this, 1.2D, 10.0F, 2.0F));
+        this.goalSelector.add(7, new RaccoonAttackGoal(this, 1.4D));
 
-        this.goalSelector.add(6, new AnimalMateGoal(this, 1.15D));
-        this.goalSelector.add(7, new RaccoonEatFoodGoal(this));
-        this.goalSelector.add(8, new RaccoonTemptGoal(this, 1.25D,
+        this.goalSelector.add(8, new AnimalMateGoal(this, 1.15D));
+        this.goalSelector.add(9, new RaccoonEatFoodGoal(this));
+        this.goalSelector.add(10, new RaccoonTemptGoal(this, 1.25D,
                 RACCOON_TEMPT_INGREDIENT));
 
 
-        this.goalSelector.add(9, new RaccoonFollowParentGoal(this, 1.1D));
+        this.goalSelector.add(11, new RaccoonFollowParentGoal(this, 1.1D));
 
-        this.goalSelector.add(10, new WanderAroundFarGoal(this, 1.0D));
-        this.goalSelector.add(11, new LookAtEntityGoal(this, PlayerEntity.class, 4.0F));
-        this.goalSelector.add(12, new LookAroundGoal(this));
+        this.goalSelector.add(12, new WanderAroundFarGoal(this, 1.0D));
+        this.goalSelector.add(13, new LookAtEntityGoal(this, PlayerEntity.class, 4.0F));
+        this.goalSelector.add(14, new LookAroundGoal(this));
 
 
     }
@@ -162,7 +169,9 @@ public class RaccoonEntity extends TameableEntity {
                 .add(EntityAttributes.MOVEMENT_SPEED, 0.25D)
                 .add(EntityAttributes.FOLLOW_RANGE, 32.0D)
                 .add(EntityAttributes.TEMPT_RANGE, 12)
-                .add(EntityAttributes.SAFE_FALL_DISTANCE, 5.0F);
+                .add(EntityAttributes.SAFE_FALL_DISTANCE, 5.0F)
+                .add(EntityAttributes.ATTACK_DAMAGE, 1.0D);
+
         //.add(EntityAttributes.WAYPOINT_TRANSMIT_RANGE, 1.0D)
         //MAY BE USEFUL FOR COONSKIN CAP mechanic
     }
@@ -313,6 +322,24 @@ public class RaccoonEntity extends TameableEntity {
                     log.info("Tamed raccoon fullness reset after resistance period");
                 }
             }
+        }
+
+        // Track time spent full but not sleeping (wild raccoons only)
+        if (!this.getEntityWorld().isClient()
+                && !this.isTamed()
+                && this.isFull()
+                && !this.isSleeping()
+                && !this.isPanic()) {
+
+            fullSleepSearchTicks++;
+
+            if (fullSleepSearchTicks >= FULL_SLEEP_SEARCH_TICKS) {
+                resetFullnessFromSleepFailure();
+                fullSleepSearchTicks = 0;
+            }
+        } else {
+            // Reset timer if not in valid searching state
+            fullSleepSearchTicks = 0;
         }
 
         //sleeping:
@@ -610,6 +637,7 @@ public class RaccoonEntity extends TameableEntity {
 
 
         this.sleepTicks = 0;
+        this.fullSleepSearchTicks = 0;
         this.dataTracker.set(DATA_SLEEPING, true);
         this.setSitting(false);
         this.getNavigation().stop();
@@ -617,6 +645,7 @@ public class RaccoonEntity extends TameableEntity {
 
     }
 
+    //RACCOON SLEEP SPOT SEARCHING
     public boolean canSleepHere() {
         if (this.isTamed()) return false;
         if (this.dataTracker.get(DATA_PANIC_MODE)) return false;
@@ -626,15 +655,16 @@ public class RaccoonEntity extends TameableEntity {
         return light <= MAX_SLEEP_LIGHT;
     }
 
-
+    //RACCOON SLEEP WAKE
     public void wakeNatural() {
         if(!isSleeping()) return;
 
         this.sleepTicks = 0;
         this.dataTracker.set(DATA_SLEEPING, false);
 
-        // Fully rested : reset fullness
+        // Fully rested : reset fullness & timer
         this.dataTracker.set(DATA_FULLNESS, 0);
+        this.fullSleepSearchTicks = 0;
 
         this.getNavigation().stop();
         this.velocityDirty = false;
@@ -644,11 +674,14 @@ public class RaccoonEntity extends TameableEntity {
         }
     }
 
+    //RACCOON SLEEP INTERRUPTED
     public void wakeInterrupted(){
         if(!isSleeping()) return;
 
         sleepTicks = 0;
         dataTracker.set(DATA_SLEEPING, false);
+
+        this.fullSleepSearchTicks = 0;
 
         getNavigation().stop();
         velocityDirty = false;
@@ -657,6 +690,8 @@ public class RaccoonEntity extends TameableEntity {
             log.info("Raccoon woke due to interruption, fullness preserved");
         }
     }
+
+    //ON RACCOON DAMAGE, WAKE AND PANIC
 
     @Override
     public boolean damage(ServerWorld world, DamageSource source, float amount) {
@@ -671,6 +706,38 @@ public class RaccoonEntity extends TameableEntity {
 
         return result;
     }
+
+    //AFTER 10 FAILED SLEEP ATTEMPTS, RESET FULLNESS
+    public void resetFullnessFromSleepFailure() {
+        if (this.isSleeping()) return;
+
+        this.dataTracker.set(DATA_FULLNESS, 0);
+
+        if (!this.getEntityWorld().isClient()) {
+            log.info("Raccoon failed to find sleep spot — fullness reset");
+        }
+    }
+
+
+    /*
+        ATTACK HELPERS
+     */
+
+    @Override
+    public void setTarget(@Nullable LivingEntity target) {
+        LivingEntity previous = this.getTarget();
+        super.setTarget(target);
+
+        if (!this.getEntityWorld().isClient()
+                && target instanceof ChickenEntity
+                && previous == null
+                && !this.isTamed()
+                && !this.isFull()) {
+
+            this.playSound(SoundEvents.ENTITY_FOX_AGGRO, 1.0F, 1.0F);
+        }
+    }
+
 
     /*
         SOUNDS
@@ -698,6 +765,7 @@ public class RaccoonEntity extends TameableEntity {
     protected SoundEvent getDeathSound() {
         return ModSounds.RACCOON_DEATH;
     }
+
 
 
     /*
