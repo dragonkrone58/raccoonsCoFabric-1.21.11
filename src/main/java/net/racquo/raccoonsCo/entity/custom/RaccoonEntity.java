@@ -286,7 +286,6 @@ public class RaccoonEntity extends TameableEntity {
                 this.currentEatingStack = ItemStack.EMPTY;
 
                 increaseFullness();
-                resetEatCooldown();
             }
         }
 
@@ -500,6 +499,8 @@ public class RaccoonEntity extends TameableEntity {
 
     public void consumeDroppedFood(ItemEntity itemEntity) {
         if (this.getEntityWorld().isClient()) return;
+
+        if(this.eatingCooldown > 0) return;
         if (this.isInSittingPose()) return;
         if (this.isFull()) return;
 
@@ -510,6 +511,8 @@ public class RaccoonEntity extends TameableEntity {
         this.eatingTicks = EATING_ANIMATION_DURATION;
         this.dataTracker.set(DATA_EATING, true);
         this.currentEatingStack = itemStack.copyWithCount(1);
+
+        this.resetEatCooldown();
 
 
         // Remove 1 item
