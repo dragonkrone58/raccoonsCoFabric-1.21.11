@@ -37,5 +37,15 @@
       "raccoonsco:raccoon_eats2",
       "raccoonsco:raccoon_eats3"
     ]
+  },
+  "raccoon_sleeps": {
+    "subtitle": "Raccoon snores",
+    "sounds": [
+      "raccoonsco:raccoon_sleeps1",
+      "raccoonsco:raccoon_sleeps2",
+      "raccoonsco:raccoon_sleeps3",
+      "raccoonsco:raccoon_sleeps4",
+      "raccoonsco:raccoon_sleeps5"
+    ]
   }
 }

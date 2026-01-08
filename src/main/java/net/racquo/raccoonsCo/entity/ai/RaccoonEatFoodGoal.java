@@ -22,6 +22,7 @@ public class RaccoonEatFoodGoal extends Goal {
         if (raccoon. isInSittingPose()) return false;
         if (raccoon.isSleeping()) return false;
         if(!raccoon.canEatDroppedFood()) return false;
+        if(raccoon.isFull()) return false;
 
 
         List<ItemEntity> items = raccoon.getEntityWorld().getEntitiesByClass(
@@ -41,7 +42,9 @@ public class RaccoonEatFoodGoal extends Goal {
         return targetFood != null
                 && targetFood.isAlive()
                 && !raccoon.isInSittingPose()
-                && raccoon.squaredDistanceTo(targetFood) > 1.2;
+                && raccoon.squaredDistanceTo(targetFood) > 1.2
+                && !raccoon.isSleeping()
+                && !raccoon.isFull();
     }
 
     @Override

@@ -37,6 +37,7 @@ import net.racquo.raccoonsCo.entity.ModEntities;
 import net.racquo.raccoonsCo.entity.ai.RaccoonEatFoodGoal;
 import net.racquo.raccoonsCo.entity.ai.RaccoonFollowParentGoal;
 import net.racquo.raccoonsCo.entity.ai.RaccoonSeekShadeSleepGoal;
+import net.racquo.raccoonsCo.entity.ai.RaccoonTemptGoal;
 import net.racquo.raccoonsCo.item.ModItems;
 import net.racquo.raccoonsCo.sound.ModSounds;
 import org.jspecify.annotations.Nullable;
@@ -47,10 +48,7 @@ import java.util.List;
 import net.minecraft.util.math.random.Random;
 
 /*
-    NEXT STEPS: When sleep is interrupted by damage, raccoon will panic around. When settled back down, will
-    seek sleeping spot again without fullness being depleted.
-    fullness only reset if waking up 'naturally' rather than interrupted
-    split wake() into two
+    NEXT STEPS: RACCOONS WILL STILL GET ATTRACTED TO DROPPED ITEMS EVEN IF THEY ARE FULLNESS 3. This should not happen
  */
 
 
@@ -145,8 +143,8 @@ public class RaccoonEntity extends TameableEntity {
 
         this.goalSelector.add(6, new AnimalMateGoal(this, 1.15D));
         this.goalSelector.add(7, new RaccoonEatFoodGoal(this));
-        this.goalSelector.add(8, new TemptGoal(this, 1.25D,
-                RACCOON_TEMPT_INGREDIENT, false));
+        this.goalSelector.add(8, new RaccoonTemptGoal(this, 1.25D,
+                RACCOON_TEMPT_INGREDIENT));
 
 
         this.goalSelector.add(9, new RaccoonFollowParentGoal(this, 1.1D));
@@ -664,11 +662,6 @@ public class RaccoonEntity extends TameableEntity {
         }
     }
 
-
-
-
-
-
     @Override
     public boolean damage(ServerWorld world, DamageSource source, float amount) {
         boolean result = super.damage(world, source, amount);
@@ -683,7 +676,6 @@ public class RaccoonEntity extends TameableEntity {
         return result;
     }
 
-
     /*
         SOUNDS
      */
@@ -693,7 +685,7 @@ public class RaccoonEntity extends TameableEntity {
     protected SoundEvent getAmbientSound() {
 
         if(this.isSleeping()){
-            return SoundEvents.ENTITY_FOX_SLEEP;
+            return ModSounds.RACCOON_SLEEPS;
         }
 
         return ModSounds.RACCOON_IDLE;
