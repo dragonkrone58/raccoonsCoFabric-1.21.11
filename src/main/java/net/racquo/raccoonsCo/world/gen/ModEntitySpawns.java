@@ -14,7 +14,7 @@ import net.racquo.raccoonsCo.entity.ModEntities;
 public class ModEntitySpawns {
 
     public static void addSpawns(){
-        BiomeModifications.addSpawn(BiomeSelectors.includeByKey(BiomeKeys.FOREST, BiomeKeys.MANGROVE_SWAMP, BiomeKeys.TAIGA)
+        BiomeModifications.addSpawn(BiomeSelectors.includeByKey(BiomeKeys.FOREST, BiomeKeys.SWAMP, BiomeKeys.TAIGA)
         , SpawnGroup.CREATURE, ModEntities.RACCOON, 30, 1, 3);
 
         SpawnRestriction.register(ModEntities.RACCOON, SpawnLocationTypes.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES

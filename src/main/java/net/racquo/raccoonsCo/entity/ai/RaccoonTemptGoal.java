@@ -1,12 +1,8 @@
 package net.racquo.raccoonsCo.entity.ai;
 
 import net.minecraft.entity.ai.goal.TemptGoal;
-import net.minecraft.entity.mob.PathAwareEntity;
-import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Ingredient;
 import net.racquo.raccoonsCo.entity.custom.RaccoonEntity;
-
-import java.util.function.Predicate;
 
 public class RaccoonTemptGoal extends TemptGoal {
 

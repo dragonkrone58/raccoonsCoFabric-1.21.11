@@ -75,6 +75,7 @@ public class RaccoonRenderer extends MobEntityRenderer<RaccoonEntity, RaccoonRen
         livingEntityRenderState.sittingAnimationState.copyFrom(livingEntity.sittingAnimationState);
         livingEntityRenderState.eatingAnimationState.copyFrom(livingEntity.eatingAnimationState);
         livingEntityRenderState.sleepingAnimationState.copyFrom(livingEntity.sleepingAnimationState);
+        livingEntityRenderState.begAnimationState.copyFrom(livingEntity.begAnimationState);
 
 
         livingEntityRenderState.variant = livingEntity.getVariant();

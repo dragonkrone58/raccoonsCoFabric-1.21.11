@@ -47,11 +47,6 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 import net.minecraft.util.math.random.Random;
 
-/*
-    NEXT STEPS: RACCOONS WILL STILL GET ATTRACTED TO DROPPED ITEMS EVEN IF THEY ARE FULLNESS 3. This should not happen
- */
-
-
 public class RaccoonEntity extends TameableEntity {
 
 
@@ -61,6 +56,7 @@ public class RaccoonEntity extends TameableEntity {
     public final AnimationState sittingAnimationState = new AnimationState();
     public final AnimationState eatingAnimationState = new AnimationState();
     public final AnimationState sleepingAnimationState = new AnimationState();
+    public final AnimationState begAnimationState = new AnimationState();
 
     //EATING
     private ItemStack currentEatingStack;

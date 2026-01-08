@@ -22,6 +22,7 @@ public class RaccoonModel extends EntityModel<RaccoonRenderState> {
     private final Animation sittingAnimation;
     private final Animation eatingAnimation;
     private final Animation sleepingAnimation;
+    private final Animation begAnimation;
 
 
 
@@ -35,6 +36,7 @@ public class RaccoonModel extends EntityModel<RaccoonRenderState> {
         this.sittingAnimation = RaccoonAnimations.ANIM_RACCOON_SIT.createAnimation(root);
         this.eatingAnimation = RaccoonAnimations.ANIM_RACCOON_EATING.createAnimation(root);
         this.sleepingAnimation = RaccoonAnimations.ANIM_RACCOON_SLEEPING.createAnimation(root);
+        this.begAnimation = RaccoonAnimations.ANIM_RACCOON_BEG.createAnimation(root);
 
     }
     /*
@@ -86,6 +88,7 @@ public class RaccoonModel extends EntityModel<RaccoonRenderState> {
         this.sittingAnimation.apply(state.sittingAnimationState, state.age, 1f);
         this.eatingAnimation.apply(state.eatingAnimationState, state.age, 1f);
         this.sleepingAnimation.apply(state.sleepingAnimationState, state.age, 1f);
+        this.begAnimation.apply(state.begAnimationState, state.age, 1f);
 
 
     }
