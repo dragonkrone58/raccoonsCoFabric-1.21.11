@@ -81,9 +81,13 @@ public class RaccoonEntity extends TameableEntity {
     private int tamedBuffTicks = 0;
     private boolean hasTamedBuff = false;
 
+    //PANICKING
+    private static final int PANIC_TICKS = 20 * 8;
+    private static final TrackedData<Boolean> DATA_PANIC_MODE =
+            DataTracker.registerData(RaccoonEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+    private int panicTicks = 0;
 
     //SLEEPING
-    //ALTER TIMER FOR LONGER SLEEPING TIME
     private static final int SLEEP_DURATION_TICKS = 20 * 300; // 5 minutes
     private static final int MAX_SLEEP_LIGHT = 12;
     private static final TrackedData<Boolean> DATA_SLEEPING =
@@ -91,9 +95,12 @@ public class RaccoonEntity extends TameableEntity {
     private int sleepTicks = 0;
 
     // FULLNESS TIMEOUT
-    //ALTER TIMER FOR LONGER SLEEP SEARCHING TIME
-    private static final int FULL_SLEEP_SEARCH_TICKS = 20 * 120;
+    private static final int FULL_SLEEP_SEARCH_TICKS = 20 * 120; //2 minutes
     private int fullSleepSearchTicks = 0;
+
+    //BEGGING
+    private static final TrackedData<Boolean> DATA_BEGGING =
+            DataTracker.registerData(RaccoonEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 
     //LIST OF FOOD ITEMS RACCOONS WILL EAT
     private static final List<ItemConvertible> RACCOON_EATABLES =
@@ -165,7 +172,6 @@ public class RaccoonEntity extends TameableEntity {
     /*
         RACCOON ENTITY ATTRIBUTES
      */
-
     public static DefaultAttributeContainer.Builder createAttributes(){
         return MobEntity.createMobAttributes()
                 .add(EntityAttributes.MAX_HEALTH, 10.0D)
@@ -174,16 +180,11 @@ public class RaccoonEntity extends TameableEntity {
                 .add(EntityAttributes.TEMPT_RANGE, 12)
                 .add(EntityAttributes.SAFE_FALL_DISTANCE, 5.0F)
                 .add(EntityAttributes.ATTACK_DAMAGE, 1.0D);
-
-        //.add(EntityAttributes.WAYPOINT_TRANSMIT_RANGE, 1.0D)
-        //MAY BE USEFUL FOR COONSKIN CAP mechanic
     }
 
-
     /*
-        RACCOON ANIMATION STATES
+        RACCOON ANIMATION STATES SETUP
     */
-
     private void setupAnimationStates() {
 
         // sleeping state
@@ -197,7 +198,6 @@ public class RaccoonEntity extends TameableEntity {
             }
             return;
         }
-
         sleepingAnimationState.stop();
 
         //eating state
@@ -210,12 +210,25 @@ public class RaccoonEntity extends TameableEntity {
             }
             return;
         }
-
         eatingAnimationState.stop();
 
-        boolean sitting = this.isInSittingPose();
+        // begging state
+        if (this.isBegging()) {
+            idleAnimationState.stop();
+            sittingAnimationState.stop();
+            eatingAnimationState.stop();
+            sleepingAnimationState.stop();
+
+            if (!begAnimationState.isRunning()) {
+                begAnimationState.start(this.age);
+            }
+            return;
+        }
+        begAnimationState.stop();
 
         //sitting state
+        boolean sitting = this.isInSittingPose();
+
         if (sitting) {
             idleAnimationState.stop();
 
@@ -236,10 +249,12 @@ public class RaccoonEntity extends TameableEntity {
         return this.isSleeping() || super.isImmobile();
     }
 
+    /*
+        RACCOON ENTITY TICKING
+     */
 
     @Override
     public void tick() {
-
 
         super.tick();
 
@@ -280,7 +295,6 @@ public class RaccoonEntity extends TameableEntity {
         }
 
         //eating:
-
         if(this.eatingCooldown > 0){
             this.eatingCooldown--;
         }
@@ -293,7 +307,6 @@ public class RaccoonEntity extends TameableEntity {
             }
 
             //eating effects timeline
-
             int elapsed = EATING_ANIMATION_DURATION - this.eatingTicks;
             if(elapsed >= EATING_SOUND_START && elapsed <= EATING_SOUND_END){
                 if(elapsed % 4 == 0 ){
@@ -305,14 +318,16 @@ public class RaccoonEntity extends TameableEntity {
             if(elapsed == BURP_TICK){
                 playSound(SoundEvents.ENTITY_PLAYER_BURP, 1.0F, 1.0F);
             }
-
+            //finish eating
             if(this.eatingTicks == 0 && !this.getEntityWorld().isClient()){
                 this.dataTracker.set(DATA_EATING, false);
+                this.setBegging(false);
                 this.currentEatingStack = ItemStack.EMPTY;
 
                 increaseFullness();
             }
         }
+
 
         // Handle fullness cooldown for tamed raccoons
         if (this.isTamed() && this.fullnessCooldownTicks > 0) {
@@ -385,13 +400,13 @@ public class RaccoonEntity extends TameableEntity {
         builder.add(DATA_FULLNESS, 0);
         builder.add(DATA_SLEEPING, false);
         builder.add(DATA_PANIC_MODE, false);
+        builder.add(DATA_BEGGING, false);
     }
 
 
     /*
         RACCOON CHILD CREATOR
     */
-
     @Override
     public @Nullable PassiveEntity createChild(ServerWorld world, PassiveEntity entity) {
         RaccoonEntity baby = ModEntities.RACCOON.create(world, SpawnReason.BREEDING);
@@ -405,12 +420,9 @@ public class RaccoonEntity extends TameableEntity {
         return baby;
     }
 
-
-
     /*
         TAMING & MOB INTERACTION
     */
-
     @Override
     public ActionResult interactMob(PlayerEntity player, Hand hand) {
 
@@ -540,7 +552,9 @@ public class RaccoonEntity extends TameableEntity {
     }
 
 
-    //item eating method
+    /*
+        EATING DROPPED FOODS:
+     */
 
     public void consumeDroppedFood(ItemEntity itemEntity) {
         if (this.getEntityWorld().isClient()) return;
@@ -551,7 +565,7 @@ public class RaccoonEntity extends TameableEntity {
 
         ItemStack itemStack = itemEntity.getStack();
 
-
+        this.setBegging(false);
         this.getNavigation().stop();
         this.eatingTicks = EATING_ANIMATION_DURATION;
         this.dataTracker.set(DATA_EATING, true);
@@ -586,7 +600,7 @@ public class RaccoonEntity extends TameableEntity {
     }
 
     public void increaseFullness() {
-        if (isFull()) return; // Already full
+        if (isFull()) return;
 
         int before = getFullness();
         int after = before + 1;
@@ -596,7 +610,7 @@ public class RaccoonEntity extends TameableEntity {
             log.info("Raccoon fullness increased: {} -> {}", before, after);
         }
 
-        // If tamed and now full, start resistance period
+        // If tamed and now full, start buff period
         if (this.isTamed() && after >= MAX_FULLNESS) {
             hasTamedBuff = true;
             tamedBuffTicks = FULLNESS_COOLDOWN_TICKS;
@@ -618,14 +632,6 @@ public class RaccoonEntity extends TameableEntity {
     /*
         SLEEPING HELPERS
      */
-
-    private static final int PANIC_TICKS = 20 * 8;
-
-    private static final TrackedData<Boolean> DATA_PANIC_MODE =
-            DataTracker.registerData(RaccoonEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
-
-    private int panicTicks = 0;
-
     public boolean isPanic(){
         return this.dataTracker.get(DATA_PANIC_MODE);
     }
@@ -638,14 +644,12 @@ public class RaccoonEntity extends TameableEntity {
 
         if(!canSleepHere()) return;
 
-
         this.sleepTicks = 0;
         this.fullSleepSearchTicks = 0;
         this.dataTracker.set(DATA_SLEEPING, true);
         this.setSitting(false);
         this.getNavigation().stop();
         this.setVelocity(0, this.getVelocity().y, 0);
-
     }
 
     //RACCOON SLEEP SPOT SEARCHING
@@ -695,7 +699,6 @@ public class RaccoonEntity extends TameableEntity {
     }
 
     //ON RACCOON DAMAGE, WAKE AND PANIC
-
     @Override
     public boolean damage(ServerWorld world, DamageSource source, float amount) {
         boolean result = super.damage(world, source, amount);
@@ -710,7 +713,7 @@ public class RaccoonEntity extends TameableEntity {
         return result;
     }
 
-    //AFTER 10 FAILED SLEEP ATTEMPTS, RESET FULLNESS
+    //AFTER FAILED SLEEP ATTEMPTS, RESET FULLNESS
     public void resetFullnessFromSleepFailure() {
         if (this.isSleeping()) return;
 
@@ -725,7 +728,6 @@ public class RaccoonEntity extends TameableEntity {
     /*
         ATTACK HELPERS
      */
-
     @Override
     public void setTarget(@Nullable LivingEntity target) {
         LivingEntity previous = this.getTarget();
@@ -741,19 +743,27 @@ public class RaccoonEntity extends TameableEntity {
         }
     }
 
+    /*
+        BEGGING HELPERS
+     */
+    public boolean isBegging() {
+        return this.dataTracker.get(DATA_BEGGING);
+    }
+
+    public void setBegging(boolean begging) {
+        this.dataTracker.set(DATA_BEGGING, begging);
+    }
+
 
     /*
         SOUNDS
      */
-
     @Nullable
     @Override
     protected SoundEvent getAmbientSound() {
-
         if(this.isSleeping()){
             return ModSounds.RACCOON_SLEEPS;
         }
-
         return ModSounds.RACCOON_IDLE;
     }
 
@@ -769,12 +779,9 @@ public class RaccoonEntity extends TameableEntity {
         return ModSounds.RACCOON_DEATH;
     }
 
-
-
     /*
         VARIANT METHODS
      */
-
     public RaccoonVariant getVariant(){
         return RaccoonVariant.byId(this.getTypeVariant() & 255);
     }
@@ -797,7 +804,6 @@ public class RaccoonEntity extends TameableEntity {
     public void readData(ReadView view) {
         super.readData(view);
         this.dataTracker.set(DATA_ID_TYPE_VARIANT, view.getInt("Variant", 0));
-
     }
 
     private static RaccoonVariant pickVariant(Random random, @Nullable RegistryKey<Biome> biomeKey){
