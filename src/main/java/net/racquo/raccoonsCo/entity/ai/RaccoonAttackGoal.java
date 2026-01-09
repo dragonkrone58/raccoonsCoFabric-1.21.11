@@ -2,7 +2,6 @@ package net.racquo.raccoonsCo.entity.ai;
 
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.MeleeAttackGoal;
-import net.minecraft.entity.passive.FoxEntity;
 import net.minecraft.sound.SoundEvents;
 import net.racquo.raccoonsCo.entity.custom.RaccoonEntity;
 
@@ -26,7 +25,7 @@ public class RaccoonAttackGoal extends MeleeAttackGoal {
     @Override
     protected void attack(LivingEntity target) {
         if (this.canAttack(target)) {
-            //this.resetCooldown();
+            this.resetCooldown();
             this.mob.tryAttack(getServerWorld(this.mob), target);
             raccoon.playSound(SoundEvents.ENTITY_FOX_BITE, 1.0F, 1.0F);
         }

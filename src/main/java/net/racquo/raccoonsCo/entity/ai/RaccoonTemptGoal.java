@@ -7,7 +7,7 @@ import net.racquo.raccoonsCo.entity.custom.RaccoonEntity;
 public class RaccoonTemptGoal extends TemptGoal {
 
     private final RaccoonEntity raccoon;
-    private static final double BEG_DISTANCE = 1.5D;
+    private static final double BEG_DISTANCE = 2.5D;
 
     public RaccoonTemptGoal(RaccoonEntity raccoon, double speed, Ingredient ingredient){
         super(raccoon, speed, ingredient, false);
@@ -35,6 +35,7 @@ public class RaccoonTemptGoal extends TemptGoal {
 
         if (raccoon.isEating() || raccoon.isFull() || raccoon.isSleeping()) {
             raccoon.setBegging(false);
+            this.stop();
             return;
         }
 

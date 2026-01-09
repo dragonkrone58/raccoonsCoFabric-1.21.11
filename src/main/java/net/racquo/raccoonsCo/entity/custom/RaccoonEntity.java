@@ -63,7 +63,7 @@ public class RaccoonEntity extends TameableEntity {
     private static final TrackedData<Boolean> DATA_EATING =
             DataTracker.registerData(RaccoonEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 
-    private static final int EATING_COOLDOWN_TICKS = 100;
+    private static final int EATING_COOLDOWN_TICKS = 20;
     private static final int EATING_ANIMATION_DURATION = 70;
     private static final int EATING_SOUND_START = 20;
     private static final int EATING_SOUND_END = 50;
@@ -186,12 +186,14 @@ public class RaccoonEntity extends TameableEntity {
         RACCOON ANIMATION STATES SETUP
     */
     private void setupAnimationStates() {
+        //eating state
 
         // sleeping state
         if (this.isSleeping()) {
             idleAnimationState.stop();
             sittingAnimationState.stop();
             eatingAnimationState.stop();
+            begAnimationState.stop();
 
             if (!sleepingAnimationState.isRunning()) {
                 sleepingAnimationState.start(this.age);
@@ -201,9 +203,11 @@ public class RaccoonEntity extends TameableEntity {
         sleepingAnimationState.stop();
 
         //eating state
-        if(this.dataTracker.get(DATA_EATING)) {
+        if(this.isEating()) {
             idleAnimationState.stop();
             sittingAnimationState.stop();
+            begAnimationState.stop();
+            sleepingAnimationState.stop();
 
             if(!eatingAnimationState.isRunning()){
                 eatingAnimationState.start(this.age);
@@ -257,6 +261,7 @@ public class RaccoonEntity extends TameableEntity {
     public void tick() {
 
         super.tick();
+
 
         //panic ticks
 
@@ -528,6 +533,14 @@ public class RaccoonEntity extends TameableEntity {
         EATING DROPPED ITEMS HELPERS
     */
 
+    public void startEating(ItemStack stack) {
+        this.dataTracker.set(DATA_EATING, true);
+        this.setBegging(false);
+        this.currentEatingStack = stack.copyWithCount(1);
+        this.eatingTicks = EATING_ANIMATION_DURATION;
+        this.getNavigation().stop();
+    }
+
     //item eating eligibility helper
     public boolean canEatItem(ItemStack itemStack) {
 
@@ -565,11 +578,7 @@ public class RaccoonEntity extends TameableEntity {
 
         ItemStack itemStack = itemEntity.getStack();
 
-        this.setBegging(false);
-        this.getNavigation().stop();
-        this.eatingTicks = EATING_ANIMATION_DURATION;
-        this.dataTracker.set(DATA_EATING, true);
-        this.currentEatingStack = itemStack.copyWithCount(1);
+        this.startEating(itemStack);
 
         this.resetEatCooldown();
 
@@ -751,6 +760,7 @@ public class RaccoonEntity extends TameableEntity {
     }
 
     public void setBegging(boolean begging) {
+        if(begging && this.isEating()) return;
         this.dataTracker.set(DATA_BEGGING, begging);
     }
 

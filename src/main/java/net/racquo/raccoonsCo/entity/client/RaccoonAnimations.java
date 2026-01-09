@@ -694,17 +694,18 @@ public class RaccoonAnimations  {
 
     public static final AnimationDefinition ANIM_RACCOON_BEG = AnimationDefinition.Builder.create(0.6667F).looping()
             .addBoneAnimation("frontLegL", new Transformation(Transformation.Targets.ROTATE,
-                    new Keyframe(0.0F, AnimationHelper.createRotationalVector(-120.0F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR),
-                    new Keyframe(0.3333F, AnimationHelper.createRotationalVector(-109.5684F, 26.128F, -8.8967F), Transformation.Interpolations.LINEAR),
-                    new Keyframe(0.6667F, AnimationHelper.createRotationalVector(-120.0F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR)
+                    new Keyframe(0.0F, AnimationHelper.createRotationalVector(-99.5684F, 26.128F, -8.8967F), Transformation.Interpolations.LINEAR),
+                    new Keyframe(0.3333F, AnimationHelper.createRotationalVector(-124.5684F, 26.128F, -8.8967F), Transformation.Interpolations.LINEAR),
+                    new Keyframe(0.6667F, AnimationHelper.createRotationalVector(-99.5684F, 26.128F, -8.8967F), Transformation.Interpolations.LINEAR)
             ))
             .addBoneAnimation("frontLegL", new Transformation(Transformation.Targets.MOVE_ORIGIN,
-                    new Keyframe(0.0F, AnimationHelper.createTranslationalVector(1.0F, 5.0F, 2.0F), Transformation.Interpolations.LINEAR)
+                    new Keyframe(0.0F, AnimationHelper.createTranslationalVector(1.0F, 5.0F, 2.0F), Transformation.Interpolations.LINEAR),
+                    new Keyframe(0.6667F, AnimationHelper.createTranslationalVector(1.0F, 5.0F, 2.0F), Transformation.Interpolations.LINEAR)
             ))
             .addBoneAnimation("frontLegR", new Transformation(Transformation.Targets.ROTATE,
-                    new Keyframe(0.0F, AnimationHelper.createRotationalVector(-120.0F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR),
-                    new Keyframe(0.3333F, AnimationHelper.createRotationalVector(-110.0053F, -28.4804F, 9.8491F), Transformation.Interpolations.LINEAR),
-                    new Keyframe(0.6667F, AnimationHelper.createRotationalVector(-120.0F, 0.0F, 0.0F), Transformation.Interpolations.LINEAR)
+                    new Keyframe(0.0F, AnimationHelper.createRotationalVector(-100.0053F, -28.4804F, 9.8491F), Transformation.Interpolations.LINEAR),
+                    new Keyframe(0.3333F, AnimationHelper.createRotationalVector(-125.0053F, -28.4804F, 9.8491F), Transformation.Interpolations.LINEAR),
+                    new Keyframe(0.6667F, AnimationHelper.createRotationalVector(-100.0053F, -28.4804F, 9.8491F), Transformation.Interpolations.LINEAR)
             ))
             .addBoneAnimation("frontLegR", new Transformation(Transformation.Targets.MOVE_ORIGIN,
                     new Keyframe(0.0F, AnimationHelper.createTranslationalVector(-1.0F, 5.0F, 2.0F), Transformation.Interpolations.LINEAR)
