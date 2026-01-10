@@ -28,6 +28,7 @@ public class ModModelProvider extends FabricModelProvider {
         blockStateModelGenerator.registerFlowerPotPlantAndItem(ModBlocks.VIOLET, ModBlocks.VIOLET_FLOWER_POT, BlockStateModelGenerator.CrossType.NOT_TINTED );
         blockStateModelGenerator.registerFlowerPotPlantAndItem(ModBlocks.LUPINE, ModBlocks.LUPINE_FLOWER_POT, BlockStateModelGenerator.CrossType.NOT_TINTED );
         blockStateModelGenerator.registerFlowerPotPlantAndItem(ModBlocks.MILKWEED, ModBlocks.MILKWEED_FLOWER_POT, BlockStateModelGenerator.CrossType.NOT_TINTED );
+        blockStateModelGenerator.registerTintableCross(ModBlocks.SWAMP_GRASS, BlockStateModelGenerator.CrossType.NOT_TINTED );
     }
 
     @Override
@@ -44,8 +45,7 @@ public class ModModelProvider extends FabricModelProvider {
 
         itemModelGenerator.register(ModItems.RACCOON_SPAWN_EGG, Models.GENERATED);
         itemModelGenerator.register(ModItems.CRAWFISH_SPAWN_EGG, Models.GENERATED);
-
-
+        itemModelGenerator.register(ModBlocks.SWAMPY_REEDS.asItem(), Models.GENERATED);
     }
 }
 

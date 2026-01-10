@@ -18,7 +18,8 @@ public class ModConfiguredFeatures {
     public static final RegistryKey<ConfiguredFeature<?, ?>> VIOLET_KEY = registerKey("violet");
     public static final RegistryKey<ConfiguredFeature<?, ?>> LUPINE_KEY = registerKey("lupine");
     public static final RegistryKey<ConfiguredFeature<?, ?>> MILKWEED_KEY = registerKey("milkweed");
-
+    public static final RegistryKey<ConfiguredFeature<?, ?>> SWAMPY_REEDS_KEY = registerKey("swampy_reeds");
+    public static final RegistryKey<ConfiguredFeature<?, ?>> SWAMP_GRASS_KEY = registerKey("swamp_grass");
 
     public static void bootstrap(Registerable<ConfiguredFeature<?, ?>> context){
         //define generation parameters
@@ -33,6 +34,13 @@ public class ModConfiguredFeatures {
 
         register(context, MILKWEED_KEY, Feature.RANDOM_PATCH, ConfiguredFeatures.createRandomPatchFeatureConfig(Feature.SIMPLE_BLOCK,
                 new SimpleBlockFeatureConfig(BlockStateProvider.of(ModBlocks.MILKWEED.getDefaultState())), List.of(Blocks.GRASS_BLOCK, Blocks.MUD)));
+
+        register(context, SWAMPY_REEDS_KEY, Feature.RANDOM_PATCH, ConfiguredFeatures.createRandomPatchFeatureConfig(Feature.SIMPLE_BLOCK,
+                new SimpleBlockFeatureConfig(BlockStateProvider.of(ModBlocks.SWAMPY_REEDS.getDefaultState())), List.of(Blocks.GRASS_BLOCK)));
+
+        register(context, SWAMP_GRASS_KEY, Feature.RANDOM_PATCH, ConfiguredFeatures.createRandomPatchFeatureConfig(Feature.SIMPLE_BLOCK,
+                new SimpleBlockFeatureConfig(BlockStateProvider.of(ModBlocks.SWAMP_GRASS.getDefaultState())), List.of(Blocks.GRASS_BLOCK, Blocks.MUD)));
+
 
     }
 

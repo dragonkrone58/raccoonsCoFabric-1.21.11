@@ -20,6 +20,7 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
+import net.minecraft.util.Rarity;
 import net.racquo.raccoonsCo.RaccoonsCo;
 import net.racquo.raccoonsCo.entity.ModEntities;
 
@@ -34,7 +35,9 @@ public class ModItems {
     //register items
 
     public static final Item RACCOON_PELT = registerItem( "raccoon_pelt", Item :: new);
-    //public static final Item BANDIT_POTTERY_SHERD = registerItem( "bandit_pottery_sherd", Item :: new);
+
+    //public static final Item BANDIT_POTTERY_SHERD = registerItem( "bandit_pottery_sherd",settings -> new Item(settings.rarity(Rarity.UNCOMMON)));
+
     public static final Item BOILED_EGG = registerItem( "boiled_egg",
             setting -> new Item(setting.food(ModFoodComponents.BOILED_EGG)));
 

@@ -5,6 +5,7 @@ import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.util.Identifier;
+import net.minecraft.world.gen.YOffset;
 import net.minecraft.world.gen.feature.*;
 import net.minecraft.world.gen.placementmodifier.*;
 import net.racquo.raccoonsCo.RaccoonsCo;
@@ -17,7 +18,8 @@ public class ModPlacedFeatures {
     public static final RegistryKey<PlacedFeature> VIOLET_PLACED_KEY = registerKey("violet_placed");
     public static final RegistryKey<PlacedFeature> LUPINE_PLACED_KEY = registerKey("lupine_placed");
     public static final RegistryKey<PlacedFeature> MILKWEED_PLACED_KEY = registerKey("milkweed_placed");
-
+    public static final RegistryKey<PlacedFeature> SWAMPY_REEDS_PLACED_KEY = registerKey("swampy_reeds_placed");
+    public static final RegistryKey<PlacedFeature> SWAMP_GRASS_PLACED_KEY = registerKey("swamp_grass_placed");
 
     public static void bootstrap(Registerable<PlacedFeature> context) {
         var configuredFeatures = context.getRegistryLookup(RegistryKeys.CONFIGURED_FEATURE);
@@ -38,6 +40,13 @@ public class ModPlacedFeatures {
                 RarityFilterPlacementModifier.of(15), SquarePlacementModifier.of(), PlacedFeatures.MOTION_BLOCKING_HEIGHTMAP,
                 BiomePlacementModifier.of());
 
+        register(context, SWAMPY_REEDS_PLACED_KEY, configuredFeatures.getOrThrow(ModConfiguredFeatures.SWAMPY_REEDS_KEY),
+                RarityFilterPlacementModifier.of(1), SquarePlacementModifier.of(), HeightRangePlacementModifier.uniform(YOffset.fixed(63), YOffset.fixed(63)),
+                        BiomePlacementModifier.of());
+
+        register(context, SWAMP_GRASS_PLACED_KEY, configuredFeatures.getOrThrow(ModConfiguredFeatures.SWAMP_GRASS_KEY),
+                RarityFilterPlacementModifier.of(1), SquarePlacementModifier.of(), HeightRangePlacementModifier.uniform(YOffset.fixed(63), YOffset.fixed(63)),
+                BiomePlacementModifier.of());
 
     }
     public static RegistryKey<PlacedFeature> registerKey(String name) {

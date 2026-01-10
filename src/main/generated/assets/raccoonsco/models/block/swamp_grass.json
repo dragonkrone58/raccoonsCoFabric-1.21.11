@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cross",
+  "textures": {
+    "cross": "raccoonsco:block/swamp_grass"
+  }
+}

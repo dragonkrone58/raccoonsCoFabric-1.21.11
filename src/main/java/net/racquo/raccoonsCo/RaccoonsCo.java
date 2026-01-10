@@ -3,6 +3,7 @@ package net.racquo.raccoonsCo;
 import net.fabricmc.api.ModInitializer;
 
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
+import net.minecraft.util.Identifier;
 import net.racquo.raccoonsCo.block.ModBlocks;
 import net.racquo.raccoonsCo.entity.ModEntities;
 import net.racquo.raccoonsCo.entity.custom.CrawfishEntity;
@@ -28,4 +29,9 @@ public class RaccoonsCo implements ModInitializer {
 
 
 	}
+
+    public static Identifier id(String path) {
+        return Identifier.of(MOD_ID, path);
+    }
+
 }

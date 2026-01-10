@@ -1,5 +1,6 @@
 package net.racquo.raccoonsCo.block;
 
+import com.mojang.serialization.MapCodec;
 import jdk.jshell.Snippet;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.minecraft.block.*;
@@ -18,6 +19,7 @@ import net.minecraft.registry.RegistryKeys;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Identifier;
 import net.racquo.raccoonsCo.RaccoonsCo;
+import net.racquo.raccoonsCo.block.custom.SwampyReedsBlock;
 
 import java.util.function.Function;
 
@@ -28,8 +30,28 @@ public class ModBlocks {
     public static final Block EXAMPLE_BLOCK = registerBlock("example_block",
             properties -> new Block(properties.strength(4f).requiresTool().sounds(BlockSoundGroup.COPPER)));
 
+    public static final Block SWAMPY_REEDS = registerBlock("swampy_reeds",
+            properties -> new SwampyReedsBlock(properties
+                    .mapColor(MapColor.DARK_GREEN)
+                    .noCollision()
+                    .breakInstantly()
+                    .sounds(BlockSoundGroup.GRASS)
+                    .offset(AbstractBlock.OffsetType.XZ)
+                    .pistonBehavior(PistonBehavior.DESTROY)));
 
-
+    public static final Block SWAMP_GRASS = registerBlock("swamp_grass",
+            properties -> new PlantBlock(properties
+                    .mapColor(MapColor.DARK_GREEN)
+                    .noCollision()
+                    .breakInstantly()
+                    .sounds(BlockSoundGroup.GRASS)
+                    .offset(AbstractBlock.OffsetType.XZ)
+                    .pistonBehavior(PistonBehavior.DESTROY)) {
+                @Override
+                protected MapCodec<? extends PlantBlock> getCodec() {
+                    return null;
+                }
+            });
     public static final Block MARIGOLD = registerBlock("marigold",
             properties -> new FlowerBlock(
             StatusEffects.SPEED, 4.0f, properties
@@ -127,6 +149,8 @@ public class ModBlocks {
             entries.add(ModBlocks.VIOLET);
             entries.add(ModBlocks.LUPINE);
             entries.add(ModBlocks.MILKWEED);
+            entries.add(ModBlocks.SWAMPY_REEDS);
+            entries.add(ModBlocks.SWAMP_GRASS);
         });
     }
 

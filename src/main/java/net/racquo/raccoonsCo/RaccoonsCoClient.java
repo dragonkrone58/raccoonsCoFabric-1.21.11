@@ -4,6 +4,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
+import net.minecraft.block.Block;
 import net.minecraft.client.render.BlockRenderLayer;
 import net.racquo.raccoonsCo.block.ModBlocks;
 import net.racquo.raccoonsCo.entity.ModEntities;
@@ -25,6 +26,8 @@ public class RaccoonsCoClient implements ClientModInitializer {
         BlockRenderLayerMap.putBlock(ModBlocks.LUPINE_FLOWER_POT, BlockRenderLayer.CUTOUT);
         BlockRenderLayerMap.putBlock(ModBlocks.MILKWEED, BlockRenderLayer.CUTOUT);
         BlockRenderLayerMap.putBlock(ModBlocks.MILKWEED_FLOWER_POT, BlockRenderLayer.CUTOUT);
+        BlockRenderLayerMap.putBlock(ModBlocks.SWAMPY_REEDS, BlockRenderLayer.CUTOUT);
+        BlockRenderLayerMap.putBlock(ModBlocks.SWAMP_GRASS, BlockRenderLayer.CUTOUT);
 
         EntityModelLayerRegistry.registerModelLayer(RaccoonModel.RACCOON, RaccoonModel::getTexturedModelData);
         EntityRendererRegistry.register(ModEntities.RACCOON, RaccoonRenderer::new);

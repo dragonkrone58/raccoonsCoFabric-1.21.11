@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/tall_grass_bottom",
+  "textures": {
+    "cross": "raccoonsco:block/swampy_reeds_bottom"
+  }
+}

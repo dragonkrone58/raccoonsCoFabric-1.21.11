@@ -38,6 +38,8 @@ public class ModLanguageProvider extends FabricLanguageProvider {
         translationBuilder.add(ModBlocks.LUPINE_FLOWER_POT, "Lupine Flower Pot");
         translationBuilder.add(ModBlocks.MILKWEED_FLOWER_POT, "Milkweed Flower Pot");
         translationBuilder.add(ModBlocks.MILKWEED, "Milkweed");
+        translationBuilder.add(ModBlocks.SWAMPY_REEDS, "Swamp Reeds");
+        translationBuilder.add(ModBlocks.SWAMP_GRASS, "Swamp Grass");
 
         translationBuilder.add(ModEntities.RACCOON, "Raccoon");
         translationBuilder.add(ModEntities.CRAWFISH, "Crawfish");

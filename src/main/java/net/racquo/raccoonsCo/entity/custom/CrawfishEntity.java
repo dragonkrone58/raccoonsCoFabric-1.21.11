@@ -48,7 +48,7 @@ public class CrawfishEntity extends WaterAnimalEntity implements Bucketable {
     private static final TrackedData<Integer> DATA_ID_TYPE_VARIANT =
             DataTracker.registerData(CrawfishEntity.class, TrackedDataHandlerRegistry.INTEGER);
 
-    private static final double RARE_VARIANT_CHANCE = 0.02;
+    private static final double RARE_VARIANT_CHANCE = 0.05;
 
     public final AnimationState idleAnimationState = new AnimationState();
 
@@ -96,8 +96,7 @@ public class CrawfishEntity extends WaterAnimalEntity implements Bucketable {
 
     @Override
     protected void initGoals() {
-        this.goalSelector.add(0, new EscapeDangerGoal(this, 1.5));
-        this.goalSelector.add(2, new FleeEntityGoal<>(this, PlayerEntity.class, 8.0F, 1.6, 1.4));
+        this.goalSelector.add(0, new EscapeDangerGoal(this, 1.1));
         this.goalSelector.add(4, new SwimAroundGoal(this, 1.5, 40));
     }
 

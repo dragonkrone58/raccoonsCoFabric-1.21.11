@@ -1,0 +1,6 @@
+{
+  "variants": {
+    "half=lower": { "model": "raccoonsco:block/swampy_reeds_lower" },
+    "half=upper": { "model": "raccoonsco:block/swampy_reeds_upper" }
+  }
+}

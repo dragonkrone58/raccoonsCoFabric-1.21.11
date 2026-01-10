@@ -27,7 +27,7 @@ public class CrawfishRenderer extends MobEntityRenderer<CrawfishEntity, Crawfish
             });
 
     public CrawfishRenderer(EntityRendererFactory.Context context) {
-        super(context, new CrawfishModel(context.getPart(CrawfishModel.CRAWFISH)), 0.5f);
+        super(context, new CrawfishModel(context.getPart(CrawfishModel.CRAWFISH)), 0.1f);
     }
 
     @Override
