@@ -7,6 +7,8 @@ import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.minecraft.client.render.BlockRenderLayer;
 import net.racquo.raccoonsCo.block.ModBlocks;
 import net.racquo.raccoonsCo.entity.ModEntities;
+import net.racquo.raccoonsCo.entity.client.CrawfishModel;
+import net.racquo.raccoonsCo.entity.client.CrawfishRenderer;
 import net.racquo.raccoonsCo.entity.client.RaccoonModel;
 import net.racquo.raccoonsCo.entity.client.RaccoonRenderer;
 
@@ -26,6 +28,9 @@ public class RaccoonsCoClient implements ClientModInitializer {
 
         EntityModelLayerRegistry.registerModelLayer(RaccoonModel.RACCOON, RaccoonModel::getTexturedModelData);
         EntityRendererRegistry.register(ModEntities.RACCOON, RaccoonRenderer::new);
+
+        EntityModelLayerRegistry.registerModelLayer(CrawfishModel.CRAWFISH, CrawfishModel::getTexturedModelData);
+        EntityRendererRegistry.register(ModEntities.CRAWFISH, CrawfishRenderer::new);
 
 
     }

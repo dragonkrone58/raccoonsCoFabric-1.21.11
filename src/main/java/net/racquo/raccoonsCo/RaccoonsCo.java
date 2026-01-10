@@ -5,6 +5,7 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.racquo.raccoonsCo.block.ModBlocks;
 import net.racquo.raccoonsCo.entity.ModEntities;
+import net.racquo.raccoonsCo.entity.custom.CrawfishEntity;
 import net.racquo.raccoonsCo.entity.custom.RaccoonEntity;
 import net.racquo.raccoonsCo.item.ModItems;
 import net.racquo.raccoonsCo.sound.ModSounds;
@@ -23,8 +24,8 @@ public class RaccoonsCo implements ModInitializer {
         ModWorldGeneration.generateModWorldGen();
         ModSounds.registerSounds();
         ModEntities.registerModEntities();
+        ModEntities.registerAttributes();
 
-        FabricDefaultAttributeRegistry.register(ModEntities.RACCOON, RaccoonEntity.createAttributes());
 
 	}
 }

@@ -6,6 +6,8 @@ import net.minecraft.component.type.ConsumableComponents;
 import net.minecraft.component.type.FoodComponents;
 import net.minecraft.component.type.TooltipDisplayComponent;
 import net.minecraft.entity.player.PlayerEquipment;
+import net.minecraft.fluid.Fluids;
+import net.minecraft.fluid.WaterFluid;
 import net.minecraft.item.*;
 import net.minecraft.item.ItemGroups;
 import net.minecraft.item.equipment.EquipmentType;
@@ -14,6 +16,7 @@ import net.minecraft.registry.Registry;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
@@ -46,6 +49,12 @@ public class ModItems {
 
     public static final Item RACCOON_SPAWN_EGG = registerItem("raccoon_spawn_egg",
             setting-> new SpawnEggItem(setting.spawnEgg(ModEntities.RACCOON)));
+
+    public static final Item CRAWFISH_SPAWN_EGG = registerItem("crawfish_spawn_egg",
+                    setting-> new SpawnEggItem(setting.spawnEgg(ModEntities.CRAWFISH)));
+
+    public static final Item CRAWFISH_BUCKET = registerItem("crawfish_bucket",
+                    setting->new EntityBucketItem(ModEntities.CRAWFISH, Fluids.WATER, SoundEvents.ITEM_BUCKET_EMPTY_FISH, setting));
     //register item helper
 
     private static Item registerItem(String name, Function<Item.Settings, Item> function) {
@@ -75,6 +84,7 @@ public class ModItems {
 
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.SPAWN_EGGS).register(entries -> {
             entries.add(RACCOON_SPAWN_EGG);
+            entries.add(CRAWFISH_SPAWN_EGG);
         });
 
 

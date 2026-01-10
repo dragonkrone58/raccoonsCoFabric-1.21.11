@@ -10,6 +10,7 @@ import net.minecraft.entity.passive.AnimalEntity;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.biome.BiomeKeys;
 import net.racquo.raccoonsCo.entity.ModEntities;
+import net.racquo.raccoonsCo.entity.custom.CrawfishEntity;
 
 public class ModEntitySpawns {
 
@@ -19,5 +20,11 @@ public class ModEntitySpawns {
 
         SpawnRestriction.register(ModEntities.RACCOON, SpawnLocationTypes.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES
         , AnimalEntity::isValidNaturalSpawn);
+
+        BiomeModifications.addSpawn(BiomeSelectors.includeByKey(BiomeKeys.SWAMP, BiomeKeys.RIVER)
+                , SpawnGroup.WATER_AMBIENT, ModEntities.CRAWFISH, 50, 2, 5);
+
+        SpawnRestriction.register(ModEntities.CRAWFISH, SpawnLocationTypes.IN_WATER, Heightmap.Type.OCEAN_FLOOR
+                , CrawfishEntity::canCrawfishSpawn);
     }
 }

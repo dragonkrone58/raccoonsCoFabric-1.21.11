@@ -42,6 +42,7 @@ public class ModModelProvider extends FabricModelProvider {
                 ItemModelGenerator.HELMET_TRIM_ID_PREFIX, false);
 
         itemModelGenerator.register(ModItems.RACCOON_SPAWN_EGG, Models.GENERATED);
+        itemModelGenerator.register(ModItems.CRAWFISH_SPAWN_EGG, Models.GENERATED);
 
 
     }

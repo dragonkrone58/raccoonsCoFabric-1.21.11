@@ -24,6 +24,8 @@ public class ModLanguageProvider extends FabricLanguageProvider {
         translationBuilder.add(ModItems.BOILED_EGG, "Boiled Egg");
         translationBuilder.add(ModItems.RACCOON_PELT_HELMET, "Raccoon Skin Cap");
         translationBuilder.add(ModItems.RACCOON_SPAWN_EGG, "Raccoon Spawn Egg");
+        translationBuilder.add(ModItems.CRAWFISH_SPAWN_EGG, "Crawfish Spawn Egg");
+        translationBuilder.add(ModItems.CRAWFISH_BUCKET, "Bucket of Crawfish");
         translationBuilder.add(ModItems.RAW_CRAWFISH, "Raw Crawfish");
         translationBuilder.add(ModItems.COOKED_CRAWFISH, "Boiled Crawfish");
 
@@ -38,6 +40,7 @@ public class ModLanguageProvider extends FabricLanguageProvider {
         translationBuilder.add(ModBlocks.MILKWEED, "Milkweed");
 
         translationBuilder.add(ModEntities.RACCOON, "Raccoon");
+        translationBuilder.add(ModEntities.CRAWFISH, "Crawfish");
 
 
 
