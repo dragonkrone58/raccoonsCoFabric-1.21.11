@@ -37,6 +37,7 @@ public class ModModelProvider extends FabricModelProvider {
         itemModelGenerator.register(ModItems.BOILED_EGG, Models.GENERATED);
         itemModelGenerator.register(ModItems.RAW_CRAWFISH, Models.GENERATED);
         itemModelGenerator.register(ModItems.COOKED_CRAWFISH, Models.GENERATED);
+        itemModelGenerator.register(ModItems.CRAWFISH_BUCKET, Models.GENERATED);
 
         itemModelGenerator.registerArmor(ModItems.RACCOON_PELT_HELMET, ModArmorMaterials.RACCOON_PELT_KEY,
                 ItemModelGenerator.HELMET_TRIM_ID_PREFIX, false);

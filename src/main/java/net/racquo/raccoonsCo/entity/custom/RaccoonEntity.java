@@ -146,11 +146,7 @@ public class RaccoonEntity extends TameableEntity {
         this.goalSelector.add(0, new SwimGoal(this));
         this.goalSelector.add(1, new TameableEntity.TameableEscapeDangerGoal(1.5D, DamageTypeTags.PANIC_ENVIRONMENTAL_CAUSES));
         this.goalSelector.add(2, new SitGoal(this));
-        this.targetSelector.add(4, new ActiveTargetGoal<>(
-                this,
-                ChickenEntity.class,
-                true
-        ));
+        this.targetSelector.add(4, new ActiveTargetGoal<>(this, ChickenEntity.class, true ));
         this.goalSelector.add(3, new EscapeDangerGoal(this, 1.6D));
         this.goalSelector.add(5, new RaccoonSeekShadeSleepGoal(this, 1.2D));
         this.goalSelector.add(6, new FollowOwnerGoal(this, 1.2D, 10.0F, 2.0F));

@@ -37,8 +37,9 @@ public class ModItems {
     //public static final Item BANDIT_POTTERY_SHERD = registerItem( "bandit_pottery_sherd", Item :: new);
     public static final Item BOILED_EGG = registerItem( "boiled_egg",
             setting -> new Item(setting.food(ModFoodComponents.BOILED_EGG)));
+
     public static final Item RAW_CRAWFISH = registerItem("raw_crawfish",
-            setting -> new Item(setting.food(ModFoodComponents.RAW_CRAWFISH, ConsumableComponents.RAW_CHICKEN)));
+            setting -> new Item(setting.food(ModFoodComponents.RAW_CRAWFISH, ModFoodComponents.RAW_CRAWFISH_CONSUMABLE)));
 
     public static final Item COOKED_CRAWFISH = registerItem("cooked_crawfish",
             setting -> new Item(setting.food(ModFoodComponents.COOKED_CRAWFISH)));
@@ -85,6 +86,10 @@ public class ModItems {
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.SPAWN_EGGS).register(entries -> {
             entries.add(RACCOON_SPAWN_EGG);
             entries.add(CRAWFISH_SPAWN_EGG);
+        });
+
+        ItemGroupEvents.modifyEntriesEvent(ItemGroups.TOOLS).register(entries -> {
+            entries.add(CRAWFISH_BUCKET);
         });
 
 

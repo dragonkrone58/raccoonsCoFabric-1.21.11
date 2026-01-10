@@ -22,7 +22,7 @@ public class ModEntitySpawns {
         , AnimalEntity::isValidNaturalSpawn);
 
         BiomeModifications.addSpawn(BiomeSelectors.includeByKey(BiomeKeys.SWAMP, BiomeKeys.RIVER)
-                , SpawnGroup.WATER_AMBIENT, ModEntities.CRAWFISH, 50, 2, 5);
+                , SpawnGroup.WATER_AMBIENT, ModEntities.CRAWFISH, 30, 2, 5);
 
         SpawnRestriction.register(ModEntities.CRAWFISH, SpawnLocationTypes.IN_WATER, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES
                 , CrawfishEntity::canCrawfishSpawn);
