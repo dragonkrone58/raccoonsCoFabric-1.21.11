@@ -18,6 +18,7 @@ public class CrawfishAnimations {
             ))
             .addBoneAnimation("clawR", new Transformation(Transformation.Targets.ROTATE,
                     new Keyframe(0.0F, AnimationHelper.createRotationalVector(0.0F, 10.0F, -12.5F), Transformation.Interpolations.CUBIC),
+                    new Keyframe(1.0F, AnimationHelper.createRotationalVector(0.0F, 17.5F, -12.5F), Transformation.Interpolations.CUBIC),
                     new Keyframe(2.0F, AnimationHelper.createRotationalVector(0.0F, 10.0F, -12.5F), Transformation.Interpolations.CUBIC)
             ))
             .addBoneAnimation("clawR", new Transformation(Transformation.Targets.MOVE_ORIGIN,
@@ -26,6 +27,7 @@ public class CrawfishAnimations {
             ))
             .addBoneAnimation("clawL", new Transformation(Transformation.Targets.ROTATE,
                     new Keyframe(0.0F, AnimationHelper.createRotationalVector(0.0F, -10.0F, 12.5F), Transformation.Interpolations.CUBIC),
+                    new Keyframe(1.0F, AnimationHelper.createRotationalVector(0.0F, -17.5F, 12.5F), Transformation.Interpolations.CUBIC),
                     new Keyframe(2.0F, AnimationHelper.createRotationalVector(0.0F, -10.0F, 12.5F), Transformation.Interpolations.CUBIC)
             ))
             .addBoneAnimation("clawL", new Transformation(Transformation.Targets.MOVE_ORIGIN,
@@ -34,7 +36,7 @@ public class CrawfishAnimations {
             ))
             .addBoneAnimation("antennaR", new Transformation(Transformation.Targets.ROTATE,
                     new Keyframe(0.0F, AnimationHelper.createRotationalVector(0.0F, 0.0F, 0.0F), Transformation.Interpolations.CUBIC),
-                    new Keyframe(1.0F, AnimationHelper.createRotationalVector(0.0F, 5.0F, 0.0F), Transformation.Interpolations.CUBIC),
+                    new Keyframe(1.0F, AnimationHelper.createRotationalVector(0.0F, 10.0F, 0.0F), Transformation.Interpolations.CUBIC),
                     new Keyframe(2.0F, AnimationHelper.createRotationalVector(0.0F, 0.0F, 0.0F), Transformation.Interpolations.CUBIC)
             ))
             .addBoneAnimation("antennaR", new Transformation(Transformation.Targets.MOVE_ORIGIN,
@@ -42,18 +44,18 @@ public class CrawfishAnimations {
                     new Keyframe(2.0F, AnimationHelper.createTranslationalVector(0.0F, 0.0F, 0.0F), Transformation.Interpolations.CUBIC)
             ))
             .addBoneAnimation("tail", new Transformation(Transformation.Targets.ROTATE,
-                    new Keyframe(0.0F, AnimationHelper.createRotationalVector(0.0F, 0.0F, 0.0F), Transformation.Interpolations.CUBIC),
+                    new Keyframe(0.0F, AnimationHelper.createRotationalVector(10.0F, 0.0F, 0.0F), Transformation.Interpolations.CUBIC),
                     new Keyframe(1.0F, AnimationHelper.createRotationalVector(-10.0F, 0.0F, 0.0F), Transformation.Interpolations.CUBIC),
-                    new Keyframe(2.0F, AnimationHelper.createRotationalVector(0.0F, 0.0F, 0.0F), Transformation.Interpolations.CUBIC)
+                    new Keyframe(2.0F, AnimationHelper.createRotationalVector(10.0F, 0.0F, 0.0F), Transformation.Interpolations.CUBIC)
             ))
             .addBoneAnimation("tail", new Transformation(Transformation.Targets.MOVE_ORIGIN,
                     new Keyframe(0.0F, AnimationHelper.createTranslationalVector(0.0F, 0.0F, 0.0F), Transformation.Interpolations.CUBIC),
                     new Keyframe(2.0F, AnimationHelper.createTranslationalVector(0.0F, 0.0F, 0.0F), Transformation.Interpolations.CUBIC)
             ))
             .addBoneAnimation("tergum", new Transformation(Transformation.Targets.ROTATE,
-                    new Keyframe(0.0F, AnimationHelper.createRotationalVector(-7.5F, 0.0F, 0.0F), Transformation.Interpolations.CUBIC),
+                    new Keyframe(0.0F, AnimationHelper.createRotationalVector(0.0F, 0.0F, 0.0F), Transformation.Interpolations.CUBIC),
                     new Keyframe(1.0F, AnimationHelper.createRotationalVector(-10.0F, 0.0F, 0.0F), Transformation.Interpolations.CUBIC),
-                    new Keyframe(2.0F, AnimationHelper.createRotationalVector(-7.5F, 0.0F, 0.0F), Transformation.Interpolations.CUBIC)
+                    new Keyframe(2.0F, AnimationHelper.createRotationalVector(0.0F, 0.0F, 0.0F), Transformation.Interpolations.CUBIC)
             ))
             .addBoneAnimation("tergum", new Transformation(Transformation.Targets.MOVE_ORIGIN,
                     new Keyframe(0.0F, AnimationHelper.createTranslationalVector(0.0F, 0.0F, 0.0F), Transformation.Interpolations.CUBIC),
@@ -61,7 +63,7 @@ public class CrawfishAnimations {
             ))
             .addBoneAnimation("antennaL", new Transformation(Transformation.Targets.ROTATE,
                     new Keyframe(0.0F, AnimationHelper.createRotationalVector(0.0F, 0.0F, 0.0F), Transformation.Interpolations.CUBIC),
-                    new Keyframe(1.0F, AnimationHelper.createRotationalVector(0.0F, -5.0F, 0.0F), Transformation.Interpolations.CUBIC),
+                    new Keyframe(1.0F, AnimationHelper.createRotationalVector(0.0F, -10.0F, 0.0F), Transformation.Interpolations.CUBIC),
                     new Keyframe(2.0F, AnimationHelper.createRotationalVector(0.0F, 0.0F, 0.0F), Transformation.Interpolations.CUBIC)
             ))
             .addBoneAnimation("antennaL", new Transformation(Transformation.Targets.MOVE_ORIGIN,

@@ -2,6 +2,7 @@ package net.racquo.raccoonsCo.entity.custom;
 
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.AnimationState;
+import net.minecraft.entity.EntityData;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.ai.goal.EscapeDangerGoal;
@@ -19,13 +20,17 @@ import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.passive.WaterAnimalEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Random;
+import net.minecraft.world.LocalDifficulty;
+import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
+import net.minecraft.world.biome.Biome;
 import net.racquo.raccoonsCo.entity.ModEntities;
 import net.racquo.raccoonsCo.sound.ModSounds;
 import org.jspecify.annotations.Nullable;
@@ -39,7 +44,7 @@ public class CrawfishEntity extends WaterAnimalEntity {
     private static final TrackedData<Integer> DATA_ID_TYPE_VARIANT =
             DataTracker.registerData(CrawfishEntity.class, TrackedDataHandlerRegistry.INTEGER);
 
-    private static final double RARE_VARIANT_CHANCE = 0.10;
+    private static final double RARE_VARIANT_CHANCE = 0.02;
 
     public final AnimationState idleAnimationState = new AnimationState();
 
@@ -49,6 +54,14 @@ public class CrawfishEntity extends WaterAnimalEntity {
         super(type, world);
         this.setPathfindingPenalty(net.minecraft.entity.ai.pathing.PathNodeType.WATER, 0.0F);
         this.setPathfindingPenalty(net.minecraft.entity.ai.pathing.PathNodeType.WALKABLE, 0.0F);
+    }
+
+    @Override
+    public EntityData initialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason,
+                                 @Nullable EntityData entityData) {
+        setVariant(pickVariant(this.random));
+
+        return super.initialize(world, difficulty, spawnReason, entityData);
     }
 
     /* ---------------- ANIMATION ---------------- */
@@ -117,9 +130,6 @@ public class CrawfishEntity extends WaterAnimalEntity {
                 : CrawfishVariant.DEFAULT;
     }
 
-    /* ---------------- BUCKET ---------------- */
-
-
     /* ---------------- BREEDING ---------------- */
 
     @Override
@@ -154,20 +164,16 @@ public class CrawfishEntity extends WaterAnimalEntity {
     }
 
     /* ---------------- SOUNDS ---------------- */
-    @Nullable
-    @Override
-    protected SoundEvent getAmbientSound() {
-        return SoundEvents.ENTITY_SALMON_AMBIENT;
-    }
+
 
     @Nullable @Override
     protected SoundEvent getHurtSound(DamageSource source) {
-        return SoundEvents.ENTITY_NAUTILUS_HURT;
+        return ModSounds.CRAWFISH_HURT;
     }
 
     @Nullable @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.ENTITY_NAUTILUS_DEATH;
+        return ModSounds.CRAWFISH_DEATH;
     }
 
     @Override

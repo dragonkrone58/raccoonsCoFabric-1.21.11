@@ -151,11 +151,6 @@ public class RaccoonEntity extends TameableEntity {
                 ChickenEntity.class,
                 true
         ));
-        this.targetSelector.add(4, new ActiveTargetGoal<>(
-                this,
-                CrawfishEntity.class,
-                true
-        ));
         this.goalSelector.add(3, new EscapeDangerGoal(this, 1.6D));
         this.goalSelector.add(5, new RaccoonSeekShadeSleepGoal(this, 1.2D));
         this.goalSelector.add(6, new FollowOwnerGoal(this, 1.2D, 10.0F, 2.0F));

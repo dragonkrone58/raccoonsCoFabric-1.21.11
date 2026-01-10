@@ -24,7 +24,7 @@ public class ModEntitySpawns {
         BiomeModifications.addSpawn(BiomeSelectors.includeByKey(BiomeKeys.SWAMP, BiomeKeys.RIVER)
                 , SpawnGroup.WATER_AMBIENT, ModEntities.CRAWFISH, 50, 2, 5);
 
-        SpawnRestriction.register(ModEntities.CRAWFISH, SpawnLocationTypes.IN_WATER, Heightmap.Type.OCEAN_FLOOR
+        SpawnRestriction.register(ModEntities.CRAWFISH, SpawnLocationTypes.IN_WATER, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES
                 , CrawfishEntity::canCrawfishSpawn);
     }
 }
