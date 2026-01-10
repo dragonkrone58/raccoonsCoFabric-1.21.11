@@ -1,6 +1,9 @@
 package net.racquo.raccoonsCo.item;
 
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
+import net.minecraft.component.type.ConsumableComponent;
+import net.minecraft.component.type.ConsumableComponents;
+import net.minecraft.component.type.FoodComponents;
 import net.minecraft.component.type.TooltipDisplayComponent;
 import net.minecraft.entity.player.PlayerEquipment;
 import net.minecraft.item.*;
@@ -28,9 +31,15 @@ public class ModItems {
     //register items
 
     public static final Item RACCOON_PELT = registerItem( "raccoon_pelt", Item :: new);
-    public static final Item BANDIT_POTTERY_SHERD = registerItem( "bandit_pottery_sherd", Item :: new);
+    //public static final Item BANDIT_POTTERY_SHERD = registerItem( "bandit_pottery_sherd", Item :: new);
     public static final Item BOILED_EGG = registerItem( "boiled_egg",
             setting -> new Item(setting.food(ModFoodComponents.BOILED_EGG)));
+    public static final Item RAW_CRAWFISH = registerItem("raw_crawfish",
+            setting -> new Item(setting.food(ModFoodComponents.RAW_CRAWFISH, ConsumableComponents.RAW_CHICKEN)));
+
+    public static final Item COOKED_CRAWFISH = registerItem("cooked_crawfish",
+            setting -> new Item(setting.food(ModFoodComponents.COOKED_CRAWFISH)));
+
     public static final Item RACCOON_PELT_HELMET = registerItem("raccoon_pelt_helmet",
             setting -> new Item(setting.armor(ModArmorMaterials.RACCOON_PELT_ARMOR_MATERIAL, EquipmentType.HELMET)));
 
@@ -52,10 +61,12 @@ public class ModItems {
         //add item(s) to creative tab(s)
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.INGREDIENTS).register(entries -> {
             entries.add(RACCOON_PELT);
-            entries.add(BANDIT_POTTERY_SHERD);
+            //entries.add(BANDIT_POTTERY_SHERD);
         });
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.FOOD_AND_DRINK).register(entries -> {
             entries.add(BOILED_EGG);
+            entries.add(RAW_CRAWFISH);
+            entries.add(COOKED_CRAWFISH);
         });
 
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.COMBAT).register(entries -> {

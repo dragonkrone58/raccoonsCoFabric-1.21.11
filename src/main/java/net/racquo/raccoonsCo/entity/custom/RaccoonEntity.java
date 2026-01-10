@@ -104,7 +104,7 @@ public class RaccoonEntity extends TameableEntity {
 
     //LIST OF FOOD ITEMS RACCOONS WILL EAT
     private static final List<ItemConvertible> RACCOON_EATABLES =
-            List.of(ModItems.BOILED_EGG, Items.SWEET_BERRIES, Items.COOKIE, Items.APPLE, Items.MELON_SLICE,
+            List.of(ModItems.BOILED_EGG, ModItems.COOKED_CRAWFISH, ModItems.RAW_CRAWFISH, Items.SWEET_BERRIES, Items.COOKIE, Items.APPLE, Items.MELON_SLICE,
                     Items.GLOW_BERRIES, Items.PUMPKIN_PIE, Items.POTATO, Items.BAKED_POTATO, Items.SALMON, Items.COOKED_SALMON,
                     Items.COD, Items.COOKED_COD, Items.CHICKEN, Items.COOKED_CHICKEN);
 
@@ -248,10 +248,6 @@ public class RaccoonEntity extends TameableEntity {
         }
     }
 
-    @Override
-    public boolean isImmobile() {
-        return this.isSleeping() || super.isImmobile();
-    }
 
     /*
         RACCOON ENTITY TICKING
@@ -439,7 +435,7 @@ public class RaccoonEntity extends TameableEntity {
         ItemStack itemStack = player.getStackInHand(hand);
 
         //RACCOON TAMING
-        if (!this.isTamed() && itemStack.isOf(Items.SWEET_BERRIES)) {
+        if (!this.isTamed() && (itemStack.isOf(ModItems.RAW_CRAWFISH) || itemStack.isOf(ModItems.COOKED_CRAWFISH))) {
             if(!this.getEntityWorld().isClient()) {
                 itemStack.decrementUnlessCreative(1, player);
                 this.tryTame(player, itemStack);
@@ -641,6 +637,12 @@ public class RaccoonEntity extends TameableEntity {
     /*
         SLEEPING HELPERS
      */
+
+    @Override
+    public boolean isImmobile() {
+        return this.isSleeping() || super.isImmobile();
+    }
+
     public boolean isPanic(){
         return this.dataTracker.get(DATA_PANIC_MODE);
     }

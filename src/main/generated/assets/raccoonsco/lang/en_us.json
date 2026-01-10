@@ -9,9 +9,10 @@
   "block.raccoonsco.violet": "Violet",
   "block.raccoonsco.violet_flower_pot": "Violet Flower Pot",
   "entity.raccoonsco.raccoon": "Raccoon",
-  "item.raccoonsco.bandit_pottery_sherd": "Bandit Pottery Sherd",
   "item.raccoonsco.boiled_egg": "Boiled Egg",
+  "item.raccoonsco.cooked_crawfish": "Boiled Crawfish",
   "item.raccoonsco.raccoon_pelt": "Raccoon Pelt",
   "item.raccoonsco.raccoon_pelt_helmet": "Raccoon Skin Cap",
-  "item.raccoonsco.raccoon_spawn_egg": "Raccoon Spawn Egg"
+  "item.raccoonsco.raccoon_spawn_egg": "Raccoon Spawn Egg",
+  "item.raccoonsco.raw_crawfish": "Raw Crawfish"
 }

@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_raw_crawfish": {
+      "conditions": {
+        "items": [
+          {
+            "items": "raccoonsco:raw_crawfish"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "raccoonsco:cooked_crawfish_from_campfire_cooking"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_raw_crawfish"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "raccoonsco:cooked_crawfish_from_campfire_cooking"
+    ]
+  }
+}

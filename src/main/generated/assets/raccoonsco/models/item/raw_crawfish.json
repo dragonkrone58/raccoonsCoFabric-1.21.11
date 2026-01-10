@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "raccoonsco:item/bandit_pottery_sherd"
+    "layer0": "raccoonsco:item/raw_crawfish"
   }
 }

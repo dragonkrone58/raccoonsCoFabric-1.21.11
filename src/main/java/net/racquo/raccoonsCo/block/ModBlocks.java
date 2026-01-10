@@ -28,6 +28,8 @@ public class ModBlocks {
     public static final Block EXAMPLE_BLOCK = registerBlock("example_block",
             properties -> new Block(properties.strength(4f).requiresTool().sounds(BlockSoundGroup.COPPER)));
 
+
+
     public static final Block MARIGOLD = registerBlock("marigold",
             properties -> new FlowerBlock(
             StatusEffects.SPEED, 4.0f, properties

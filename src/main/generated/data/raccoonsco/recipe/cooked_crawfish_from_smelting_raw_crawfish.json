@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:smelting",
+  "category": "food",
+  "cookingtime": 200,
+  "experience": 0.25,
+  "group": "cooked_crawfish",
+  "ingredient": "raccoonsco:raw_crawfish",
+  "result": {
+    "id": "raccoonsco:cooked_crawfish"
+  }
+}

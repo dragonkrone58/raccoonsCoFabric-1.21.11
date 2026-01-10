@@ -30,5 +30,7 @@ public class ModItemTagProvider extends FabricTagProvider.ItemTagProvider{
         valueLookupBuilder(ItemTags.BEE_FOOD).add(ModBlocks.MARIGOLD.asItem());
         valueLookupBuilder(ItemTags.BEE_FOOD).add(ModBlocks.VIOLET.asItem());
         valueLookupBuilder(ItemTags.BEE_FOOD).add(ModBlocks.MILKWEED.asItem());
+       // valueLookupBuilder(ItemTags.DECORATED_POT_SHERDS).add(ModItems.BANDIT_POTTERY_SHERD);
+
     }
 }

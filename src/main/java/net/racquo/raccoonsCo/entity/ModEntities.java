@@ -15,6 +15,7 @@ public class ModEntities {
     private static final RegistryKey<EntityType<?>> RACCOONS_KEY =
             RegistryKey.of(RegistryKeys.ENTITY_TYPE, Identifier.of(RaccoonsCo.MOD_ID, "raccoon"));
 
+
     public static final EntityType<RaccoonEntity> RACCOON = Registry.register(Registries.ENTITY_TYPE,
             Identifier.of(RaccoonsCo.MOD_ID, "raccoon"),
             EntityType.Builder.create(RaccoonEntity :: new, SpawnGroup.CREATURE)

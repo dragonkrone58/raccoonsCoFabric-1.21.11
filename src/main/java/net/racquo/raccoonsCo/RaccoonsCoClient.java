@@ -4,15 +4,12 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
-import net.minecraft.block.Block;
 import net.minecraft.client.render.BlockRenderLayer;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.world.chunk.ChunkSection;
 import net.racquo.raccoonsCo.block.ModBlocks;
 import net.racquo.raccoonsCo.entity.ModEntities;
 import net.racquo.raccoonsCo.entity.client.RaccoonModel;
 import net.racquo.raccoonsCo.entity.client.RaccoonRenderer;
-import net.racquo.raccoonsCo.entity.custom.RaccoonEntity;
+
 
 public class RaccoonsCoClient implements ClientModInitializer {
     @Override
