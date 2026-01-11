@@ -59,7 +59,7 @@
   "crawfish_death": {
     "subtitle": "Crawfish dies",
     "sounds": [
-      "raccoonsco:crawfish_hurt1"
+      "raccoonsco:crawfish_death"
     ]
   }
 }

@@ -3,6 +3,9 @@ package net.racquo.raccoonsCo.datagen;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricBlockLootTableProvider;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricEntityLootTableProvider;
+import net.minecraft.item.Items;
+import net.minecraft.loot.condition.RandomChanceLootCondition;
+import net.minecraft.loot.entry.ItemEntry;
 import net.minecraft.registry.RegistryWrapper;
 import net.racquo.raccoonsCo.block.ModBlocks;
 import net.racquo.raccoonsCo.entity.ModEntities;
@@ -26,6 +29,16 @@ public class ModLootTableProvider extends FabricBlockLootTableProvider {
         addPottedPlantDrops(ModBlocks.VIOLET_FLOWER_POT);
         addDrop(ModBlocks.LUPINE);
         addPottedPlantDrops(ModBlocks.LUPINE_FLOWER_POT);
+
+        addDrop(ModBlocks.SWAMP_GRASS,
+                block -> dropsWithShears(block, applyExplosionDecay(block, ItemEntry.builder(Items.WHEAT_SEEDS)
+                        .conditionally(RandomChanceLootCondition.builder(0.10f)))));
+
+        addDrop(ModBlocks.SWAMPY_REEDS,
+                block -> dropsWithShears(block, applyExplosionDecay(block, ItemEntry.builder(Items.WHEAT_SEEDS)
+                        .conditionally(RandomChanceLootCondition.builder(0.10f)))));
+
+
     }
 }
 

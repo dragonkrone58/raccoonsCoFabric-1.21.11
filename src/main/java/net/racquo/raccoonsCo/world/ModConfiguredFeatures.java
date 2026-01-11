@@ -37,9 +37,7 @@ public class ModConfiguredFeatures {
 
         register(context, SWAMPY_REEDS_KEY, Feature.RANDOM_PATCH,
                 new RandomPatchFeatureConfig(
-                        64, // tries per patch (density)
-                        6,  // horizontal spread (patch size)
-                        3,  // vertical spread (keeps flat)
+                        32, 6, 3,
                         PlacedFeatures.createEntry(
                                 Feature.SIMPLE_BLOCK,
                                 new SimpleBlockFeatureConfig(

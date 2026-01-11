@@ -42,7 +42,7 @@ public class ModPlacedFeatures {
 
         register(context, SWAMPY_REEDS_PLACED_KEY,
                 configuredFeatures.getOrThrow(ModConfiguredFeatures.SWAMPY_REEDS_KEY),
-                CountPlacementModifier.of(14),
+                CountPlacementModifier.of(10),
                 SquarePlacementModifier.of(),
                 HeightRangePlacementModifier.uniform(YOffset.fixed(63), YOffset.fixed(63)),
                 BiomePlacementModifier.of()
