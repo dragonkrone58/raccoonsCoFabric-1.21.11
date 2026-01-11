@@ -61,5 +61,13 @@
     "sounds": [
       "raccoonsco:crawfish_death"
     ]
+  },
+  "suspicious_mud_wade": {
+    "subtitle": "Wade Through Mud",
+    "sounds": [
+      "raccoonsco:suspicious_mud_step1",
+      "raccoonsco:suspicious_mud_step2",
+      "raccoonsco:suspicious_mud_step3"
+    ]
   }
 }

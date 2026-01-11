@@ -19,16 +19,27 @@ import net.minecraft.registry.RegistryKeys;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Identifier;
 import net.racquo.raccoonsCo.RaccoonsCo;
+import net.racquo.raccoonsCo.block.custom.SuspiciousMudBlock;
 import net.racquo.raccoonsCo.block.custom.SwampyReedsBlock;
 
 import java.util.function.Function;
 
 public class ModBlocks {
 
-    //create block(s)
+    //REGISTER BLOCKS
 
     public static final Block EXAMPLE_BLOCK = registerBlock("example_block",
             properties -> new Block(properties.strength(4f).requiresTool().sounds(BlockSoundGroup.COPPER)));
+
+    public static final Block SUSPICIOUS_MUD = registerBlock("suspicious_mud",
+                properties -> new SuspiciousMudBlock(properties
+                        .mapColor(MapColor.BROWN)
+                        .strength(0.5f)
+                        .hardness(0.5f)
+                        .noCollision()
+                        .sounds(BlockSoundGroup.MUD)
+                        .velocityMultiplier(0.2f)
+                        .jumpVelocityMultiplier(0.1f)));
 
     public static final Block SWAMPY_REEDS = registerBlock("swampy_reeds",
             properties -> new SwampyReedsBlock(properties
@@ -118,7 +129,7 @@ public class ModBlocks {
                     .pistonBehavior(PistonBehavior.DESTROY)));
 
 
-    //helper to register block w/ item
+    //BLOCK REGISTER HELPERS
     private static Block registerBlock(String name, Function<AbstractBlock.Settings, Block> function) {
         Block toRegister = function.apply(AbstractBlock.Settings.create().registryKey(RegistryKey.of(RegistryKeys.BLOCK, Identifier.of(RaccoonsCo.MOD_ID, name))));
         registerBlockItem(name, toRegister);
@@ -130,13 +141,14 @@ public class ModBlocks {
                 function.apply(AbstractBlock.Settings.create().registryKey(RegistryKey.of(RegistryKeys.BLOCK, Identifier.of(RaccoonsCo.MOD_ID, name)))));
     }
 
-    //helper to register block item
+
     private static void registerBlockItem(String name, Block block) {
         Registry.register(Registries.ITEM, Identifier.of(RaccoonsCo.MOD_ID, name),
                 new BlockItem(block, new Item.Settings().useBlockPrefixedTranslationKey()
                         .registryKey(RegistryKey.of(RegistryKeys.ITEM, Identifier.of(RaccoonsCo.MOD_ID, name)))));
     }
 
+    //REGISTER TO CREATIVE TABS
     public static void registerModBlocks(){
         RaccoonsCo.LOGGER.info("Registering ModBlocks for " + RaccoonsCo.MOD_ID);
 
@@ -151,6 +163,7 @@ public class ModBlocks {
             entries.add(ModBlocks.MILKWEED);
             entries.add(ModBlocks.SWAMPY_REEDS);
             entries.add(ModBlocks.SWAMP_GRASS);
+            entries.add(ModBlocks.SUSPICIOUS_MUD);
         });
     }
 

@@ -1,5 +1,6 @@
 package net.racquo.raccoonsCo.sound;
 
+import net.minecraft.client.sound.Sound;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.sound.SoundEvent;
@@ -15,6 +16,7 @@ public class ModSounds {
     public static final SoundEvent RACCOON_SLEEPS = registerSoundEvent("raccoon_sleeps");
     public static final SoundEvent CRAWFISH_HURT = registerSoundEvent("crawfish_hurt");
     public static final SoundEvent CRAWFISH_DEATH = registerSoundEvent("crawfish_death");
+    public static final SoundEvent SUSPICIOUS_MUD_STEP = registerSoundEvent("suspicious_mud_wade");
 
     private static SoundEvent registerSoundEvent(String name) {
         Identifier id = Identifier.of(RaccoonsCo.MOD_ID, name);
