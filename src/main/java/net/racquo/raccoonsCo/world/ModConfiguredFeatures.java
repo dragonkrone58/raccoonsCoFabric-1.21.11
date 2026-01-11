@@ -35,10 +35,20 @@ public class ModConfiguredFeatures {
         register(context, MILKWEED_KEY, Feature.RANDOM_PATCH, ConfiguredFeatures.createRandomPatchFeatureConfig(Feature.SIMPLE_BLOCK,
                 new SimpleBlockFeatureConfig(BlockStateProvider.of(ModBlocks.MILKWEED.getDefaultState())), List.of(Blocks.GRASS_BLOCK, Blocks.MUD)));
 
-        register(context, SWAMPY_REEDS_KEY, Feature.RANDOM_PATCH, ConfiguredFeatures.createRandomPatchFeatureConfig(Feature.SIMPLE_BLOCK,
-                new SimpleBlockFeatureConfig(BlockStateProvider.of(ModBlocks.SWAMPY_REEDS.getDefaultState())), List.of(Blocks.GRASS_BLOCK)));
-
-        register(context, SWAMP_GRASS_KEY, Feature.RANDOM_PATCH, ConfiguredFeatures.createRandomPatchFeatureConfig(Feature.SIMPLE_BLOCK,
+        register(context, SWAMPY_REEDS_KEY, Feature.RANDOM_PATCH,
+                new RandomPatchFeatureConfig(
+                        64, // tries per patch (density)
+                        6,  // horizontal spread (patch size)
+                        3,  // vertical spread (keeps flat)
+                        PlacedFeatures.createEntry(
+                                Feature.SIMPLE_BLOCK,
+                                new SimpleBlockFeatureConfig(
+                                        BlockStateProvider.of(ModBlocks.SWAMPY_REEDS.getDefaultState())
+                                )
+                        )
+                )
+        );
+        register(context, SWAMP_GRASS_KEY, Feature.RANDOM_PATCH,ConfiguredFeatures.createRandomPatchFeatureConfig(Feature.SIMPLE_BLOCK,
                 new SimpleBlockFeatureConfig(BlockStateProvider.of(ModBlocks.SWAMP_GRASS.getDefaultState())), List.of(Blocks.GRASS_BLOCK, Blocks.MUD)));
 
 

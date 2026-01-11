@@ -28,7 +28,7 @@ public class ModFlowerGeneration {
                 GenerationStep.Feature.VEGETAL_DECORATION, ModPlacedFeatures.MILKWEED_PLACED_KEY);
 
         BiomeModifications.addFeature(BiomeSelectors.includeByKey(
-                        BiomeKeys.SWAMP),
+                        BiomeKeys.SWAMP, BiomeKeys.MANGROVE_SWAMP),
                 GenerationStep.Feature.VEGETAL_DECORATION, ModPlacedFeatures.SWAMPY_REEDS_PLACED_KEY
         );
 

@@ -40,12 +40,15 @@ public class ModPlacedFeatures {
                 RarityFilterPlacementModifier.of(15), SquarePlacementModifier.of(), PlacedFeatures.MOTION_BLOCKING_HEIGHTMAP,
                 BiomePlacementModifier.of());
 
-        register(context, SWAMPY_REEDS_PLACED_KEY, configuredFeatures.getOrThrow(ModConfiguredFeatures.SWAMPY_REEDS_KEY),
-                RarityFilterPlacementModifier.of(1), SquarePlacementModifier.of(), HeightRangePlacementModifier.uniform(YOffset.fixed(63), YOffset.fixed(63)),
-                        BiomePlacementModifier.of());
-
+        register(context, SWAMPY_REEDS_PLACED_KEY,
+                configuredFeatures.getOrThrow(ModConfiguredFeatures.SWAMPY_REEDS_KEY),
+                CountPlacementModifier.of(14),
+                SquarePlacementModifier.of(),
+                HeightRangePlacementModifier.uniform(YOffset.fixed(63), YOffset.fixed(63)),
+                BiomePlacementModifier.of()
+        );
         register(context, SWAMP_GRASS_PLACED_KEY, configuredFeatures.getOrThrow(ModConfiguredFeatures.SWAMP_GRASS_KEY),
-                RarityFilterPlacementModifier.of(1), SquarePlacementModifier.of(), HeightRangePlacementModifier.uniform(YOffset.fixed(63), YOffset.fixed(63)),
+                RarityFilterPlacementModifier.of(2), SquarePlacementModifier.of(), PlacedFeatures.MOTION_BLOCKING_HEIGHTMAP,
                 BiomePlacementModifier.of());
 
     }
