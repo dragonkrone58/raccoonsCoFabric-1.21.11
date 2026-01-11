@@ -69,5 +69,14 @@
       "raccoonsco:suspicious_mud_step2",
       "raccoonsco:suspicious_mud_step3"
     ]
+  },
+  "reed_rustle": {
+    "subtitle": "Reeds Rustle",
+    "sounds": [
+      "raccoonsco:reed_rustle1",
+      "raccoonsco:reed_rustle2",
+      "raccoonsco:reed_rustle3",
+      "raccoonsco:reed_rustle4"
+    ]
   }
 }

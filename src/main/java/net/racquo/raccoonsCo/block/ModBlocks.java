@@ -31,16 +31,6 @@ public class ModBlocks {
     public static final Block EXAMPLE_BLOCK = registerBlock("example_block",
             properties -> new Block(properties.strength(4f).requiresTool().sounds(BlockSoundGroup.COPPER)));
 
-    public static final Block SUSPICIOUS_MUD = registerBlock("suspicious_mud",
-                properties -> new SuspiciousMudBlock(properties
-                        .mapColor(MapColor.BROWN)
-                        .strength(0.5f)
-                        .hardness(0.5f)
-                        .noCollision()
-                        .sounds(BlockSoundGroup.MUD)
-                        .velocityMultiplier(0.2f)
-                        .jumpVelocityMultiplier(0.1f)));
-
     public static final Block SWAMPY_REEDS = registerBlock("swampy_reeds",
             properties -> new SwampyReedsBlock(properties
                     .mapColor(MapColor.DARK_GREEN)
@@ -163,7 +153,6 @@ public class ModBlocks {
             entries.add(ModBlocks.MILKWEED);
             entries.add(ModBlocks.SWAMPY_REEDS);
             entries.add(ModBlocks.SWAMP_GRASS);
-            entries.add(ModBlocks.SUSPICIOUS_MUD);
         });
     }
 

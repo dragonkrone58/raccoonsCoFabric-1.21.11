@@ -17,6 +17,7 @@ public class ModSounds {
     public static final SoundEvent CRAWFISH_HURT = registerSoundEvent("crawfish_hurt");
     public static final SoundEvent CRAWFISH_DEATH = registerSoundEvent("crawfish_death");
     public static final SoundEvent SUSPICIOUS_MUD_STEP = registerSoundEvent("suspicious_mud_wade");
+    public static final SoundEvent REED_RUSTLE = registerSoundEvent("reed_rustle");
 
     private static SoundEvent registerSoundEvent(String name) {
         Identifier id = Identifier.of(RaccoonsCo.MOD_ID, name);

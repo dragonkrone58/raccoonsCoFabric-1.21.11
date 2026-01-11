@@ -5,8 +5,12 @@ import net.minecraft.registry.Registerable;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.intprovider.UniformIntProvider;
+import net.minecraft.world.gen.blockpredicate.BlockPredicate;
 import net.minecraft.world.gen.feature.*;
 import net.minecraft.world.gen.stateprovider.BlockStateProvider;
+import net.minecraft.world.gen.stateprovider.PredicatedStateProvider;
 import net.racquo.raccoonsCo.RaccoonsCo;
 import net.racquo.raccoonsCo.block.ModBlocks;
 
@@ -20,6 +24,7 @@ public class ModConfiguredFeatures {
     public static final RegistryKey<ConfiguredFeature<?, ?>> MILKWEED_KEY = registerKey("milkweed");
     public static final RegistryKey<ConfiguredFeature<?, ?>> SWAMPY_REEDS_KEY = registerKey("swampy_reeds");
     public static final RegistryKey<ConfiguredFeature<?, ?>> SWAMP_GRASS_KEY = registerKey("swamp_grass");
+
 
     public static void bootstrap(Registerable<ConfiguredFeature<?, ?>> context){
         //define generation parameters
@@ -48,7 +53,6 @@ public class ModConfiguredFeatures {
         );
         register(context, SWAMP_GRASS_KEY, Feature.RANDOM_PATCH,ConfiguredFeatures.createRandomPatchFeatureConfig(Feature.SIMPLE_BLOCK,
                 new SimpleBlockFeatureConfig(BlockStateProvider.of(ModBlocks.SWAMP_GRASS.getDefaultState())), List.of(Blocks.GRASS_BLOCK, Blocks.MUD)));
-
 
     }
 

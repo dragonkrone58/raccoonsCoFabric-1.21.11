@@ -29,7 +29,6 @@ public class ModModelProvider extends FabricModelProvider {
         blockStateModelGenerator.registerFlowerPotPlantAndItem(ModBlocks.LUPINE, ModBlocks.LUPINE_FLOWER_POT, BlockStateModelGenerator.CrossType.NOT_TINTED );
         blockStateModelGenerator.registerFlowerPotPlantAndItem(ModBlocks.MILKWEED, ModBlocks.MILKWEED_FLOWER_POT, BlockStateModelGenerator.CrossType.NOT_TINTED );
         blockStateModelGenerator.registerTintableCross(ModBlocks.SWAMP_GRASS, BlockStateModelGenerator.CrossType.NOT_TINTED );
-        blockStateModelGenerator.registerSimpleCubeAll(ModBlocks.SUSPICIOUS_MUD);
     }
 
     @Override

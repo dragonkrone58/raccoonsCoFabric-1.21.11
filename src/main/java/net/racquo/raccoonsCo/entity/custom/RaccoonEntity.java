@@ -138,6 +138,7 @@ public class RaccoonEntity extends TameableEntity {
         super(entityType, world);
         this.setPathfindingPenalty(PathNodeType.POWDER_SNOW, -1.0F);
         this.setPathfindingPenalty(PathNodeType.DANGER_POWDER_SNOW, -1.0F);
+
     }
 
     /* ---------------- ENTITY GOALS ---------------- */
