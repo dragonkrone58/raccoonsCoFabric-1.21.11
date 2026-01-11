@@ -42,9 +42,8 @@ public class SuspiciousMudBlock extends Block {
         if (!(entity instanceof LivingEntity) || entity.getBlockStateAtPos().isOf(this)) {
             entity.slowMovement(state, new Vec3d(0.9F, 1.5, 0.9F));
 
-
             //only play when moving in mud
-            if (entity.age % 25 == 0) {
+            if (entity.isMovingHorizontally() && entity.age % 18 == 0) {
                 world.playSound(
                         null,
                         entity.getBlockPos(),
