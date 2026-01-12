@@ -21,6 +21,8 @@ public class ModPlacedFeatures {
     public static final RegistryKey<PlacedFeature> SWAMPY_REEDS_PLACED_KEY = registerKey("swampy_reeds_placed");
     public static final RegistryKey<PlacedFeature> SWAMP_GRASS_PLACED_KEY = registerKey("swamp_grass_placed");
 
+
+
     public static void bootstrap(Registerable<PlacedFeature> context) {
         var configuredFeatures = context.getRegistryLookup(RegistryKeys.CONFIGURED_FEATURE);
 
@@ -50,7 +52,6 @@ public class ModPlacedFeatures {
         register(context, SWAMP_GRASS_PLACED_KEY, configuredFeatures.getOrThrow(ModConfiguredFeatures.SWAMP_GRASS_KEY),
                 RarityFilterPlacementModifier.of(2), SquarePlacementModifier.of(), PlacedFeatures.MOTION_BLOCKING_HEIGHTMAP,
                 BiomePlacementModifier.of());
-
 
     }
     public static RegistryKey<PlacedFeature> registerKey(String name) {

@@ -1,5 +1,6 @@
 package net.racquo.raccoonsCo.entity.custom;
 
+import net.minecraft.block.ConcretePowderBlock;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.FoodComponent;
 import net.minecraft.entity.*;
@@ -128,17 +129,16 @@ public class RaccoonEntity extends TameableEntity {
             RaccoonVariant.BLOND,
             RaccoonVariant.CINNAMON,
     };
+
     //VARIANT DATA TRACKER
     private static final TrackedData<Integer> DATA_ID_TYPE_VARIANT =
             DataTracker.registerData(RaccoonEntity.class, TrackedDataHandlerRegistry.INTEGER);
-
 
     /* ---------------- CONSTRUCTOR ---------------- */
     public RaccoonEntity(EntityType<? extends TameableEntity> entityType, World world) {
         super(entityType, world);
         this.setPathfindingPenalty(PathNodeType.POWDER_SNOW, -1.0F);
         this.setPathfindingPenalty(PathNodeType.DANGER_POWDER_SNOW, -1.0F);
-
     }
 
     /* ---------------- ENTITY GOALS ---------------- */

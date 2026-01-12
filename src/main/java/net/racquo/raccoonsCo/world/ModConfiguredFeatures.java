@@ -53,7 +53,6 @@ public class ModConfiguredFeatures {
         );
         register(context, SWAMP_GRASS_KEY, Feature.RANDOM_PATCH,ConfiguredFeatures.createRandomPatchFeatureConfig(Feature.SIMPLE_BLOCK,
                 new SimpleBlockFeatureConfig(BlockStateProvider.of(ModBlocks.SWAMP_GRASS.getDefaultState())), List.of(Blocks.GRASS_BLOCK, Blocks.MUD)));
-
     }
 
     public static RegistryKey<ConfiguredFeature<?, ?>> registerKey(String name) {
