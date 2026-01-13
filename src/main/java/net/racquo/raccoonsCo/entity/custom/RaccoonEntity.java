@@ -44,6 +44,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.Objects;
+
 import net.minecraft.util.math.random.Random;
 
 public class RaccoonEntity extends TameableEntity {
@@ -291,7 +293,7 @@ public class RaccoonEntity extends TameableEntity {
             if (tamedBuffTicks <= 0) {
                 hasTamedBuff = false;
 
-                this.getAttributeInstance(EntityAttributes.MAX_HEALTH)
+                Objects.requireNonNull(this.getAttributeInstance(EntityAttributes.MAX_HEALTH))
                         .setBaseValue(10.0D);
 
                 if (this.getHealth() > 10.0F) {
@@ -599,7 +601,7 @@ public class RaccoonEntity extends TameableEntity {
             hasTamedBuff = true;
             tamedBuffTicks = FULLNESS_COOLDOWN_TICKS;
 
-            this.getAttributeInstance(EntityAttributes.MAX_HEALTH)
+            Objects.requireNonNull(this.getAttributeInstance(EntityAttributes.MAX_HEALTH))
                     .setBaseValue(20.0D);
 
             if (this.getHealth() < 20.0F) {
