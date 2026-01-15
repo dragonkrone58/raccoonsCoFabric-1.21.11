@@ -6,6 +6,7 @@ import net.minecraft.util.Identifier;
 import net.racquo.raccoonsCo.block.ModBlocks;
 import net.racquo.raccoonsCo.entity.ModEntities;
 import net.racquo.raccoonsCo.item.ModItems;
+import net.racquo.raccoonsCo.item.custom.RaccoonPeltHelmet;
 import net.racquo.raccoonsCo.sound.ModSounds;
 import net.racquo.raccoonsCo.world.gen.ModWorldGeneration;
 import org.slf4j.Logger;
@@ -23,6 +24,7 @@ public class RaccoonsCo implements ModInitializer {
         ModSounds.registerSounds();
         ModEntities.registerModEntities();
         ModEntities.registerAttributes();
+        RaccoonPeltHelmet.register();
 
 
 	}

@@ -23,15 +23,14 @@ public class ModItemTagProvider extends FabricTagProvider.ItemTagProvider{
     @Override
     protected void configure(RegistryWrapper.WrapperLookup wrapperLookup) {
         valueLookupBuilder(ItemTags.HEAD_ARMOR).add(ModItems.RACCOON_PELT_HELMET);
-        valueLookupBuilder(ItemTags.TRIMMABLE_ARMOR).add(ModItems.RACCOON_PELT_HELMET);
+        //valueLookupBuilder(ItemTags.TRIMMABLE_ARMOR).add(ModItems.RACCOON_PELT_HELMET);
         valueLookupBuilder(ModTags.Items.RACCOON_PELT_REPAIR).add(ModItems.RACCOON_PELT);
         valueLookupBuilder(ItemTags.MAP_INVISIBILITY_EQUIPMENT).add(ModItems.RACCOON_PELT_HELMET);
         valueLookupBuilder(ItemTags.BEE_FOOD).add(ModBlocks.LUPINE.asItem());
         valueLookupBuilder(ItemTags.BEE_FOOD).add(ModBlocks.MARIGOLD.asItem());
         valueLookupBuilder(ItemTags.BEE_FOOD).add(ModBlocks.VIOLET.asItem());
         valueLookupBuilder(ItemTags.BEE_FOOD).add(ModBlocks.MILKWEED.asItem());
-        //valueLookupBuilder(ItemTags.DECORATED_POT_SHERDS).add(ModItems.BANDIT_POTTERY_SHERD);
-        //valueLookupBuilder(ItemTags.DECORATED_POT_INGREDIENTS).add(ModItems.BANDIT_POTTERY_SHERD);
+
 
 
     }
