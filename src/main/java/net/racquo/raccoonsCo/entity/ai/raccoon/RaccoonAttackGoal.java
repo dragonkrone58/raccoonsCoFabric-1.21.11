@@ -1,4 +1,4 @@
-package net.racquo.raccoonsCo.entity.ai;
+package net.racquo.raccoonsCo.entity.ai.raccoon;
 
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.MeleeAttackGoal;

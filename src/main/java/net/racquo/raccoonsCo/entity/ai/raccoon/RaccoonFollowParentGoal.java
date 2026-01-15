@@ -1,7 +1,6 @@
-package net.racquo.raccoonsCo.entity.ai;
+package net.racquo.raccoonsCo.entity.ai.raccoon;
 
 import net.minecraft.entity.ai.goal.FollowParentGoal;
-import net.minecraft.entity.passive.AnimalEntity;
 import net.racquo.raccoonsCo.entity.custom.RaccoonEntity;
 
 public class RaccoonFollowParentGoal extends FollowParentGoal {
