@@ -48,6 +48,16 @@
       "raccoonsco:raccoon_sleeps5"
     ]
   },
+
+  "raccoon_sniffs": {
+    "subtitle": "Raccoon sniffs",
+    "sounds": [
+      "raccoonsco:raccoon_sniff1",
+      "raccoonsco:raccoon_sniff2",
+      "raccoonsco:raccoon_sniff3"
+    ]
+  },
+
   "crawfish_hurt": {
     "subtitle": "Crawfish is hurt",
     "sounds": [

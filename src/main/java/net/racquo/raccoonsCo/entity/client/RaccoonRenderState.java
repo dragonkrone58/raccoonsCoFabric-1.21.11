@@ -10,6 +10,8 @@ public class RaccoonRenderState extends LivingEntityRenderState {
     public AnimationState eatingAnimationState = new AnimationState();
     public AnimationState sleepingAnimationState = new AnimationState();
     public AnimationState begAnimationState = new AnimationState();
+    public AnimationState grabAnimationState = new AnimationState();
+    public AnimationState washAnimationState = new AnimationState();
 
     public RaccoonVariant variant;
 }

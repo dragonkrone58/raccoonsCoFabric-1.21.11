@@ -1,6 +1,9 @@
 package net.racquo.raccoonsCo.entity.custom;
 
 
+import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.ConcretePowderBlock;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.FoodComponent;
 import net.minecraft.entity.*;
@@ -31,13 +34,16 @@ import net.minecraft.storage.WriteView;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Util;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.ServerWorldAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.BiomeKeys;
 import net.racquo.raccoonsCo.entity.ModEntities;
 import net.racquo.raccoonsCo.entity.ai.raccoon.*;
 import net.racquo.raccoonsCo.item.ModItems;
+import net.racquo.raccoonsCo.mixin.ConcretePowderBlockAccessor;
 import net.racquo.raccoonsCo.sound.ModSounds;
 import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
@@ -47,7 +53,12 @@ import java.util.List;
 import java.util.Objects;
 
 import net.minecraft.util.math.random.Random;
-
+/*
+    TO ADD:
+    RACCOON WASH FAIL COOLDOWN TO PREVENT FRUITLESS LOOP
+    RACCOON HAPPY SOUND WHEN FULL ( & BUFFED PARTICLES / SOUND)
+    RACCOONS SWIMMING / HUNTING CRAYFISH, FIX PATHING ISSUE
+ */
 public class RaccoonEntity extends TameableEntity {
 
 
@@ -59,6 +70,26 @@ public class RaccoonEntity extends TameableEntity {
     public final AnimationState eatingAnimationState = new AnimationState();
     public final AnimationState sleepingAnimationState = new AnimationState();
     public final AnimationState begAnimationState = new AnimationState();
+    public final AnimationState grabAnimationState = new AnimationState();
+    public final AnimationState washAnimationState = new AnimationState();
+
+    /* ---------------- GRABBING & WASHING ---------------- */
+    private int washingTicks = 0;
+    private static final int GRAB_DURATION_TICKS = 35; // 1.75s
+    private static final int WASH_DROP_TICK = 90;
+    private static final int WASHING_DURATION_TICKS = 20 * 7;
+    private static final int MAX_WASH_SEARCH_DISTANCE = 24;
+
+    private boolean headingToWater = false;
+    private BlockPos waterPos;
+
+    public ItemStack grabbedStack = ItemStack.EMPTY;
+
+    public static final TrackedData<Boolean> DATA_GRABBING =
+            DataTracker.registerData(RaccoonEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
+
+    public static final TrackedData<Boolean> DATA_WASHING =
+            DataTracker.registerData(RaccoonEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 
     /* ---------------- EATING ---------------- */
     private ItemStack currentEatingStack;
@@ -147,9 +178,10 @@ public class RaccoonEntity extends TameableEntity {
     @Override
     protected void initGoals() {
         this.goalSelector.add(0, new SwimGoal(this));
-        this.goalSelector.add(1, new TameableEntity.TameableEscapeDangerGoal(1.5D, DamageTypeTags.PANIC_ENVIRONMENTAL_CAUSES));
+        this.goalSelector.add(1, new TameableEscapeDangerGoal(1.5D, DamageTypeTags.PANIC_ENVIRONMENTAL_CAUSES));
         this.goalSelector.add(2, new SitGoal(this));
         this.targetSelector.add(4, new ActiveTargetGoal<>(this, ChickenEntity.class, true ));
+        this.goalSelector.add(4, new RaccoonWashConcreteGoal(this, 1.2D));
         this.goalSelector.add(3, new EscapeDangerGoal(this, 1.6D));
         this.goalSelector.add(5, new RaccoonSeekShadeSleepGoal(this, 1.2D));
         this.goalSelector.add(6, new FollowOwnerGoal(this, 1.2D, 10.0F, 2.0F));
@@ -199,6 +231,8 @@ public class RaccoonEntity extends TameableEntity {
         builder.add(DATA_SLEEPING, false);
         builder.add(DATA_PANIC_MODE, false);
         builder.add(DATA_BEGGING, false);
+        builder.add(DATA_GRABBING, false);
+        builder.add(DATA_WASHING, false);
     }
 
     /* ---------------- ANIMATION STATE SETUP---------------- */
@@ -207,6 +241,18 @@ public class RaccoonEntity extends TameableEntity {
         if (isSleeping()) {
             stopAllExcept(sleepingAnimationState);
             startIfNotRunning(sleepingAnimationState);
+            return;
+        }
+
+        if (dataTracker.get(DATA_GRABBING)) {
+            stopAllExcept(grabAnimationState);
+            startIfNotRunning(grabAnimationState);
+            return;
+        }
+
+        if (dataTracker.get(DATA_WASHING)) {
+            stopAllExcept(washAnimationState);
+            startIfNotRunning(washAnimationState);
             return;
         }
 
@@ -239,6 +285,8 @@ public class RaccoonEntity extends TameableEntity {
         if (eatingAnimationState != keep) eatingAnimationState.stop();
         if (sleepingAnimationState != keep) sleepingAnimationState.stop();
         if (begAnimationState != keep) begAnimationState.stop();
+        if(washAnimationState != keep)  washAnimationState.stop();
+        if(grabAnimationState != keep) grabAnimationState.stop();
     }
 
     private void startIfNotRunning(AnimationState state) {
@@ -270,6 +318,30 @@ public class RaccoonEntity extends TameableEntity {
             endTamedBuff();
         }
 
+        // GRABBING
+        if (dataTracker.get(DATA_GRABBING)) {
+            handleGrabbingTick(isServer);
+        }
+
+        // ARRIVED AT WATER → START WASHING
+        if (headingToWater && waterPos != null) {
+            if (this.getBlockPos().isWithinDistance(waterPos, 1.5)) {
+                headingToWater = false;
+
+                washingTicks = 0;
+                dataTracker.set(DATA_WASHING, true);
+
+                getNavigation().stop();
+                setVelocity(0, getVelocity().y, 0);
+                velocityDirty = true;
+            }
+        }
+
+        // WASHING
+        if (dataTracker.get(DATA_WASHING)) {
+            handleWashingTick();
+        }
+
         // EATING COOLDOWN
         if (eatingCooldown > 0) eatingCooldown--;
 
@@ -280,13 +352,13 @@ public class RaccoonEntity extends TameableEntity {
 
         // FULLNESS COOLDOWN (TAMED)
         if (this.isTamed() && fullnessCooldownTicks > 0 && --fullnessCooldownTicks == 0) {
-            resetFullness(true);
+            resetFullness();
         }
 
         // SLEEP SEARCH (WILD ONLY)
         if (isServer && shouldSearchForSleep()) {
             if (++fullSleepSearchTicks >= FULL_SLEEP_SEARCH_TICKS) {
-                resetFullness(true);
+                resetFullness();
             }
         } else {
             fullSleepSearchTicks = 0;
@@ -380,6 +452,148 @@ public class RaccoonEntity extends TameableEntity {
         this.heal(2.0F * (food != null ? food.nutrition() : 1.0F));
     }
 
+    /* ---------------- TAMED RACCOON GRABBING  ---------------- */
+    public void startGrabSequence() {
+        this.washingTicks = 0;
+    }
+
+    // GRABBING TICK HANDLER
+    private void handleGrabbingTick(boolean isServer) {
+        washingTicks++;
+
+        // Stop movement during grab
+        getNavigation().stop();
+        setVelocity(0, getVelocity().y, 0);
+        velocityDirty = true;
+
+        // Play sniff sound at 0.5s (10 ticks)
+        if (washingTicks == 10) {
+            playSound(ModSounds.RACCOON_SNIFFS, 1.0F, 1.0F);
+        }
+
+        if (washingTicks >= GRAB_DURATION_TICKS) {
+            dataTracker.set(DATA_GRABBING, false);
+            grabAnimationState.stop();
+            waterPos = null;
+            attemptFindWater();
+        }
+    }
+
+    /* ---------------- TAMED RACCOON SEEK WATER  ---------------- */
+    private void attemptFindWater() {
+        waterPos = findNearestWater();
+
+        if (waterPos == null) {
+            dropHeldItemAtOwner();
+            return;
+        }
+
+        headingToWater = true;
+
+        getNavigation().startMovingTo(
+                waterPos.getX() + 0.5,
+                waterPos.getY(),
+                waterPos.getZ() + 0.5,
+                1.1D
+        );
+    }
+
+
+    @Nullable
+    private BlockPos findNearestWater() {
+        BlockPos origin = getBlockPos();
+
+        for (BlockPos pos : BlockPos.iterateOutwards(origin, MAX_WASH_SEARCH_DISTANCE, 2, MAX_WASH_SEARCH_DISTANCE)) {
+            if (getEntityWorld().getBlockState(pos).isOf(Blocks.WATER)) {
+                return pos;
+            }
+        }
+        return null;
+    }
+
+
+    /* ---------------- TAMED RACCOON WASHING  ---------------- */
+
+    // WASHING TICK HANDLER
+    private void handleWashingTick() {
+        washingTicks++;
+
+        // Stop movement while washing
+        getNavigation().stop();
+        setVelocity(0, getVelocity().y, 0);
+        velocityDirty = true;
+
+        // Play water sounds and particles periodically
+        if (washingTicks % 20 == 0 && washingTicks < WASH_DROP_TICK) {
+            playSound(SoundEvents.ENTITY_GENERIC_SPLASH, 0.5F, 1.0F);
+
+            if (!getEntityWorld().isClient()) {
+                ((ServerWorld) getEntityWorld()).spawnParticles(
+                        ParticleTypes.SPLASH,
+                        getX(),
+                        getBodyY(0.5),
+                        getZ(),
+                        3, // particles per tick
+                        0.2, 0.2, 0.2, 0.01
+                );
+            }
+        }
+
+        if (washingTicks == WASH_DROP_TICK) {
+            playSound(SoundEvents.ENTITY_ITEM_PICKUP);
+            dropWashedConcrete();
+        }
+
+        if (washingTicks >= WASHING_DURATION_TICKS) {
+            dataTracker.set(DATA_WASHING, false);
+            washAnimationState.stop();
+            washingTicks = 0;
+            waterPos = null;
+            grabbedStack = ItemStack.EMPTY;
+        }
+    }
+
+    private void dropWashedConcrete() {
+        if (!(grabbedStack.getItem() instanceof BlockItem blockItem)) return;
+
+        if (!(blockItem.getBlock() instanceof ConcretePowderBlock powder)) return;
+
+        Block hardened = ((ConcretePowderBlockAccessor) powder)
+                .raccoonsCo$getHardenedBlock();
+
+        ItemStack output = new ItemStack(hardened.asItem());
+
+        ItemEntity entity = new ItemEntity(
+                getEntityWorld(),
+                getX(),
+                getBodyY(0.5),
+                getZ(),
+                output
+        );
+
+        getEntityWorld().spawnEntity(entity);
+    }
+
+
+    private void dropHeldItemAtOwner() {
+        if (!isTamed() || getOwner() == null) return;
+
+        getNavigation().startMovingTo(getOwner(), 1.2D);
+
+        ItemEntity entity = new ItemEntity(
+                getEntityWorld(),
+                getX(),
+                getBodyY(0.5),
+                getZ(),
+                grabbedStack.copy()
+        );
+
+        getEntityWorld().spawnEntity(entity);
+        grabbedStack = ItemStack.EMPTY;
+    }
+
+
+
     /* ---------------- TAMED RACCOON SITTING ---------------- */
 
     private void toggleSitting() {
@@ -425,7 +639,7 @@ public class RaccoonEntity extends TameableEntity {
             this.setHealth(10.0F);
         }
 
-        resetFullness(true);
+        resetFullness();
     }
 
 
@@ -461,6 +675,9 @@ public class RaccoonEntity extends TameableEntity {
 
         if (isServer) this.getNavigation().stop();
 
+        if (eatingTicks == 1) {
+            playSound(ModSounds.RACCOON_SNIFFS, 1.0F, 1.0F);
+        }
         // Play Sounds
         if (eatingTicks >= EATING_SOUND_START
                 && eatingTicks <= EATING_SOUND_END
@@ -506,7 +723,7 @@ public class RaccoonEntity extends TameableEntity {
         increaseFullness();
 
         // Start eating cooldown after finishing the animation
-        this.eatingCooldown = EATING_COOLDOWN_TICKS; // 20 ticks
+        this.eatingCooldown = EATING_COOLDOWN_TICKS;
     }
 
 
@@ -634,7 +851,7 @@ public class RaccoonEntity extends TameableEntity {
         this.dataTracker.set(DATA_SLEEPING, false);
 
         // Fully rested : reset fullness & timer
-        resetFullness(true);
+        resetFullness();
         this.getNavigation().stop();
         this.velocityDirty = false;
     }
@@ -666,12 +883,12 @@ public class RaccoonEntity extends TameableEntity {
         return result;
     }
     /* ---------------- FULLNESS RESET ---------------- */
-    private void resetFullness(boolean logIt) {
+    private void resetFullness() {
         this.dataTracker.set(DATA_FULLNESS, 0);
         this.fullSleepSearchTicks = 0;
         this.fullnessCooldownTicks = 0;
 
-        if (logIt && !this.getEntityWorld().isClient()) {
+        if (!this.getEntityWorld().isClient()) {
             log.info("Raccoon fullness reset");
         }
     }
@@ -761,17 +978,17 @@ public class RaccoonEntity extends TameableEntity {
 
         if(biomeKey == null){return RaccoonVariant.DEFAULT;}
 
-        if (biomeKey.equals(net.minecraft.world.biome.BiomeKeys.TAIGA)) {
+        if (biomeKey.equals(BiomeKeys.TAIGA)) {
             return random.nextBoolean()
                     ? RaccoonVariant.DEFAULT
                     : RaccoonVariant.GRAY;
 
-        } else if (biomeKey.equals(net.minecraft.world.biome.BiomeKeys.FOREST)) {
+        } else if (biomeKey.equals(BiomeKeys.FOREST)) {
             return random.nextBoolean()
                     ? RaccoonVariant.GRAY
                     : RaccoonVariant.BROWN;
 
-        } else if (biomeKey.equals(net.minecraft.world.biome.BiomeKeys.SWAMP)) {
+        } else if (biomeKey.equals(BiomeKeys.SWAMP)) {
             return RaccoonVariant.SWAMP;
 
         } else {return RaccoonVariant.DEFAULT;}
