@@ -145,14 +145,6 @@ public class CrawfishEntity extends WaterAnimalEntity implements Bucketable {
         return baby;
     }
 
-
-    /*ADD KELP AS BREEDING ITEM
-    MANUALLY ADD: INTERACTMOB W/ KELP, BREEDS.
-    CRAWFISH WILL INCUBATE EGGS & HATCH AFTER TIME
-
-
-     */
-
     /* ---------------- MOVEMENT ---------------- */
 
     @Override

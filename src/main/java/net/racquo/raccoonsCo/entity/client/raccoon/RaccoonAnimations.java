@@ -666,9 +666,9 @@ public class RaccoonAnimations  {
                     new Keyframe(4.0F, AnimationHelper.createRotationalVector(0.0F, 32.5F, 0.0F), Transformation.Interpolations.CUBIC)
             ))
             .addBoneAnimation("neck", new Transformation(Transformation.Targets.MOVE_ORIGIN,
-                    new Keyframe(0.0F, AnimationHelper.createTranslationalVector(1.0F, 0.0F, 3.0F), Transformation.Interpolations.CUBIC),
-                    new Keyframe(2.0F, AnimationHelper.createTranslationalVector(1.0F, 0.0F, 3.0F), Transformation.Interpolations.CUBIC),
-                    new Keyframe(4.0F, AnimationHelper.createTranslationalVector(1.0F, 0.0F, 3.0F), Transformation.Interpolations.CUBIC)
+                    new Keyframe(0.0F, AnimationHelper.createTranslationalVector(1.0F, 0.0F, 1.0F), Transformation.Interpolations.CUBIC),
+                    new Keyframe(2.0F, AnimationHelper.createTranslationalVector(1.0F, 0.0F, 1.0F), Transformation.Interpolations.CUBIC),
+                    new Keyframe(4.0F, AnimationHelper.createTranslationalVector(1.0F, 0.0F, 1.0F), Transformation.Interpolations.CUBIC)
             ))
             .addBoneAnimation("nose", new Transformation(Transformation.Targets.ROTATE,
                     new Keyframe(0.0F, AnimationHelper.createRotationalVector(0.0F, 0.0F, 0.0F), Transformation.Interpolations.CUBIC),
@@ -695,6 +695,7 @@ public class RaccoonAnimations  {
                     new Keyframe(4.0F, AnimationHelper.createTranslationalVector(0.0F, -0.3F, -1.2F), Transformation.Interpolations.CUBIC)
             ))
             .build();
+
 
     public static final AnimationDefinition ANIM_RACCOON_BEG = AnimationDefinition.Builder.create(0.6667F).looping()
             .addBoneAnimation("frontLegL", new Transformation(Transformation.Targets.ROTATE,
