@@ -55,10 +55,8 @@ import java.util.Objects;
 import net.minecraft.util.math.random.Random;
 /*
    Current issues with washing:
-   sometimes washing animation may not play whilst washing
-   raccoon will get stuck after washing & attempting to track to already dropped item(s), needing to be sat and unsat
-   raccoons that have grabbed but did not initially find washing spot will not wash
-   if a washing spot appears (player places water)
+   grabbing & washing animation do not play every two washing instances.
+
  */
 public class RaccoonEntity extends TameableEntity {
 
@@ -87,15 +85,23 @@ public class RaccoonEntity extends TameableEntity {
     public static final TrackedData<Boolean> DATA_WASHING =
             DataTracker.registerData(RaccoonEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 
+    private static final int GRABBING_COOLDOWN = 2;
+
     public static final int MAX_GRAB_STACK = 16;
 
     private static final int GRAB_DURATION_TICKS = 35;
+    private static final int WATER_RETRY_TICKS = 40;
     private static final int WASH_DROP_TICK = 90;
     private static final int WASHING_DURATION_TICKS = 20 * 7;
     private static final int MAX_WASH_SEARCH_DISTANCE = 24;
+    private static final int POST_WASH_COOLDOWN_TICKS = 40;
 
+    private int grabbingCooldown = 0;
+    private int washingStartDelay = 0;
     private int grabbingTicks = 0;
     private int washingTicks = 0;
+    private int waterRetryTicks = 0;
+    private int postWashCooldown = 0;
     /* ---------------- EATING ---------------- */
     private ItemStack currentEatingStack;
 
@@ -207,6 +213,13 @@ public class RaccoonEntity extends TameableEntity {
         this.goalSelector.add(14, new LookAroundGoal(this));
     }
 
+    @Override
+    public boolean canTarget(@Nullable LivingEntity target) {
+        if (isGrabbing() || isWashing()) return false;
+        return super.canTarget(target);
+    }
+
+
     /* ---------------- ENTITY ATTRIBUTES ---------------- */
     public static DefaultAttributeContainer.Builder createAttributes(){
         return MobEntity.createMobAttributes()
@@ -244,63 +257,54 @@ public class RaccoonEntity extends TameableEntity {
     }
 
     /* ---------------- ANIMATION STATE SETUP---------------- */
+    @Nullable
+    private AnimationState currentAnimation = null;
+
     private void setupAnimationStates() {
 
         if (isSleeping()) {
-            stopAllExcept(sleepingAnimationState);
-            startIfNotRunning(sleepingAnimationState);
-            return;
-        }
-
-        if (dataTracker.get(DATA_GRABBING)) {
-            stopAllExcept(grabAnimationState);
-            startIfNotRunning(grabAnimationState);
+            switchTo(sleepingAnimationState);
             return;
         }
 
         if (dataTracker.get(DATA_WASHING)) {
-            stopAllExcept(washAnimationState);
-            startIfNotRunning(washAnimationState);
+            switchTo(washAnimationState);
+            return;
+        }
+
+        if (dataTracker.get(DATA_GRABBING)) {
+            switchTo(grabAnimationState);
             return;
         }
 
         if (isEating()) {
-            stopAllExcept(eatingAnimationState);
-            startIfNotRunning(eatingAnimationState);
+            switchTo(eatingAnimationState);
             return;
         }
 
         if (isBegging()) {
-            stopAllExcept(begAnimationState);
-            startIfNotRunning(begAnimationState);
+            switchTo(begAnimationState);
             return;
         }
 
         if (this.isInSittingPose()) {
-            stopAllExcept(sittingAnimationState);
-            startIfNotRunning(sittingAnimationState);
+            switchTo(sittingAnimationState);
         } else {
-            stopAllExcept(idleAnimationState);
-            startIfNotRunning(idleAnimationState);
+            switchTo(idleAnimationState);
         }
     }
 
 
-    //ANIMATION STATE HELPERS
-    private void stopAllExcept(AnimationState keep) {
-        if (idleAnimationState != keep) idleAnimationState.stop();
-        if (sittingAnimationState != keep) sittingAnimationState.stop();
-        if (eatingAnimationState != keep) eatingAnimationState.stop();
-        if (sleepingAnimationState != keep) sleepingAnimationState.stop();
-        if (begAnimationState != keep) begAnimationState.stop();
-        if(washAnimationState != keep)  washAnimationState.stop();
-        if(grabAnimationState != keep) grabAnimationState.stop();
-    }
+    private void switchTo(AnimationState next) {
+        if (currentAnimation == next) return;
 
-    private void startIfNotRunning(AnimationState state) {
-        if (!state.isRunning()) state.start(this.age);
-    }
+        if (currentAnimation != null) {
+            currentAnimation.stop();
+        }
 
+        currentAnimation = next;
+        next.start(this.age);
+    }
 
     /* ---------------- TICKING ---------------- */
 
@@ -325,22 +329,52 @@ public class RaccoonEntity extends TameableEntity {
             endTamedBuff();
         }
 
+        if (isServer && postWashCooldown > 0) {
+            postWashCooldown--;
+        }
+
+
         // GRABBING
         if (dataTracker.get(DATA_GRABBING)) {
             handleGrabbingTick();
         }
+        //RETRY WATER SEARCHING
+        if (!getEntityWorld().isClient()
+                && !dataTracker.get(DATA_WASHING)
+                && !dataTracker.get(DATA_GRABBING)
+                && !headingToWater
+                && !grabbedStack.isEmpty()) {
 
-        // ARRIVED AT WATER → START WASHING
+            if (++waterRetryTicks >= WATER_RETRY_TICKS) {
+                waterRetryTicks = 0;
+                attemptFindWater();
+            }
+        }
+
+        // ARRIVED AT WATER
         if (headingToWater && waterPos != null) {
             if (this.getBlockPos().isWithinDistance(waterPos, 1.5)) {
                 headingToWater = false;
 
-                washingTicks = 0;
-                dataTracker.set(DATA_WASHING, true);
 
+                //delay washing
+                washingStartDelay = 1;
+                washingTicks = 0;
                 getNavigation().stop();
-                setVelocity(0, getVelocity().y, 0);
-                velocityDirty = true;
+            }
+        }
+        // START WASHING AFTER DELAY
+        if (washingStartDelay > 0 && --washingStartDelay == 0) {
+            // END grabbing cleanly
+            if (dataTracker.get(DATA_GRABBING)) {
+                dataTracker.set(DATA_GRABBING, false);
+                washingStartDelay = 1; // force 1-tick gap
+                return;
+            }
+
+            // START washing on next tick
+            if (!dataTracker.get(DATA_WASHING) && !grabbedStack.isEmpty()) {
+                dataTracker.set(DATA_WASHING, true);
             }
         }
 
@@ -465,8 +499,9 @@ public class RaccoonEntity extends TameableEntity {
         return this.dataTracker.get(DATA_GRABBING);
     }
 
-    private boolean canGrab(ItemStack stack) {
+    public boolean canGrab(ItemStack stack) {
         if (stack.isEmpty()) return false;
+        if (postWashCooldown > 0) return false;
         if(this.isInSittingPose()) return false;
         if(this.isSleeping()) return false;
         if(this.isEating()) return false;
@@ -500,68 +535,82 @@ public class RaccoonEntity extends TameableEntity {
 
 
     public void startGrabSequence() {
-        this.grabbingTicks = 0;
-    }
-
-    // GRABBING TICK HANDLER
-    private void handleGrabbingTick() {
-        grabbingTicks++;
-
-        // Stop movement during grab
-        getNavigation().stop();
-        setVelocity(0, getVelocity().y, 0);
-        velocityDirty = true;
-
-        // Play sniff sound at 0.5s (10 ticks)
-        if (grabbingTicks == 10) playSound(ModSounds.RACCOON_SNIFFS, 1.0F, 1.0F);
-
-        // Once grab duration reached, check for more powder
-        if (grabbingTicks >= GRAB_DURATION_TICKS) {
+        if (!dataTracker.get(DATA_GRABBING)) {
+            dataTracker.set(DATA_GRABBING, true);
             grabbingTicks = 0;
-
-            List<ItemEntity> nearby = getEntityWorld().getEntitiesByClass(
-                    ItemEntity.class,
-                    getBoundingBox().expand(12),
-                    item -> canGrab(item.getStack())
-            );
-
-            if (!nearby.isEmpty()) {
-                ItemEntity next = nearby.get(0);
-                ItemStack stack = next.getStack();
-
-                int toGrab = Math.min(
-                        MAX_GRAB_STACK - grabbedStack.getCount(),
-                        stack.getCount()
-                );
-
-                if (toGrab > 0) {
-                    ItemStack taken = stack.split(toGrab);
-                    addToInventory(taken);
-
-                    if (stack.isEmpty()) {
-                        next.discard();
-                    }
-                }
-
-                dataTracker.set(DATA_GRABBING, true);
-                grabAnimationState.start(this.age);
-
-            } else {
-                dataTracker.set(DATA_GRABBING, false);
-                grabAnimationState.stop();
-                attemptFindWater();
-            }
-
+            grabbingCooldown = GRABBING_COOLDOWN;
         }
     }
 
+    private void resumeConcreteSearch() {
+        this.headingToWater = false;
+        this.waterPos = null;
+        this.grabbingTicks = 0;
+    }
+
+      // GRABBING TICK HANDLER
+      private void handleGrabbingTick() {
+          grabbingTicks++;
+
+          // Stop movement during grab
+          getNavigation().stop();
+          setVelocity(0, getVelocity().y, 0);
+          velocityDirty = true;
+          this.bodyYaw = this.getYaw();
+          this.headYaw = this.getYaw();
+
+          if (grabbingTicks == 10) playSound(ModSounds.RACCOON_SNIFFS, 1.0F, 1.0F);
+
+          if (grabbingCooldown > 0) {
+              grabbingCooldown--;
+              return;
+          }
+
+          if (grabbingTicks >= GRAB_DURATION_TICKS) {
+              grabbingTicks = 0;
+
+              List<ItemEntity> nearby = getEntityWorld().getEntitiesByClass(
+                      ItemEntity.class,
+                      getBoundingBox().expand(12),
+                      item -> canGrab(item.getStack())
+              );
+
+              if (!nearby.isEmpty()) {
+                  ItemEntity next = nearby.get(0);
+                  ItemStack stack = next.getStack();
+
+                  int spaceLeft = MAX_GRAB_STACK - grabbedStack.getCount();
+                  int toGrab = Math.min(spaceLeft, stack.getCount());
+                  if (toGrab <= 0) return;
+
+                  ItemStack taken = stack.split(toGrab);
+                  addToInventory(taken);
+
+                  if (stack.isEmpty()) next.discard();
+
+                  // Only toggle DATA_GRABBING if it's currently false
+                  if (!dataTracker.get(DATA_GRABBING)) {
+                      dataTracker.set(DATA_GRABBING, true);
+                  }
+
+                  startGrabSequence();
+                  grabbingCooldown = GRABBING_COOLDOWN;
+              } else {
+                  dataTracker.set(DATA_GRABBING, false);
+                  attemptFindWater();
+              }
+          }
+      }
+
+
 
     /* ---------------- TAMED RACCOON SEEK WATER  ---------------- */
-    private void attemptFindWater() {
+    public void attemptFindWater() {
         waterPos = findNearestWater();
 
-        // If no water or inventory empty, do nothing
+        // If no water or inventory empty, retry
         if (waterPos == null || grabbedStack.isEmpty()) return;
+        waterRetryTicks = 0;
 
         headingToWater = true;
         getNavigation().startMovingTo(
@@ -599,6 +648,8 @@ public class RaccoonEntity extends TameableEntity {
         getNavigation().stop();
         setVelocity(0, getVelocity().y, 0);
         velocityDirty = true;
+        this.bodyYaw = this.getYaw();
+        this.headYaw = this.getYaw();
 
         // Play water sounds and particles periodically
         if (washingTicks % 20 == 0 && washingTicks < WASH_DROP_TICK) {
@@ -610,7 +661,7 @@ public class RaccoonEntity extends TameableEntity {
                         getX(),
                         getBodyY(0.5),
                         getZ(),
-                        3, // particles per tick
+                        3,
                         0.2, 0.2, 0.2, 0.01
                 );
             }
@@ -621,12 +672,21 @@ public class RaccoonEntity extends TameableEntity {
         }
 
         if (washingTicks >= WASHING_DURATION_TICKS) {
-            dataTracker.set(DATA_WASHING, false);
-            washAnimationState.stop();
+            if (dataTracker.get(DATA_WASHING)) {
+                dataTracker.set(DATA_WASHING, false);
+            }
+            washingStartDelay = 1;
             washingTicks = 0;
             waterPos = null;
             grabbedStack = ItemStack.EMPTY;
-        }
+
+            getNavigation().stop();
+            setVelocity(0, getVelocity().y, 0);
+            velocityDirty = true;
+
+            resumeConcreteSearch();
+            postWashCooldown = POST_WASH_COOLDOWN_TICKS;        }
+
     }
 
     private void dropWashedConcrete() {
@@ -647,6 +707,10 @@ public class RaccoonEntity extends TameableEntity {
         getEntityWorld().spawnEntity(entity);
 
         grabbedStack = ItemStack.EMPTY;
+    }
+
+    public boolean isPostWashCoolingDown() {
+        return postWashCooldown > 0;
     }
 
 

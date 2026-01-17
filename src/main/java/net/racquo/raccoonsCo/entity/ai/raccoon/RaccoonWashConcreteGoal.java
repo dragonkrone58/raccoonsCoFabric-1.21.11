@@ -27,16 +27,17 @@ public class RaccoonWashConcreteGoal extends Goal {
     @Override
     public boolean canStart() {
         if (!raccoon.isTamed()) return false;
+        if (raccoon.isPostWashCoolingDown()) return false;
         if (raccoon.isInSittingPose()) return false;
         if (raccoon.isEating() || raccoon.isSleeping()) return false;
 
-        // If already heading to water or washing, don't start
+        // Already holding something or washing
         if (!raccoon.grabbedStack.isEmpty()) return false;
+        if (raccoon.isWashing()) return false;
 
         targetPowder = findNearestConcretePowder();
         return targetPowder != null;
     }
-
 
     @Override
     public void start() {
@@ -50,8 +51,14 @@ public class RaccoonWashConcreteGoal extends Goal {
             return;
         }
 
-        if (raccoon.distanceTo(targetPowder) < 1.5F) {
+        if (raccoon.distanceTo(targetPowder) <= 1.5F) {
             grabConcrete();
+
+            // Immediately hand off to entity logic
+            raccoon.getNavigation().stop();
+            raccoon.attemptFindWater();
+
+            stop();
         }
     }
 
@@ -59,7 +66,8 @@ public class RaccoonWashConcreteGoal extends Goal {
     public boolean shouldContinue() {
         return targetPowder != null
                 && targetPowder.isAlive()
-                && raccoon.grabbedStack.isEmpty();
+                && raccoon.grabbedStack.isEmpty()
+                && !raccoon.isWashing();
     }
 
     @Override
@@ -73,8 +81,12 @@ public class RaccoonWashConcreteGoal extends Goal {
         List<ItemEntity> items = raccoon.getEntityWorld().getEntitiesByClass(
                 ItemEntity.class,
                 raccoon.getBoundingBox().expand(12),
-                item -> item.getStack().getItem() instanceof BlockItem blockItem
-                        && blockItem.getBlock() instanceof ConcretePowderBlock
+                item -> {
+                    ItemStack stack = item.getStack();
+                    if (!(stack.getItem() instanceof BlockItem blockItem)) return false;
+                    if (!(blockItem.getBlock() instanceof ConcretePowderBlock)) return false;
+                    return raccoon.canGrab(stack);
+                }
         );
 
         return items.stream()
@@ -84,24 +96,23 @@ public class RaccoonWashConcreteGoal extends Goal {
 
     private void grabConcrete() {
         if (raccoon.isInSittingPose()) return;
-        if (!raccoon.grabbedStack.isEmpty()) return;
+        if (!raccoon.grabbedStack.isEmpty() && raccoon.grabbedStack.getCount() >= RaccoonEntity.MAX_GRAB_STACK) return;
 
         ItemStack stack = targetPowder.getStack();
+        if (stack.isEmpty()) return;
 
-        int toGrab = Math.min(stack.getCount(), RaccoonEntity.MAX_GRAB_STACK);
+        int spaceLeft = RaccoonEntity.MAX_GRAB_STACK - raccoon.grabbedStack.getCount();
+        int toGrab = Math.min(spaceLeft, stack.getCount());
         if (toGrab <= 0) return;
 
         ItemStack taken = stack.split(toGrab);
         raccoon.addToInventory(taken);
 
-        if (stack.isEmpty()) {
-            targetPowder.discard();
-        }
+        if (stack.isEmpty()) targetPowder.discard();
 
-        raccoon.getDataTracker().set(RaccoonEntity.DATA_GRABBING, true);
-        raccoon.grabAnimationState.start(raccoon.age);
         raccoon.startGrabSequence();
+        raccoon.attemptFindWater();
     }
 
-
 }
+
