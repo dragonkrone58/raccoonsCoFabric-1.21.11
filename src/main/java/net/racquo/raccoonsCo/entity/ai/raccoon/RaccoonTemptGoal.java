@@ -31,12 +31,12 @@ public class RaccoonTemptGoal extends TemptGoal {
         super.tick();
 
         if (this.closestPlayer == null) {
-            raccoon.setBegging(false);
+            raccoon.stopBegging();
             return;
         }
 
         if (raccoon.isEating() || raccoon.isFull() || raccoon.isSleeping()) {
-            raccoon.setBegging(false);
+            raccoon.stopBegging();
             this.stop();
             return;
         }
@@ -45,16 +45,16 @@ public class RaccoonTemptGoal extends TemptGoal {
 
         if (distanceSq <= BEG_DISTANCE * BEG_DISTANCE) {
             raccoon.getNavigation().stop();
-            raccoon.setBegging(true);
+            raccoon.startBegging();
             raccoon.getLookControl().lookAt(this.closestPlayer, 30.0F, 30.0F);
         } else {
-            raccoon.setBegging(false);
+            raccoon.stopBegging();
         }
     }
 
     @Override
     public void stop() {
         super.stop();
-        raccoon.setBegging(false);
+        raccoon.stopBegging();
     }
 }

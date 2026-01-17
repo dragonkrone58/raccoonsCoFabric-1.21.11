@@ -5,7 +5,6 @@ import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.ai.goal.Goal;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
 import net.racquo.raccoonsCo.entity.custom.RaccoonEntity;
 
 import java.util.Comparator;
@@ -30,8 +29,6 @@ public class RaccoonWashConcreteGoal extends Goal {
         if (raccoon.isPostWashCoolingDown()) return false;
         if (raccoon.isInSittingPose()) return false;
         if (raccoon.isEating() || raccoon.isSleeping()) return false;
-
-        // Already holding something or washing
         if (!raccoon.grabbedStack.isEmpty()) return false;
         if (raccoon.isWashing()) return false;
 
@@ -41,7 +38,9 @@ public class RaccoonWashConcreteGoal extends Goal {
 
     @Override
     public void start() {
-        raccoon.getNavigation().startMovingTo(targetPowder, speed);
+        if (targetPowder != null) {
+            raccoon.getNavigation().startMovingTo(targetPowder, speed);
+        }
     }
 
     @Override
@@ -51,14 +50,14 @@ public class RaccoonWashConcreteGoal extends Goal {
             return;
         }
 
-        if (raccoon.distanceTo(targetPowder) <= 1.5F) {
-            grabConcrete();
+        double distance = raccoon.distanceTo(targetPowder);
 
-            // Immediately hand off to entity logic
-            raccoon.getNavigation().stop();
-            raccoon.attemptFindWater();
-
-            stop();
+        // If close enough, trigger entity grab
+        if (distance <= 1.5F) {
+            if (!raccoon.isGrabbing() && raccoon.canGrab(targetPowder.getStack())) {
+                raccoon.setGrabTarget(targetPowder); // only set once
+                raccoon.startGrabSequence();
+            }
         }
     }
 
@@ -66,8 +65,9 @@ public class RaccoonWashConcreteGoal extends Goal {
     public boolean shouldContinue() {
         return targetPowder != null
                 && targetPowder.isAlive()
-                && raccoon.grabbedStack.isEmpty()
-                && !raccoon.isWashing();
+                && !raccoon.isWashing()
+                && !raccoon.isGrabbing()
+                && raccoon.grabbedStack.isEmpty();
     }
 
     @Override
@@ -93,26 +93,4 @@ public class RaccoonWashConcreteGoal extends Goal {
                 .min(Comparator.comparingDouble(raccoon::distanceTo))
                 .orElse(null);
     }
-
-    private void grabConcrete() {
-        if (raccoon.isInSittingPose()) return;
-        if (!raccoon.grabbedStack.isEmpty() && raccoon.grabbedStack.getCount() >= RaccoonEntity.MAX_GRAB_STACK) return;
-
-        ItemStack stack = targetPowder.getStack();
-        if (stack.isEmpty()) return;
-
-        int spaceLeft = RaccoonEntity.MAX_GRAB_STACK - raccoon.grabbedStack.getCount();
-        int toGrab = Math.min(spaceLeft, stack.getCount());
-        if (toGrab <= 0) return;
-
-        ItemStack taken = stack.split(toGrab);
-        raccoon.addToInventory(taken);
-
-        if (stack.isEmpty()) targetPowder.discard();
-
-        raccoon.startGrabSequence();
-        raccoon.attemptFindWater();
-    }
-
 }
-

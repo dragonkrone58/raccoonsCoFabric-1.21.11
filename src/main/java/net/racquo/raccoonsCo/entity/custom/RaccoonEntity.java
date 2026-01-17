@@ -72,6 +72,22 @@ public class RaccoonEntity extends TameableEntity {
     public final AnimationState grabAnimationState = new AnimationState();
     public final AnimationState washAnimationState = new AnimationState();
 
+    public enum RaccoonAction {
+        IDLE,
+        GRABBING,
+        WALKING_TO_WATER,
+        WASHING,
+        EATING,
+        SLEEPING,
+        BEGGING,
+        SITTING,
+        PANIC
+    }
+
+    public static final TrackedData<Integer> DATA_ACTION =
+            DataTracker.registerData(RaccoonEntity.class, TrackedDataHandlerRegistry.INTEGER);
+
+
     /* ---------------- GRABBING & WASHING ---------------- */
 
 
@@ -79,11 +95,7 @@ public class RaccoonEntity extends TameableEntity {
     private boolean headingToWater = false;
     private BlockPos waterPos;
 
-    public static final TrackedData<Boolean> DATA_GRABBING =
-            DataTracker.registerData(RaccoonEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 
-    public static final TrackedData<Boolean> DATA_WASHING =
-            DataTracker.registerData(RaccoonEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 
     private static final int GRABBING_COOLDOWN = 2;
 
@@ -105,9 +117,6 @@ public class RaccoonEntity extends TameableEntity {
     /* ---------------- EATING ---------------- */
     private ItemStack currentEatingStack;
 
-    //EATING DATA TRACKER
-    private static final TrackedData<Boolean> DATA_EATING =
-            DataTracker.registerData(RaccoonEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 
     private static final int EATING_COOLDOWN_TICKS = 20;
     private static final int EATING_ANIMATION_DURATION = 70;
@@ -122,6 +131,7 @@ public class RaccoonEntity extends TameableEntity {
 
     public static final int MAX_FULLNESS = 3;
     private static final int FULLNESS_COOLDOWN_TICKS = 20 * 300;
+
     //FULLNESS DATA TRACKER
     private static final TrackedData<Integer> DATA_FULLNESS =
             DataTracker.registerData(RaccoonEntity.class, TrackedDataHandlerRegistry.INTEGER);
@@ -138,24 +148,12 @@ public class RaccoonEntity extends TameableEntity {
 
     /* ---------------- PANIC MODE ---------------- */
     private static final int PANIC_TICKS = 20 * 8;
-    //PANIC DATA TRACKER
-    private static final TrackedData<Boolean> DATA_PANIC_MODE =
-            DataTracker.registerData(RaccoonEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     private int panicTicks = 0;
 
     /* ---------------- SLEEPING ---------------- */
     private static final int SLEEP_DURATION_TICKS = 20 * 300; // 5 minutes
     private static final int MAX_SLEEP_LIGHT = 12;
-    //SLEEPING DATA TRACKER
-    private static final TrackedData<Boolean> DATA_SLEEPING =
-            DataTracker.registerData(RaccoonEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
     private int sleepTicks = 0;
-
-
-    /* ---------------- BEGGING ---------------- */
-    //BEGGING DATA TRACKER
-    private static final TrackedData<Boolean> DATA_BEGGING =
-            DataTracker.registerData(RaccoonEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 
     /* ---------------- TEMPTABLES ---------------- */
     private static final List<ItemConvertible> RACCOON_EATABLES =
@@ -180,6 +178,7 @@ public class RaccoonEntity extends TameableEntity {
     //VARIANT DATA TRACKER
     private static final TrackedData<Integer> DATA_ID_TYPE_VARIANT =
             DataTracker.registerData(RaccoonEntity.class, TrackedDataHandlerRegistry.INTEGER);
+
 
     /* ---------------- CONSTRUCTOR ---------------- */
     public RaccoonEntity(EntityType<? extends TameableEntity> entityType, World world) {
@@ -242,18 +241,26 @@ public class RaccoonEntity extends TameableEntity {
         return super.initialize(world, difficulty, spawnReason, entityData);
     }
 
-    /* ---------------- DATA TRACKER INIT ---------------- */
+    /* ---------------- ACTION DATA TRACKER ---------------- */
     @Override
     protected void initDataTracker(DataTracker.Builder builder) {
         super.initDataTracker(builder);
-        builder.add(DATA_ID_TYPE_VARIANT, 0);
-        builder.add(DATA_EATING, false);
+        builder.add(DATA_ACTION, RaccoonAction.IDLE.ordinal());
         builder.add(DATA_FULLNESS, 0);
-        builder.add(DATA_SLEEPING, false);
-        builder.add(DATA_PANIC_MODE, false);
-        builder.add(DATA_BEGGING, false);
-        builder.add(DATA_GRABBING, false);
-        builder.add(DATA_WASHING, false);
+        builder.add(DATA_ID_TYPE_VARIANT, 0);
+
+
+    }
+    public RaccoonAction getAction() {
+        return RaccoonAction.values()[this.dataTracker.get(DATA_ACTION)];
+    }
+    private void setAction(RaccoonAction action) {
+        if (getAction() == action) return;
+        this.dataTracker.set(DATA_ACTION, action.ordinal());
+    }
+
+    public boolean isAction(RaccoonAction action) {
+        return getAction() == action;
     }
 
     /* ---------------- ANIMATION STATE SETUP---------------- */
@@ -261,38 +268,17 @@ public class RaccoonEntity extends TameableEntity {
     private AnimationState currentAnimation = null;
 
     private void setupAnimationStates() {
-
-        if (isSleeping()) {
-            switchTo(sleepingAnimationState);
-            return;
-        }
-
-        if (dataTracker.get(DATA_WASHING)) {
-            switchTo(washAnimationState);
-            return;
-        }
-
-        if (dataTracker.get(DATA_GRABBING)) {
-            switchTo(grabAnimationState);
-            return;
-        }
-
-        if (isEating()) {
-            switchTo(eatingAnimationState);
-            return;
-        }
-
-        if (isBegging()) {
-            switchTo(begAnimationState);
-            return;
-        }
-
-        if (this.isInSittingPose()) {
-            switchTo(sittingAnimationState);
-        } else {
-            switchTo(idleAnimationState);
+        switch (getAction()) {
+            case SLEEPING -> switchTo(sleepingAnimationState);
+            case WASHING -> switchTo(washAnimationState);
+            case GRABBING -> switchTo(grabAnimationState);
+            case EATING -> switchTo(eatingAnimationState);
+            case BEGGING -> switchTo(begAnimationState);
+            case SITTING -> switchTo(sittingAnimationState);
+            default -> switchTo(idleAnimationState);
         }
     }
+
 
 
     private void switchTo(AnimationState next) {
@@ -316,10 +302,10 @@ public class RaccoonEntity extends TameableEntity {
         final boolean isServer = !world.isClient();
 
         // PANIC MODE
-        if (this.dataTracker.get(DATA_PANIC_MODE)) {
+        if (isAction(RaccoonAction.PANIC)) {
             if (--panicTicks <= 0) {
                 panicTicks = 0;
-                this.dataTracker.set(DATA_PANIC_MODE, false);
+                setAction(RaccoonAction.IDLE);
                 if (isServer) log.info("Raccoon panic mode ended");
             }
         }
@@ -333,16 +319,15 @@ public class RaccoonEntity extends TameableEntity {
             postWashCooldown--;
         }
 
-
         // GRABBING
-        if (dataTracker.get(DATA_GRABBING)) {
+        if (isServer && isAction(RaccoonAction.GRABBING)){
             handleGrabbingTick();
         }
         //RETRY WATER SEARCHING
-        if (!getEntityWorld().isClient()
-                && !dataTracker.get(DATA_WASHING)
-                && !dataTracker.get(DATA_GRABBING)
-                && !headingToWater
+        if (isServer
+                && !isAction(RaccoonAction.WASHING)
+                && !(isAction(RaccoonAction.GRABBING))
+                && !isAction(RaccoonAction.WALKING_TO_WATER)
                 && !grabbedStack.isEmpty()) {
 
             if (++waterRetryTicks >= WATER_RETRY_TICKS) {
@@ -356,30 +341,26 @@ public class RaccoonEntity extends TameableEntity {
             if (this.getBlockPos().isWithinDistance(waterPos, 1.5)) {
                 headingToWater = false;
 
-
+                setAction(RaccoonAction.IDLE);
                 //delay washing
                 washingStartDelay = 1;
                 washingTicks = 0;
                 getNavigation().stop();
             }
         }
+
         // START WASHING AFTER DELAY
         if (washingStartDelay > 0 && --washingStartDelay == 0) {
-            // END grabbing cleanly
-            if (dataTracker.get(DATA_GRABBING)) {
-                dataTracker.set(DATA_GRABBING, false);
-                washingStartDelay = 1; // force 1-tick gap
-                return;
-            }
 
-            // START washing on next tick
-            if (!dataTracker.get(DATA_WASHING) && !grabbedStack.isEmpty()) {
-                dataTracker.set(DATA_WASHING, true);
+            // Transition directly into washing
+            if (!isAction(RaccoonAction.WASHING) && !grabbedStack.isEmpty()) {
+                setAction(RaccoonAction.WASHING);
+                washingTicks = 0;
             }
         }
 
         // WASHING
-        if (dataTracker.get(DATA_WASHING)) {
+        if (isServer && isAction(RaccoonAction.WASHING)) {
             handleWashingTick();
         }
 
@@ -421,9 +402,9 @@ public class RaccoonEntity extends TameableEntity {
         }
 
         // CLIENT ANIMATIONS
-        if (!isServer) {
-            setupAnimationStates();
-        }
+
+        setupAnimationStates();
+
     }
 
 
@@ -496,7 +477,14 @@ public class RaccoonEntity extends TameableEntity {
     /* ---------------- TAMED RACCOON GRABBING  ---------------- */
 
     public boolean isGrabbing(){
-        return this.dataTracker.get(DATA_GRABBING);
+        return isAction(RaccoonAction.GRABBING);    }
+
+    // Add at the top with other fields
+    private ItemEntity grabTarget = null;
+
+    // Setter
+    public void setGrabTarget(ItemEntity target) {
+        this.grabTarget = target;
     }
 
     public boolean canGrab(ItemStack stack) {
@@ -505,7 +493,7 @@ public class RaccoonEntity extends TameableEntity {
         if(this.isInSittingPose()) return false;
         if(this.isSleeping()) return false;
         if(this.isEating()) return false;
-        if (this.isGrabbing() || this.isWashing()) return false;
+        if(this.isWashing()) return false;
 
         if (!(stack.getItem() instanceof BlockItem blockItem)) return false;
         if (!(blockItem.getBlock() instanceof ConcretePowderBlock)) return false;
@@ -535,12 +523,13 @@ public class RaccoonEntity extends TameableEntity {
 
 
     public void startGrabSequence() {
-        if (!dataTracker.get(DATA_GRABBING)) {
-            dataTracker.set(DATA_GRABBING, true);
-            grabbingTicks = 0;
-            grabbingCooldown = GRABBING_COOLDOWN;
-        }
+        if (isGrabbing()) return;
+        if (grabTarget == null) return;
+        setAction(RaccoonAction.GRABBING);
+        grabbingTicks = 0;
+        grabbingCooldown = GRABBING_COOLDOWN;
     }
+
 
     private void resumeConcreteSearch() {
         this.headingToWater = false;
@@ -566,39 +555,29 @@ public class RaccoonEntity extends TameableEntity {
               return;
           }
 
-          if (grabbingTicks >= GRAB_DURATION_TICKS) {
-              grabbingTicks = 0;
+          if (grabTarget == null || !grabTarget.isAlive()) {
+              // No valid target, stop grabbing
+              setAction(RaccoonAction.IDLE);
+              return;
+          }
 
-              List<ItemEntity> nearby = getEntityWorld().getEntitiesByClass(
-                      ItemEntity.class,
-                      getBoundingBox().expand(12),
-                      item -> canGrab(item.getStack())
-              );
+          // Only pick up if canGrab
+          if (grabbingTicks >= GRAB_DURATION_TICKS && canGrab(grabTarget.getStack())) {
+              ItemStack stack = grabTarget.getStack();
 
-              if (!nearby.isEmpty()) {
-                  ItemEntity next = nearby.get(0);
-                  ItemStack stack = next.getStack();
-
-                  int spaceLeft = MAX_GRAB_STACK - grabbedStack.getCount();
-                  int toGrab = Math.min(spaceLeft, stack.getCount());
-                  if (toGrab <= 0) return;
-
+              int spaceLeft = MAX_GRAB_STACK - grabbedStack.getCount();
+              int toGrab = Math.min(spaceLeft, stack.getCount());
+              if (toGrab > 0) {
                   ItemStack taken = stack.split(toGrab);
                   addToInventory(taken);
 
-                  if (stack.isEmpty()) next.discard();
-
-                  // Only toggle DATA_GRABBING if it's currently false
-                  if (!dataTracker.get(DATA_GRABBING)) {
-                      dataTracker.set(DATA_GRABBING, true);
-                  }
-
-                  startGrabSequence();
-                  grabbingCooldown = GRABBING_COOLDOWN;
-              } else {
-                  dataTracker.set(DATA_GRABBING, false);
-                  attemptFindWater();
+                  if (stack.isEmpty()) grabTarget.discard();
               }
+
+              grabTarget = null;
+              attemptFindWater();
+              setAction(RaccoonAction.IDLE);
+              grabbingTicks = 0;
           }
       }
 
@@ -608,11 +587,13 @@ public class RaccoonEntity extends TameableEntity {
     public void attemptFindWater() {
         waterPos = findNearestWater();
 
-        // If no water or inventory empty, retry
         if (waterPos == null || grabbedStack.isEmpty()) return;
-        waterRetryTicks = 0;
 
+        waterRetryTicks = 0;
         headingToWater = true;
+
+        setAction(RaccoonAction.WALKING_TO_WATER);
+
         getNavigation().startMovingTo(
                 waterPos.getX() + 0.5,
                 waterPos.getY(),
@@ -620,6 +601,7 @@ public class RaccoonEntity extends TameableEntity {
                 1.1D
         );
     }
+
 
     @Nullable
     private BlockPos findNearestWater() {
@@ -638,7 +620,7 @@ public class RaccoonEntity extends TameableEntity {
 
     // WASHING TICK HANDLER
     public boolean isWashing(){
-        return this.dataTracker.get(DATA_WASHING);
+        return isAction(RaccoonAction.WASHING);
     }
 
     private void handleWashingTick() {
@@ -672,8 +654,8 @@ public class RaccoonEntity extends TameableEntity {
         }
 
         if (washingTicks >= WASHING_DURATION_TICKS) {
-            if (dataTracker.get(DATA_WASHING)) {
-                dataTracker.set(DATA_WASHING, false);
+            if (isAction(RaccoonAction.WASHING)) {
+                setAction(RaccoonAction.IDLE);
             }
             washingStartDelay = 1;
             washingTicks = 0;
@@ -744,16 +726,21 @@ public class RaccoonEntity extends TameableEntity {
     private void toggleSitting() {
         if (isGrabbing() || isWashing()) return;
 
-        setSitting(!isSitting());
+        boolean newState = !isSitting();
+        setSitting(newState);
+
         jumping = false;
         navigation.stop();
         setTarget(null);
 
-        //drop inventory when seated
-        if (isSitting()) {
+        if (newState) {
+            setAction(RaccoonAction.SITTING);
             dropInventory();
+        } else {
+            setAction(RaccoonAction.IDLE);
         }
     }
+
 
 
     /* ---------------- TAMING ATTEMPT METHOD  ---------------- */
@@ -814,8 +801,8 @@ public class RaccoonEntity extends TameableEntity {
 
     /* ---------------- EATING ITEM HELPERS ---------------- */
     public void startEating(ItemStack stack) {
-        this.dataTracker.set(DATA_EATING, true);
-        this.setBegging(false);
+        setAction(RaccoonAction.EATING);
+        this.stopBegging();
         this.currentEatingStack = stack.copyWithCount(1);
         this.eatingTicks = 0;
         this.getNavigation().stop();
@@ -864,13 +851,13 @@ public class RaccoonEntity extends TameableEntity {
 
     //EATING GETTER
     public boolean isEating() {
-        return this.dataTracker.get(DATA_EATING);
+        return isAction(RaccoonAction.EATING);
     }
 
     //STOP EATING
     private void finishEating() {
-        this.dataTracker.set(DATA_EATING, false);
-        this.setBegging(false);
+        setAction(RaccoonAction.IDLE);
+        this.stopBegging();
         this.currentEatingStack = ItemStack.EMPTY;
         increaseFullness();
 
@@ -953,11 +940,13 @@ public class RaccoonEntity extends TameableEntity {
     }
 
     public boolean isPanic(){
-        return this.dataTracker.get(DATA_PANIC_MODE);
+
+        return isAction(RaccoonAction.PANIC);
     }
 
     public boolean isSleeping() {
-        return this.dataTracker.get(DATA_SLEEPING);
+
+        return isAction(RaccoonAction.SLEEPING);
     }
 
 
@@ -977,7 +966,7 @@ public class RaccoonEntity extends TameableEntity {
 
         this.sleepTicks = 0;
         this.fullSleepSearchTicks = 0;
-        this.dataTracker.set(DATA_SLEEPING, true);
+        setAction(RaccoonAction.SLEEPING);
         this.setSitting(false);
         this.getNavigation().stop();
         this.setVelocity(0, this.getVelocity().y, 0);
@@ -985,7 +974,7 @@ public class RaccoonEntity extends TameableEntity {
     /* ---------------- SLEEP SEARCH METHOD---------------- */
     public boolean canSleepHere() {
         if (this.isTamed()) return false;
-        if (this.dataTracker.get(DATA_PANIC_MODE)) return false;
+        if (isAction(RaccoonAction.PANIC)) return false;
         if (!this.isFull()) return false;
 
         int light = this.getEntityWorld().getLightLevel(this.getBlockPos());
@@ -1000,7 +989,7 @@ public class RaccoonEntity extends TameableEntity {
         if(!isSleeping()) return;
 
         this.sleepTicks = 0;
-        this.dataTracker.set(DATA_SLEEPING, false);
+        setAction(RaccoonAction.IDLE);
 
         // Fully rested : reset fullness & timer
         resetFullness();
@@ -1013,7 +1002,7 @@ public class RaccoonEntity extends TameableEntity {
         if(!isSleeping()) return;
 
         sleepTicks = 0;
-        dataTracker.set(DATA_SLEEPING, false);
+        setAction(RaccoonAction.IDLE);
 
         this.fullSleepSearchTicks = 0;
 
@@ -1028,7 +1017,7 @@ public class RaccoonEntity extends TameableEntity {
         if (result) {
             // Enter panic mode
             wakeInterrupted();
-            this.dataTracker.set(DATA_PANIC_MODE, true);
+            setAction(RaccoonAction.PANIC);
             this.panicTicks = PANIC_TICKS;
         }
 
@@ -1063,16 +1052,23 @@ public class RaccoonEntity extends TameableEntity {
     }
 
     /* ---------------- BEGGING HELPERS ---------------- */
-    public boolean isBegging() {
-        return this.dataTracker.get(DATA_BEGGING);
+    @Nullable
+    private RaccoonAction actionBeforeBegging = null;
+
+    public void startBegging() {
+        if (isAction(RaccoonAction.BEGGING)) return;
+        if (isEating() || isSleeping() || isGrabbing() || isWashing()) return;
+
+        actionBeforeBegging = getAction();
+        setAction(RaccoonAction.BEGGING);
     }
 
-    public void setBegging(boolean begging) {
-        if(begging && this.isEating()) return;
-        this.dataTracker.set(DATA_BEGGING, begging);
+    public void stopBegging() {
+        if (!isAction(RaccoonAction.BEGGING)) return;
+
+        setAction(actionBeforeBegging != null ? actionBeforeBegging : RaccoonAction.IDLE);
+        actionBeforeBegging = null;
     }
-
-
     /* ---------------- SOUNDS ---------------- */
     @Nullable
     @Override
