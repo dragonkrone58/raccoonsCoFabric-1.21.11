@@ -2,11 +2,11 @@
 "raccoon_idle": {
   "subtitle": "Raccoon Chitters",
   "sounds": [
-    "raccoonsco:raccoon_idle1",
-    "raccoonsco:raccoon_idle2",
-    "raccoonsco:raccoon_idle4",
-    "raccoonsco:raccoon_idle5",
-    "raccoonsco:raccoon_idle6"
+    "raccoonsco:raccoon/raccoon_idle1",
+    "raccoonsco:raccoon/raccoon_idle2",
+    "raccoonsco:raccoon/raccoon_idle4",
+    "raccoonsco:raccoon/raccoon_idle5",
+    "raccoonsco:raccoon/raccoon_idle6"
   ]
 },
 
@@ -15,46 +15,64 @@
   "raccoon_hurt": {
     "subtitle": "Raccoon hurt",
     "sounds": [
-      "raccoonsco:raccoon_hurt1",
-      "raccoonsco:raccoon_hurt2",
-      "raccoonsco:raccoon_hurt3",
-      "raccoonsco:raccoon_hurt4"
+      "raccoonsco:raccoon/raccoon_hurt1",
+      "raccoonsco:raccoon/raccoon_hurt2",
+      "raccoonsco:raccoon/raccoon_hurt3",
+      "raccoonsco:raccoon/raccoon_hurt4"
     ]
   },
 
   "raccoon_death": {
     "subtitle": "Raccoon dies",
     "sounds": [
-      "raccoonsco:raccoon_death1",
-      "raccoonsco:raccoon_death2"
+      "raccoonsco:raccoon/raccoon_death1",
+      "raccoonsco:raccoon/raccoon_death2"
     ]
   },
 
   "raccoon_eats": {
     "subtitle": "Raccoon eats",
     "sounds": [
-      "raccoonsco:raccoon_eats1",
-      "raccoonsco:raccoon_eats2",
-      "raccoonsco:raccoon_eats3"
+      "raccoonsco:raccoon/raccoon_eats1",
+      "raccoonsco:raccoon/raccoon_eats2",
+      "raccoonsco:raccoon/raccoon_eats3"
     ]
   },
   "raccoon_sleeps": {
     "subtitle": "Raccoon snores",
     "sounds": [
-      "raccoonsco:raccoon_sleeps1",
-      "raccoonsco:raccoon_sleeps2",
-      "raccoonsco:raccoon_sleeps3",
-      "raccoonsco:raccoon_sleeps4",
-      "raccoonsco:raccoon_sleeps5"
+      "raccoonsco:raccoon/raccoon_sleeps1",
+      "raccoonsco:raccoon/raccoon_sleeps2",
+      "raccoonsco:raccoon/raccoon_sleeps3",
+      "raccoonsco:raccoon/raccoon_sleeps4",
+      "raccoonsco:raccoon/raccoon_sleeps5"
     ]
   },
 
   "raccoon_sniffs": {
     "subtitle": "Raccoon sniffs",
     "sounds": [
-      "raccoonsco:raccoon_sniff1",
-      "raccoonsco:raccoon_sniff2",
-      "raccoonsco:raccoon_sniff3"
+      "raccoonsco:raccoon/raccoon_sniff1",
+      "raccoonsco:raccoon/raccoon_sniff2",
+      "raccoonsco:raccoon/raccoon_sniff3"
+    ]
+  },
+
+  "raccoon_growls": {
+    "subtitle": "Raccoon growls",
+    "sounds": [
+      "raccoonsco:raccoon/raccoon_growl1",
+      "raccoonsco:raccoon/raccoon_growl2",
+      "raccoonsco:raccoon/raccoon_growl3"
+    ]
+  },
+
+  "raccoon_bites": {
+    "subtitle": "Raccoon bites",
+    "sounds": [
+      "raccoonsco:raccoon/raccoon_bite1",
+      "raccoonsco:raccoon/raccoon_bite2",
+      "raccoonsco:raccoon/raccoon_bite3"
     ]
   },
 

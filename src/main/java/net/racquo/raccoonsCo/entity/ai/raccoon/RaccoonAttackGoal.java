@@ -4,6 +4,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.sound.SoundEvents;
 import net.racquo.raccoonsCo.entity.custom.RaccoonEntity;
+import net.racquo.raccoonsCo.sound.ModSounds;
 
 public class RaccoonAttackGoal extends MeleeAttackGoal {
 
@@ -27,7 +28,7 @@ public class RaccoonAttackGoal extends MeleeAttackGoal {
         if (this.canAttack(target)) {
             this.resetCooldown();
             this.mob.tryAttack(getServerWorld(this.mob), target);
-            raccoon.playSound(SoundEvents.ENTITY_FOX_BITE, 1.0F, 1.0F);
+            raccoon.playSound(ModSounds.RACCOON_BITES, 1.0F, 1.0F);
         }
     }
 

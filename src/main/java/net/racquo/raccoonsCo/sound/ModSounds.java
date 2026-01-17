@@ -15,6 +15,8 @@ public class ModSounds {
     public static final SoundEvent RACCOON_EATS = registerSoundEvent("raccoon_eats");
     public static final SoundEvent RACCOON_SLEEPS = registerSoundEvent("raccoon_sleeps");
     public static final SoundEvent RACCOON_SNIFFS = registerSoundEvent("raccoon_sniffs");
+    public static final SoundEvent RACCOON_GROWLS = registerSoundEvent("raccoon_growls");
+    public static final SoundEvent RACCOON_BITES = registerSoundEvent("raccoon_bites");
     public static final SoundEvent CRAWFISH_HURT = registerSoundEvent("crawfish_hurt");
     public static final SoundEvent CRAWFISH_DEATH = registerSoundEvent("crawfish_death");
     public static final SoundEvent SUSPICIOUS_MUD_STEP = registerSoundEvent("suspicious_mud_wade");

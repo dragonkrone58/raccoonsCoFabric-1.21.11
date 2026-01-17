@@ -74,16 +74,10 @@ public class RaccoonEntity extends TameableEntity {
     public final AnimationState washAnimationState = new AnimationState();
 
     /* ---------------- GRABBING & WASHING ---------------- */
-    private int washingTicks = 0;
-    private static final int GRAB_DURATION_TICKS = 35; // 1.75s
-    private static final int WASH_DROP_TICK = 90;
-    private static final int WASHING_DURATION_TICKS = 20 * 7;
-    private static final int MAX_WASH_SEARCH_DISTANCE = 24;
-
-    private boolean headingToWater = false;
-    private BlockPos waterPos;
 
     public ItemStack grabbedStack = ItemStack.EMPTY;
+    private boolean headingToWater = false;
+    private BlockPos waterPos;
 
     public static final TrackedData<Boolean> DATA_GRABBING =
             DataTracker.registerData(RaccoonEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
@@ -91,10 +85,15 @@ public class RaccoonEntity extends TameableEntity {
     public static final TrackedData<Boolean> DATA_WASHING =
             DataTracker.registerData(RaccoonEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 
+    private static final int GRAB_DURATION_TICKS = 35;
+    private static final int WASH_DROP_TICK = 90;
+    private static final int WASHING_DURATION_TICKS = 20 * 7;
+    private static final int MAX_WASH_SEARCH_DISTANCE = 24;
+
+    private int washingTicks = 0;
     /* ---------------- EATING ---------------- */
     private ItemStack currentEatingStack;
-    private int eatingTicks = 0;
-    private int eatingCooldown = 0;
+
     //EATING DATA TRACKER
     private static final TrackedData<Boolean> DATA_EATING =
             DataTracker.registerData(RaccoonEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
@@ -105,13 +104,17 @@ public class RaccoonEntity extends TameableEntity {
     private static final int EATING_SOUND_END = 50;
     private static final int BURP_TICK = 60;
 
+    private int eatingCooldownTicks = 0;
+    private int eatingTicks = 0;
+
     /* ---------------- FULLNESS ---------------- */
+
     public static final int MAX_FULLNESS = 3;
+    private static final int FULLNESS_COOLDOWN_TICKS = 20 * 300;
     //FULLNESS DATA TRACKER
     private static final TrackedData<Integer> DATA_FULLNESS =
             DataTracker.registerData(RaccoonEntity.class, TrackedDataHandlerRegistry.INTEGER);
-    //ALTER TIMER FOR LONGER TAMED RACCOON BUFF
-    private static final int FULLNESS_COOLDOWN_TICKS = 20 * 300; // 5 minutes
+
     private int fullnessCooldownTicks = 0;
 
     // FULLNESS TIMEOUT
@@ -207,7 +210,7 @@ public class RaccoonEntity extends TameableEntity {
                 .add(EntityAttributes.FOLLOW_RANGE, 32.0D)
                 .add(EntityAttributes.TEMPT_RANGE, 12)
                 .add(EntityAttributes.SAFE_FALL_DISTANCE, 5.0F)
-                .add(EntityAttributes.ATTACK_DAMAGE, 1.0D);
+                .add(EntityAttributes.ATTACK_DAMAGE, 1.5D);
     }
 
     /* ---------------- RACCOON INIT ---------------- */
@@ -294,7 +297,6 @@ public class RaccoonEntity extends TameableEntity {
     }
 
 
-
     /* ---------------- TICKING ---------------- */
 
     @Override
@@ -343,7 +345,7 @@ public class RaccoonEntity extends TameableEntity {
         }
 
         // EATING COOLDOWN
-        if (eatingCooldown > 0) eatingCooldown--;
+        if (eatingCooldownTicks > 0) eatingCooldownTicks--;
 
         // EATING ANIMATION
         if (this.isEating()) {
@@ -703,7 +705,7 @@ public class RaccoonEntity extends TameableEntity {
 
     //ITEM EATING COOLDOWN HELPER
     public boolean canEatDroppedFood() {
-        if (eatingCooldown > 0) return false;
+        if (eatingCooldownTicks > 0) return false;
         if (isSleeping()) return false;
 
         return !isTamed() || fullnessCooldownTicks == 0;
@@ -723,7 +725,7 @@ public class RaccoonEntity extends TameableEntity {
         increaseFullness();
 
         // Start eating cooldown after finishing the animation
-        this.eatingCooldown = EATING_COOLDOWN_TICKS;
+        this.eatingCooldownTicks = EATING_COOLDOWN_TICKS;
     }
 
 
@@ -732,7 +734,7 @@ public class RaccoonEntity extends TameableEntity {
         if (this.getEntityWorld().isClient()) return;
 
         // Already eating or cooldown not finished
-        if (this.isEating() || this.eatingCooldown > 0) return;
+        if (this.isEating() || this.eatingCooldownTicks > 0) return;
 
         if (this.isInSittingPose()) return;
         if (this.isFull()) return;
@@ -906,7 +908,7 @@ public class RaccoonEntity extends TameableEntity {
                 && !this.isTamed()
                 && !this.isFull()) {
 
-            this.playSound(SoundEvents.ENTITY_FOX_AGGRO, 1.0F, 1.0F);
+            this.playSound(ModSounds.RACCOON_GROWLS, 1.0F, 1.0F);
         }
     }
 

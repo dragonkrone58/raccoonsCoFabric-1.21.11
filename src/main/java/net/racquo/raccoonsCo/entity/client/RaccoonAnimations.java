@@ -900,6 +900,7 @@ public class RaccoonAnimations  {
             .build();
 
 
+
     public static final AnimationDefinition ANIM_RACCOON_WASH = AnimationDefinition.Builder.create(5.0F)
             .addBoneAnimation("frontLegL", new Transformation(Transformation.Targets.ROTATE,
                     new Keyframe(0.0F, AnimationHelper.createRotationalVector(0.0F, 0.0F, 0.0F), Transformation.Interpolations.CUBIC),
@@ -931,6 +932,7 @@ public class RaccoonAnimations  {
                     new Keyframe(2.9167F, AnimationHelper.createTranslationalVector(0.0F, -3.5F, 1.0F), Transformation.Interpolations.CUBIC),
                     new Keyframe(3.1667F, AnimationHelper.createTranslationalVector(0.0F, -3.5F, -1.0F), Transformation.Interpolations.CUBIC),
                     new Keyframe(3.4167F, AnimationHelper.createTranslationalVector(0.0F, -3.5F, 1.0F), Transformation.Interpolations.CUBIC),
+                    new Keyframe(3.6667F, AnimationHelper.createTranslationalVector(0.0F, -3.5F, -1.0F), Transformation.Interpolations.CUBIC),
                     new Keyframe(3.9167F, AnimationHelper.createTranslationalVector(0.0F, -3.5F, 1.0F), Transformation.Interpolations.CUBIC),
                     new Keyframe(4.125F, AnimationHelper.createTranslationalVector(0.0F, -3.0F, 1.0F), Transformation.Interpolations.CUBIC),
                     new Keyframe(4.25F, AnimationHelper.createTranslationalVector(0.0F, 0.71F, 0.57F), Transformation.Interpolations.CUBIC),
@@ -968,6 +970,7 @@ public class RaccoonAnimations  {
                     new Keyframe(2.9167F, AnimationHelper.createTranslationalVector(0.0F, -3.5F, -1.0F), Transformation.Interpolations.CUBIC),
                     new Keyframe(3.1667F, AnimationHelper.createTranslationalVector(0.0F, -3.5F, 2.0F), Transformation.Interpolations.CUBIC),
                     new Keyframe(3.4167F, AnimationHelper.createTranslationalVector(0.0F, -3.5F, -1.0F), Transformation.Interpolations.CUBIC),
+                    new Keyframe(3.6667F, AnimationHelper.createTranslationalVector(0.0F, -3.5F, 2.0F), Transformation.Interpolations.CUBIC),
                     new Keyframe(3.9167F, AnimationHelper.createTranslationalVector(0.0F, -3.5F, -1.0F), Transformation.Interpolations.CUBIC),
                     new Keyframe(4.125F, AnimationHelper.createTranslationalVector(0.0F, -3.0F, 1.0F), Transformation.Interpolations.CUBIC),
                     new Keyframe(4.25F, AnimationHelper.createTranslationalVector(0.0F, 0.71F, 0.57F), Transformation.Interpolations.CUBIC),
@@ -994,6 +997,7 @@ public class RaccoonAnimations  {
                     new Keyframe(2.9167F, AnimationHelper.createTranslationalVector(-1.0F, 1.0F, 0.0F), Transformation.Interpolations.CUBIC),
                     new Keyframe(3.1667F, AnimationHelper.createTranslationalVector(1.0F, 1.0F, 0.0F), Transformation.Interpolations.CUBIC),
                     new Keyframe(3.4167F, AnimationHelper.createTranslationalVector(-1.0F, 1.0F, 0.0F), Transformation.Interpolations.CUBIC),
+                    new Keyframe(3.6667F, AnimationHelper.createTranslationalVector(1.0F, 1.0F, 0.0F), Transformation.Interpolations.CUBIC),
                     new Keyframe(3.9167F, AnimationHelper.createTranslationalVector(-1.0F, 1.0F, 0.0F), Transformation.Interpolations.CUBIC),
                     new Keyframe(4.125F, AnimationHelper.createTranslationalVector(0.0F, 1.0F, 0.0F), Transformation.Interpolations.CUBIC),
                     new Keyframe(4.7083F, AnimationHelper.createTranslationalVector(0.0F, 0.0F, 0.0F), Transformation.Interpolations.CUBIC)
@@ -1023,6 +1027,7 @@ public class RaccoonAnimations  {
                     new Keyframe(2.9167F, AnimationHelper.createTranslationalVector(-1.0F, 1.0F, 0.0F), Transformation.Interpolations.CUBIC),
                     new Keyframe(3.1667F, AnimationHelper.createTranslationalVector(1.0F, 1.0F, 0.0F), Transformation.Interpolations.CUBIC),
                     new Keyframe(3.4167F, AnimationHelper.createTranslationalVector(-1.0F, 1.0F, 0.0F), Transformation.Interpolations.CUBIC),
+                    new Keyframe(3.6667F, AnimationHelper.createTranslationalVector(1.0F, 1.0F, 0.0F), Transformation.Interpolations.CUBIC),
                     new Keyframe(3.9167F, AnimationHelper.createTranslationalVector(-1.0F, 1.0F, 0.0F), Transformation.Interpolations.CUBIC),
                     new Keyframe(4.125F, AnimationHelper.createTranslationalVector(0.0F, 1.0F, 0.0F), Transformation.Interpolations.CUBIC),
                     new Keyframe(4.7083F, AnimationHelper.createTranslationalVector(0.0F, 0.0F, 0.0F), Transformation.Interpolations.CUBIC)
@@ -1049,6 +1054,7 @@ public class RaccoonAnimations  {
                     new Keyframe(2.9167F, AnimationHelper.createRotationalVector(24.2477F, -6.2797F, 6.0F), Transformation.Interpolations.CUBIC),
                     new Keyframe(3.1667F, AnimationHelper.createRotationalVector(24.2477F, 6.2797F, -6.0F), Transformation.Interpolations.CUBIC),
                     new Keyframe(3.4167F, AnimationHelper.createRotationalVector(24.2477F, -6.2797F, 6.0F), Transformation.Interpolations.CUBIC),
+                    new Keyframe(3.6667F, AnimationHelper.createRotationalVector(24.2477F, 6.2797F, -6.0F), Transformation.Interpolations.CUBIC),
                     new Keyframe(3.9167F, AnimationHelper.createRotationalVector(24.2477F, -6.2797F, 6.0F), Transformation.Interpolations.CUBIC),
                     new Keyframe(4.125F, AnimationHelper.createRotationalVector(22.11F, 0.0F, 0.0F), Transformation.Interpolations.CUBIC),
                     new Keyframe(4.375F, AnimationHelper.createRotationalVector(-17.88F, 0.0F, 0.0F), Transformation.Interpolations.CUBIC),
@@ -1080,6 +1086,7 @@ public class RaccoonAnimations  {
                     new Keyframe(2.9167F, AnimationHelper.createRotationalVector(-23.2109F, -13.8345F, 5.8546F), Transformation.Interpolations.CUBIC),
                     new Keyframe(3.1667F, AnimationHelper.createRotationalVector(-23.2109F, 13.8345F, -5.8546F), Transformation.Interpolations.CUBIC),
                     new Keyframe(3.4167F, AnimationHelper.createRotationalVector(-23.2109F, -13.8345F, 5.8546F), Transformation.Interpolations.CUBIC),
+                    new Keyframe(3.6667F, AnimationHelper.createRotationalVector(-23.2109F, 13.8345F, -5.8546F), Transformation.Interpolations.CUBIC),
                     new Keyframe(3.9167F, AnimationHelper.createRotationalVector(-23.2109F, -13.8345F, 5.8546F), Transformation.Interpolations.CUBIC),
                     new Keyframe(4.2917F, AnimationHelper.createRotationalVector(0.0F, 0.0F, 0.0F), Transformation.Interpolations.CUBIC),
                     new Keyframe(4.375F, AnimationHelper.createRotationalVector(15.0F, 0.0F, 0.0F), Transformation.Interpolations.CUBIC),
@@ -1103,6 +1110,7 @@ public class RaccoonAnimations  {
                     new Keyframe(2.9167F, AnimationHelper.createTranslationalVector(3.0F, 3.0F, 0.0F), Transformation.Interpolations.CUBIC),
                     new Keyframe(3.1667F, AnimationHelper.createTranslationalVector(-2.0F, 3.0F, 0.0F), Transformation.Interpolations.CUBIC),
                     new Keyframe(3.4167F, AnimationHelper.createTranslationalVector(3.0F, 3.0F, 0.0F), Transformation.Interpolations.CUBIC),
+                    new Keyframe(3.6667F, AnimationHelper.createTranslationalVector(-2.0F, 3.0F, 0.0F), Transformation.Interpolations.CUBIC),
                     new Keyframe(3.9167F, AnimationHelper.createTranslationalVector(3.0F, 3.0F, 0.0F), Transformation.Interpolations.CUBIC),
                     new Keyframe(4.2917F, AnimationHelper.createTranslationalVector(0.0F, 2.0F, 0.0F), Transformation.Interpolations.CUBIC),
                     new Keyframe(4.5417F, AnimationHelper.createTranslationalVector(0.0F, 2.0F, 0.0F), Transformation.Interpolations.CUBIC),
@@ -1124,6 +1132,7 @@ public class RaccoonAnimations  {
                     new Keyframe(2.9167F, AnimationHelper.createRotationalVector(37.0772F, -6.0681F, 7.9634F), Transformation.Interpolations.CUBIC),
                     new Keyframe(3.1667F, AnimationHelper.createRotationalVector(37.0772F, 6.0681F, -7.9634F), Transformation.Interpolations.CUBIC),
                     new Keyframe(3.4167F, AnimationHelper.createRotationalVector(37.0772F, -6.0681F, 7.9634F), Transformation.Interpolations.CUBIC),
+                    new Keyframe(3.6667F, AnimationHelper.createRotationalVector(37.0772F, 6.0681F, -7.9634F), Transformation.Interpolations.CUBIC),
                     new Keyframe(3.9167F, AnimationHelper.createRotationalVector(37.0772F, -6.0681F, 7.9634F), Transformation.Interpolations.CUBIC),
                     new Keyframe(4.125F, AnimationHelper.createRotationalVector(31.78F, 0.0F, 0.0F), Transformation.Interpolations.CUBIC),
                     new Keyframe(4.375F, AnimationHelper.createRotationalVector(-21.9057F, 1.7314F, -2.2743F), Transformation.Interpolations.CUBIC),
@@ -1149,6 +1158,7 @@ public class RaccoonAnimations  {
                     new Keyframe(2.9167F, AnimationHelper.createTranslationalVector(1.0F, -3.0F, 1.0F), Transformation.Interpolations.CUBIC),
                     new Keyframe(3.1667F, AnimationHelper.createTranslationalVector(-1.0F, -2.5F, 1.0F), Transformation.Interpolations.CUBIC),
                     new Keyframe(3.4167F, AnimationHelper.createTranslationalVector(1.0F, -3.0F, 1.0F), Transformation.Interpolations.CUBIC),
+                    new Keyframe(3.6667F, AnimationHelper.createTranslationalVector(-1.0F, -2.5F, 1.0F), Transformation.Interpolations.CUBIC),
                     new Keyframe(3.9167F, AnimationHelper.createTranslationalVector(1.0F, -3.0F, 1.0F), Transformation.Interpolations.CUBIC),
                     new Keyframe(4.125F, AnimationHelper.createTranslationalVector(0.0F, -2.29F, 0.86F), Transformation.Interpolations.CUBIC),
                     new Keyframe(4.375F, AnimationHelper.createTranslationalVector(-0.41F, 6.39F, 0.41F), Transformation.Interpolations.CUBIC),
@@ -1173,6 +1183,7 @@ public class RaccoonAnimations  {
                     new Keyframe(3.0833F, AnimationHelper.createRotationalVector(0.0F, 0.0F, 17.5F), Transformation.Interpolations.CUBIC),
                     new Keyframe(3.3333F, AnimationHelper.createRotationalVector(0.0F, 0.0F, -12.5F), Transformation.Interpolations.CUBIC),
                     new Keyframe(3.5833F, AnimationHelper.createRotationalVector(0.0F, 0.0F, 17.5F), Transformation.Interpolations.CUBIC),
+                    new Keyframe(3.875F, AnimationHelper.createRotationalVector(0.0F, 0.0F, -12.5F), Transformation.Interpolations.CUBIC),
                     new Keyframe(4.125F, AnimationHelper.createRotationalVector(0.0F, 0.0F, 0.0F), Transformation.Interpolations.CUBIC),
                     new Keyframe(4.4583F, AnimationHelper.createRotationalVector(0.0F, 0.0F, 0.0F), Transformation.Interpolations.CUBIC),
                     new Keyframe(4.5417F, AnimationHelper.createRotationalVector(-25.0F, 0.0F, 0.0F), Transformation.Interpolations.CUBIC),
@@ -1207,6 +1218,7 @@ public class RaccoonAnimations  {
                     new Keyframe(3.0833F, AnimationHelper.createRotationalVector(0.0F, 0.0F, 12.5F), Transformation.Interpolations.CUBIC),
                     new Keyframe(3.3333F, AnimationHelper.createRotationalVector(0.0F, 0.0F, -17.5F), Transformation.Interpolations.CUBIC),
                     new Keyframe(3.5833F, AnimationHelper.createRotationalVector(0.0F, 0.0F, 12.5F), Transformation.Interpolations.CUBIC),
+                    new Keyframe(3.875F, AnimationHelper.createRotationalVector(0.0F, 0.0F, -17.5F), Transformation.Interpolations.CUBIC),
                     new Keyframe(4.125F, AnimationHelper.createRotationalVector(0.0F, 0.0F, 0.0F), Transformation.Interpolations.CUBIC),
                     new Keyframe(4.4583F, AnimationHelper.createRotationalVector(0.0F, 0.0F, 0.0F), Transformation.Interpolations.CUBIC),
                     new Keyframe(4.5417F, AnimationHelper.createRotationalVector(-25.0F, 0.0F, 0.0F), Transformation.Interpolations.CUBIC),
@@ -1253,6 +1265,7 @@ public class RaccoonAnimations  {
                     new Keyframe(4.875F, AnimationHelper.createTranslationalVector(0.0F, 0.0F, 0.0F), Transformation.Interpolations.CUBIC)
             ))
             .build();
+
 
 
 }
