@@ -16,7 +16,9 @@ public class RaccoonTemptGoal extends TemptGoal {
 
     @Override
     public boolean canStart() {
-        return !raccoon.isEating() && !raccoon.isFull() && !raccoon.isSleeping() && super.canStart();
+        return !raccoon.isEating() && !raccoon.isFull()
+                && !raccoon.isSleeping() &&!raccoon.isGrabbing()
+                && !raccoon.isWashing()&& super.canStart();
     }
 
     @Override

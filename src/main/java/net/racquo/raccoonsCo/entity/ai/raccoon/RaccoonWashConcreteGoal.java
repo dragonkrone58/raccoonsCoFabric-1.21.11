@@ -17,7 +17,6 @@ public class RaccoonWashConcreteGoal extends Goal {
     private final RaccoonEntity raccoon;
     private final double speed;
     private ItemEntity targetPowder;
-    private BlockPos waterPos;
 
     public RaccoonWashConcreteGoal(RaccoonEntity raccoon, double speed) {
         this.raccoon = raccoon;
@@ -30,11 +29,14 @@ public class RaccoonWashConcreteGoal extends Goal {
         if (!raccoon.isTamed()) return false;
         if (raccoon.isInSittingPose()) return false;
         if (raccoon.isEating() || raccoon.isSleeping()) return false;
+
+        // If already heading to water or washing, don't start
         if (!raccoon.grabbedStack.isEmpty()) return false;
 
         targetPowder = findNearestConcretePowder();
         return targetPowder != null;
     }
+
 
     @Override
     public void start() {
@@ -81,15 +83,25 @@ public class RaccoonWashConcreteGoal extends Goal {
     }
 
     private void grabConcrete() {
+        if (raccoon.isInSittingPose()) return;
+        if (!raccoon.grabbedStack.isEmpty()) return;
+
         ItemStack stack = targetPowder.getStack();
 
-        raccoon.grabbedStack = stack.copyWithCount(1);
+        int toGrab = Math.min(stack.getCount(), RaccoonEntity.MAX_GRAB_STACK);
+        if (toGrab <= 0) return;
+
+        ItemStack taken = stack.split(toGrab);
+        raccoon.addToInventory(taken);
+
+        if (stack.isEmpty()) {
+            targetPowder.discard();
+        }
+
         raccoon.getDataTracker().set(RaccoonEntity.DATA_GRABBING, true);
         raccoon.grabAnimationState.start(raccoon.age);
-
-        stack.decrement(1);
-        if (stack.isEmpty()) targetPowder.discard();
-
         raccoon.startGrabSequence();
     }
+
+
 }

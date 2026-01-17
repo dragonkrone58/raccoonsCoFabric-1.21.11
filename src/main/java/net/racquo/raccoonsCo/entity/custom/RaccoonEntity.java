@@ -54,10 +54,11 @@ import java.util.Objects;
 
 import net.minecraft.util.math.random.Random;
 /*
-    TO ADD:
-    RACCOON WASH FAIL COOLDOWN TO PREVENT FRUITLESS LOOP
-    RACCOON HAPPY SOUND WHEN FULL ( & BUFFED PARTICLES / SOUND)
-    RACCOONS SWIMMING / HUNTING CRAYFISH, FIX PATHING ISSUE
+   Current issues with washing:
+   sometimes washing animation may not play whilst washing
+   raccoon will get stuck after washing & attempting to track to already dropped item(s), needing to be sat and unsat
+   raccoons that have grabbed but did not initially find washing spot will not wash
+   if a washing spot appears (player places water)
  */
 public class RaccoonEntity extends TameableEntity {
 
@@ -75,6 +76,7 @@ public class RaccoonEntity extends TameableEntity {
 
     /* ---------------- GRABBING & WASHING ---------------- */
 
+
     public ItemStack grabbedStack = ItemStack.EMPTY;
     private boolean headingToWater = false;
     private BlockPos waterPos;
@@ -85,11 +87,14 @@ public class RaccoonEntity extends TameableEntity {
     public static final TrackedData<Boolean> DATA_WASHING =
             DataTracker.registerData(RaccoonEntity.class, TrackedDataHandlerRegistry.BOOLEAN);
 
+    public static final int MAX_GRAB_STACK = 16;
+
     private static final int GRAB_DURATION_TICKS = 35;
     private static final int WASH_DROP_TICK = 90;
     private static final int WASHING_DURATION_TICKS = 20 * 7;
     private static final int MAX_WASH_SEARCH_DISTANCE = 24;
 
+    private int grabbingTicks = 0;
     private int washingTicks = 0;
     /* ---------------- EATING ---------------- */
     private ItemStack currentEatingStack;
@@ -322,7 +327,7 @@ public class RaccoonEntity extends TameableEntity {
 
         // GRABBING
         if (dataTracker.get(DATA_GRABBING)) {
-            handleGrabbingTick(isServer);
+            handleGrabbingTick();
         }
 
         // ARRIVED AT WATER → START WASHING
@@ -455,13 +460,52 @@ public class RaccoonEntity extends TameableEntity {
     }
 
     /* ---------------- TAMED RACCOON GRABBING  ---------------- */
+
+    public boolean isGrabbing(){
+        return this.dataTracker.get(DATA_GRABBING);
+    }
+
+    private boolean canGrab(ItemStack stack) {
+        if (stack.isEmpty()) return false;
+        if(this.isInSittingPose()) return false;
+        if(this.isSleeping()) return false;
+        if(this.isEating()) return false;
+        if (this.isGrabbing() || this.isWashing()) return false;
+
+        if (!(stack.getItem() instanceof BlockItem blockItem)) return false;
+        if (!(blockItem.getBlock() instanceof ConcretePowderBlock)) return false;
+
+        if (grabbedStack.isEmpty()) return true;
+
+        // Only grab same color
+        return grabbedStack.isOf(stack.getItem()) && grabbedStack.getCount() < MAX_GRAB_STACK;
+    }
+
+    public void addToInventory(ItemStack stack) {
+        if (stack.isEmpty()) return;
+
+        if (grabbedStack.isEmpty()) {
+            grabbedStack = stack.copy();
+            grabbedStack.setCount(Math.min(stack.getCount(), MAX_GRAB_STACK));
+            return;
+        }
+
+        if (!grabbedStack.isOf(stack.getItem())) return;
+
+        int space = MAX_GRAB_STACK - grabbedStack.getCount();
+        if (space <= 0) return;
+
+        grabbedStack.increment(Math.min(space, stack.getCount()));
+    }
+
+
     public void startGrabSequence() {
-        this.washingTicks = 0;
+        this.grabbingTicks = 0;
     }
 
     // GRABBING TICK HANDLER
-    private void handleGrabbingTick(boolean isServer) {
-        washingTicks++;
+    private void handleGrabbingTick() {
+        grabbingTicks++;
 
         // Stop movement during grab
         getNavigation().stop();
@@ -469,29 +513,57 @@ public class RaccoonEntity extends TameableEntity {
         velocityDirty = true;
 
         // Play sniff sound at 0.5s (10 ticks)
-        if (washingTicks == 10) {
-            playSound(ModSounds.RACCOON_SNIFFS, 1.0F, 1.0F);
-        }
+        if (grabbingTicks == 10) playSound(ModSounds.RACCOON_SNIFFS, 1.0F, 1.0F);
 
-        if (washingTicks >= GRAB_DURATION_TICKS) {
-            dataTracker.set(DATA_GRABBING, false);
-            grabAnimationState.stop();
-            waterPos = null;
-            attemptFindWater();
+        // Once grab duration reached, check for more powder
+        if (grabbingTicks >= GRAB_DURATION_TICKS) {
+            grabbingTicks = 0;
+
+            List<ItemEntity> nearby = getEntityWorld().getEntitiesByClass(
+                    ItemEntity.class,
+                    getBoundingBox().expand(12),
+                    item -> canGrab(item.getStack())
+            );
+
+            if (!nearby.isEmpty()) {
+                ItemEntity next = nearby.get(0);
+                ItemStack stack = next.getStack();
+
+                int toGrab = Math.min(
+                        MAX_GRAB_STACK - grabbedStack.getCount(),
+                        stack.getCount()
+                );
+
+                if (toGrab > 0) {
+                    ItemStack taken = stack.split(toGrab);
+                    addToInventory(taken);
+
+                    if (stack.isEmpty()) {
+                        next.discard();
+                    }
+                }
+
+                dataTracker.set(DATA_GRABBING, true);
+                grabAnimationState.start(this.age);
+
+            } else {
+                dataTracker.set(DATA_GRABBING, false);
+                grabAnimationState.stop();
+                attemptFindWater();
+            }
+
         }
     }
+
 
     /* ---------------- TAMED RACCOON SEEK WATER  ---------------- */
     private void attemptFindWater() {
         waterPos = findNearestWater();
 
-        if (waterPos == null) {
-            dropHeldItemAtOwner();
-            return;
-        }
+        // If no water or inventory empty, do nothing
+        if (waterPos == null || grabbedStack.isEmpty()) return;
 
         headingToWater = true;
-
         getNavigation().startMovingTo(
                 waterPos.getX() + 0.5,
                 waterPos.getY(),
@@ -499,7 +571,6 @@ public class RaccoonEntity extends TameableEntity {
                 1.1D
         );
     }
-
 
     @Nullable
     private BlockPos findNearestWater() {
@@ -517,6 +588,10 @@ public class RaccoonEntity extends TameableEntity {
     /* ---------------- TAMED RACCOON WASHING  ---------------- */
 
     // WASHING TICK HANDLER
+    public boolean isWashing(){
+        return this.dataTracker.get(DATA_WASHING);
+    }
+
     private void handleWashingTick() {
         washingTicks++;
 
@@ -540,7 +615,6 @@ public class RaccoonEntity extends TameableEntity {
                 );
             }
         }
-
         if (washingTicks == WASH_DROP_TICK) {
             playSound(SoundEvents.ENTITY_ITEM_PICKUP);
             dropWashedConcrete();
@@ -556,14 +630,12 @@ public class RaccoonEntity extends TameableEntity {
     }
 
     private void dropWashedConcrete() {
+        if (grabbedStack.isEmpty()) return;
         if (!(grabbedStack.getItem() instanceof BlockItem blockItem)) return;
-
         if (!(blockItem.getBlock() instanceof ConcretePowderBlock powder)) return;
 
-        Block hardened = ((ConcretePowderBlockAccessor) powder)
-                .raccoonsCo$getHardenedBlock();
-
-        ItemStack output = new ItemStack(hardened.asItem());
+        Block hardened = ((ConcretePowderBlockAccessor) powder).raccoonsCo$getHardenedBlock();
+        ItemStack output = new ItemStack(hardened.asItem(), grabbedStack.getCount());
 
         ItemEntity entity = new ItemEntity(
                 getEntityWorld(),
@@ -572,37 +644,51 @@ public class RaccoonEntity extends TameableEntity {
                 getZ(),
                 output
         );
-
         getEntityWorld().spawnEntity(entity);
+
+        grabbedStack = ItemStack.EMPTY;
     }
 
 
-    private void dropHeldItemAtOwner() {
-        if (!isTamed() || getOwner() == null) return;
+    @Override
+    public void onDeath(DamageSource source) {
+        super.onDeath(source);
+        dropInventory(); // drop any concrete powder or washed blocks
+    }
 
-        getNavigation().startMovingTo(getOwner(), 1.2D);
+
+    private void dropInventory() {
+        if (grabbedStack.isEmpty()) return;
+
+        ItemStack toDrop = grabbedStack;
+        grabbedStack = ItemStack.EMPTY;
 
         ItemEntity entity = new ItemEntity(
                 getEntityWorld(),
                 getX(),
                 getBodyY(0.5),
                 getZ(),
-                grabbedStack.copy()
+                toDrop
         );
 
         getEntityWorld().spawnEntity(entity);
-        grabbedStack = ItemStack.EMPTY;
     }
-
 
 
     /* ---------------- TAMED RACCOON SITTING ---------------- */
 
     private void toggleSitting() {
+        if (isGrabbing() || isWashing()) return;
+
         setSitting(!isSitting());
         jumping = false;
         navigation.stop();
         setTarget(null);
+
+        //drop inventory when seated
+        if (isSitting()) {
+            dropInventory();
+        }
     }
 
 

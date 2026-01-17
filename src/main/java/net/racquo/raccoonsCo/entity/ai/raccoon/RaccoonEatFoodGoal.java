@@ -20,7 +20,7 @@ public class RaccoonEatFoodGoal extends Goal {
     @Override
     public boolean canStart(){
         if (raccoon. isInSittingPose()) return false;
-        if (raccoon.isSleeping()) return false;
+        if (raccoon.isSleeping() || raccoon.isWashing() || raccoon.isGrabbing()) return false;
         if(!raccoon.canEatDroppedFood()) return false;
         if(raccoon.isFull()) return false;
 
