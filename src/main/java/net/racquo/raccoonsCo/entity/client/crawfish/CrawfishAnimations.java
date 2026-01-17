@@ -1,5 +1,5 @@
 
-package net.racquo.raccoonsCo.entity.client;
+package net.racquo.raccoonsCo.entity.client.crawfish;
 
 import net.minecraft.client.render.entity.animation.AnimationDefinition;
 import net.minecraft.client.render.entity.animation.AnimationHelper;

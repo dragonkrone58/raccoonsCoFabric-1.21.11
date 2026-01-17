@@ -1,13 +1,9 @@
-package net.racquo.raccoonsCo.entity.client;
+package net.racquo.raccoonsCo.entity.client.raccoon;
 
 import com.google.common.collect.Maps;
 import net.minecraft.client.render.command.OrderedRenderCommandQueue;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.MobEntityRenderer;
-import net.minecraft.client.render.entity.model.BabyModelTransformer;
-import net.minecraft.client.render.entity.model.EntityModel;
-import net.minecraft.client.render.entity.state.EntityRenderState;
-import net.minecraft.client.render.entity.state.LivingEntityRenderState;
 import net.minecraft.client.render.state.CameraRenderState;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
@@ -17,7 +13,6 @@ import net.racquo.raccoonsCo.entity.custom.RaccoonEntity;
 import net.racquo.raccoonsCo.entity.custom.RaccoonVariant;
 
 import java.util.Map;
-import java.util.Set;
 
 public class RaccoonRenderer extends MobEntityRenderer<RaccoonEntity, RaccoonRenderState, RaccoonModel> {
 

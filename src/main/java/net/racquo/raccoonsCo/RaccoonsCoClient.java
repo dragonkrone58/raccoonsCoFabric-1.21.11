@@ -4,14 +4,13 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
-import net.minecraft.block.Block;
 import net.minecraft.client.render.BlockRenderLayer;
 import net.racquo.raccoonsCo.block.ModBlocks;
 import net.racquo.raccoonsCo.entity.ModEntities;
-import net.racquo.raccoonsCo.entity.client.CrawfishModel;
-import net.racquo.raccoonsCo.entity.client.CrawfishRenderer;
-import net.racquo.raccoonsCo.entity.client.RaccoonModel;
-import net.racquo.raccoonsCo.entity.client.RaccoonRenderer;
+import net.racquo.raccoonsCo.entity.client.crawfish.CrawfishModel;
+import net.racquo.raccoonsCo.entity.client.crawfish.CrawfishRenderer;
+import net.racquo.raccoonsCo.entity.client.raccoon.RaccoonModel;
+import net.racquo.raccoonsCo.entity.client.raccoon.RaccoonRenderer;
 
 
 public class RaccoonsCoClient implements ClientModInitializer {

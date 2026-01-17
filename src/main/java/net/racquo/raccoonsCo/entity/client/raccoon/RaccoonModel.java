@@ -1,12 +1,9 @@
-package net.racquo.raccoonsCo.entity.client;
+package net.racquo.raccoonsCo.entity.client.raccoon;
 
 import net.minecraft.client.model.*;
-import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.entity.animation.Animation;
 import net.minecraft.client.render.entity.model.EntityModel;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.Entity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import net.racquo.raccoonsCo.RaccoonsCo;

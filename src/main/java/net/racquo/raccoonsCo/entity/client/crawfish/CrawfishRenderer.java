@@ -1,4 +1,4 @@
-package net.racquo.raccoonsCo.entity.client;
+package net.racquo.raccoonsCo.entity.client.crawfish;
 
 import com.google.common.collect.Maps;
 import net.minecraft.client.render.command.OrderedRenderCommandQueue;
@@ -11,8 +11,6 @@ import net.minecraft.util.Util;
 import net.racquo.raccoonsCo.RaccoonsCo;
 import net.racquo.raccoonsCo.entity.custom.CrawfishEntity;
 import net.racquo.raccoonsCo.entity.custom.CrawfishVariant;
-import net.racquo.raccoonsCo.entity.custom.RaccoonEntity;
-import net.racquo.raccoonsCo.entity.custom.RaccoonVariant;
 
 import java.util.Map;
 
