@@ -149,7 +149,7 @@ public class RaccoonEntity extends TameableEntity {
 
     /* ---------------- TEMPTABLES ---------------- */
     private static final List<ItemConvertible> RACCOON_EATABLES =
-            List.of(ModItems.BOILED_EGG, ModItems.COOKED_CRAWFISH, ModItems.RAW_CRAWFISH, Items.SWEET_BERRIES, Items.COOKIE, Items.APPLE, Items.MELON_SLICE,
+            List.of(ModItems.COOKED_CRAWFISH, ModItems.RAW_CRAWFISH, Items.SWEET_BERRIES, Items.COOKIE, Items.APPLE, Items.MELON_SLICE,
                     Items.GLOW_BERRIES, Items.PUMPKIN_PIE, Items.POTATO, Items.BAKED_POTATO, Items.SALMON, Items.COOKED_SALMON,
                     Items.COD, Items.COOKED_COD, Items.CHICKEN, Items.COOKED_CHICKEN);
 

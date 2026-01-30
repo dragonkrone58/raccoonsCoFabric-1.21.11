@@ -8,8 +8,7 @@ import net.minecraft.entity.effect.StatusEffects;
 import net.minecraft.item.consume.ApplyEffectsConsumeEffect;
 
 public class ModFoodComponents {
-    public static final FoodComponent BOILED_EGG =
-            new FoodComponent.Builder().nutrition(2).saturationModifier(0.2f).build();
+    //public static final FoodComponent BOILED_EGG = new FoodComponent.Builder().nutrition(2).saturationModifier(0.2f).build();
 
     public static final FoodComponent RAW_CRAWFISH =
             new FoodComponent.Builder().nutrition(1).saturationModifier(0.1f).build();

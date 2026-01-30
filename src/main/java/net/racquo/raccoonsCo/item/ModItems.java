@@ -38,8 +38,7 @@ public class ModItems {
 
     //public static final Item BANDIT_POTTERY_SHERD = registerItem( "bandit_pottery_sherd",settings -> new Item(settings.rarity(Rarity.UNCOMMON)));
 
-    public static final Item BOILED_EGG = registerItem( "boiled_egg",
-            setting -> new Item(setting.food(ModFoodComponents.BOILED_EGG)));
+    //public static final Item BOILED_EGG = registerItem( "boiled_egg", setting -> new Item(setting.food(ModFoodComponents.BOILED_EGG)));
 
     public static final Item RAW_CRAWFISH = registerItem("raw_crawfish",
             setting -> new Item(setting.food(ModFoodComponents.RAW_CRAWFISH, ModFoodComponents.RAW_CRAWFISH_CONSUMABLE)));
@@ -77,7 +76,7 @@ public class ModItems {
             //entries.add(BANDIT_POTTERY_SHERD);
         });
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.FOOD_AND_DRINK).register(entries -> {
-            entries.add(BOILED_EGG);
+            //entries.add(BOILED_EGG);
             entries.add(RAW_CRAWFISH);
             entries.add(COOKED_CRAWFISH);
         });

@@ -58,7 +58,7 @@ public class RaccoonEatFoodGoal extends Goal {
 
         raccoon.getLookControl().lookAt(targetFood, 30.0F, 30.0F);
 
-        // Repath every 10 ticks to avoid spam
+        // Repath every 10 ticks
         if (repathCooldown-- <= 0) {
             raccoon.getNavigation().startMovingTo(
                     targetFood.getX(),

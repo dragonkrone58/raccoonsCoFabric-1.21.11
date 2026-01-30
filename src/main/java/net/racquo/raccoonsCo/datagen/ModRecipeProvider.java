@@ -29,10 +29,10 @@ public class ModRecipeProvider extends FabricRecipeProvider {
 
             @Override
             public void generate(){
-                List<ItemConvertible> BOILED_EGG_COOKABLES = List.of(Items.EGG, Items.BLUE_EGG, Items.BROWN_EGG, Items.TURTLE_EGG);
+                //List<ItemConvertible> BOILED_EGG_COOKABLES = List.of(Items.EGG, Items.BLUE_EGG, Items.BROWN_EGG, Items.TURTLE_EGG);
                 List<ItemConvertible> RAW_CRAWFISH_COOKABLE = List.of(ModItems.RAW_CRAWFISH);
 
-                offerSmelting(BOILED_EGG_COOKABLES, RecipeCategory.FOOD, ModItems.BOILED_EGG, 0.25f, 140, "boiled_egg");
+               // offerSmelting(BOILED_EGG_COOKABLES, RecipeCategory.FOOD, ModItems.BOILED_EGG, 0.25f, 140, "boiled_egg");
                 offerSmelting(RAW_CRAWFISH_COOKABLE, RecipeCategory.FOOD, ModItems.COOKED_CRAWFISH, 0.25f, 200, "cooked_crawfish" );
                 offerFoodCookingRecipe("campfire_cooking", RecipeSerializer.CAMPFIRE_COOKING, CampfireCookingRecipe::new, 100, ModItems.RAW_CRAWFISH, ModItems.COOKED_CRAWFISH, 0.35F);
                 offerFoodCookingRecipe("smoking", RecipeSerializer.SMOKING, SmokingRecipe::new, 100, ModItems.RAW_CRAWFISH, ModItems.COOKED_CRAWFISH, 0.35F);

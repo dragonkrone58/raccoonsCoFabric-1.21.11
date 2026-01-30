@@ -21,7 +21,7 @@ public class ModLanguageProvider extends FabricLanguageProvider {
     public void generateTranslations(RegistryWrapper.WrapperLookup wrapperLookup, TranslationBuilder translationBuilder) {
         translationBuilder.add(ModItems.RACCOON_PELT, "Raccoon Pelt");
         //translationBuilder.add(ModItems.BANDIT_POTTERY_SHERD, "Bandit Pottery Sherd");
-        translationBuilder.add(ModItems.BOILED_EGG, "Boiled Egg");
+        //translationBuilder.add(ModItems.BOILED_EGG, "Boiled Egg");
         translationBuilder.add(ModItems.RACCOON_PELT_HELMET, "Raccoon Skin Cap");
         translationBuilder.add(ModItems.RACCOON_SPAWN_EGG, "Raccoon Spawn Egg");
         translationBuilder.add(ModItems.CRAWFISH_SPAWN_EGG, "Crawfish Spawn Egg");
