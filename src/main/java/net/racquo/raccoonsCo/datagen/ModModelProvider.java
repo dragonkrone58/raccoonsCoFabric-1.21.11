@@ -45,6 +45,7 @@ public class ModModelProvider extends FabricModelProvider {
 
         itemModelGenerator.register(ModItems.RACCOON_SPAWN_EGG, Models.GENERATED);
         itemModelGenerator.register(ModItems.CRAWFISH_SPAWN_EGG, Models.GENERATED);
+        itemModelGenerator.register(ModItems.RED_PANDA_SPAWN_EGG, Models.GENERATED);
         itemModelGenerator.register(ModBlocks.SWAMPY_REEDS.asItem(), Models.GENERATED);
     }
 }

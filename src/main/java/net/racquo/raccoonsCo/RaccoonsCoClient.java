@@ -11,6 +11,8 @@ import net.racquo.raccoonsCo.entity.client.crawfish.CrawfishModel;
 import net.racquo.raccoonsCo.entity.client.crawfish.CrawfishRenderer;
 import net.racquo.raccoonsCo.entity.client.raccoon.RaccoonModel;
 import net.racquo.raccoonsCo.entity.client.raccoon.RaccoonRenderer;
+import net.racquo.raccoonsCo.entity.client.red_panda.RedPandaModel;
+import net.racquo.raccoonsCo.entity.client.red_panda.RedPandaRenderer;
 
 
 public class RaccoonsCoClient implements ClientModInitializer {
@@ -33,6 +35,9 @@ public class RaccoonsCoClient implements ClientModInitializer {
 
         EntityModelLayerRegistry.registerModelLayer(CrawfishModel.CRAWFISH, CrawfishModel::getTexturedModelData);
         EntityRendererRegistry.register(ModEntities.CRAWFISH, CrawfishRenderer::new);
+
+        EntityModelLayerRegistry.registerModelLayer(RedPandaModel.RED_PANDA, RedPandaModel::getTexturedModelData);
+        EntityRendererRegistry.register(ModEntities.RED_PANDA, RedPandaRenderer::new);
 
 
     }

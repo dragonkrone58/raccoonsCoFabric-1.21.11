@@ -1,7 +1,6 @@
 package net.racquo.raccoonsCo;
 
 import net.fabricmc.api.ModInitializer;
-
 import net.minecraft.util.Identifier;
 import net.racquo.raccoonsCo.block.ModBlocks;
 import net.racquo.raccoonsCo.entity.ModEntities;

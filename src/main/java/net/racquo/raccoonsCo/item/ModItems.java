@@ -56,6 +56,9 @@ public class ModItems {
     public static final Item CRAWFISH_SPAWN_EGG = registerItem("crawfish_spawn_egg",
                     setting-> new SpawnEggItem(setting.spawnEgg(ModEntities.CRAWFISH)));
 
+    public static final Item RED_PANDA_SPAWN_EGG = registerItem("red_panda_spawn_egg",
+                    setting -> new SpawnEggItem(setting.spawnEgg(ModEntities.RED_PANDA)));
+
     public static final Item CRAWFISH_BUCKET = registerItem("crawfish_bucket",
                     setting->new EntityBucketItem(ModEntities.CRAWFISH, Fluids.WATER, SoundEvents.ITEM_BUCKET_EMPTY_FISH, setting));
     //register item helper
@@ -88,6 +91,7 @@ public class ModItems {
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.SPAWN_EGGS).register(entries -> {
             entries.add(RACCOON_SPAWN_EGG);
             entries.add(CRAWFISH_SPAWN_EGG);
+            entries.add(RED_PANDA_SPAWN_EGG);
         });
 
         ItemGroupEvents.modifyEntriesEvent(ItemGroups.TOOLS).register(entries -> {

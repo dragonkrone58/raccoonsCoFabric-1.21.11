@@ -55,7 +55,7 @@ public class RaccoonWashConcreteGoal extends Goal {
         // If close enough, trigger entity grab
         if (distance <= 1.5F) {
             if (!raccoon.isGrabbing() && raccoon.canGrab(targetPowder.getStack())) {
-                raccoon.setGrabTarget(targetPowder); // only set once
+                raccoon.setGrabTarget(targetPowder);
                 raccoon.startGrabSequence();
             }
         }

@@ -26,5 +26,11 @@ public class ModEntitySpawns {
 
         SpawnRestriction.register(ModEntities.CRAWFISH, SpawnLocationTypes.IN_WATER, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES
                 , CrawfishEntity::canCrawfishSpawn);
+
+        BiomeModifications.addSpawn(BiomeSelectors.includeByKey(BiomeKeys.CHERRY_GROVE)
+                ,SpawnGroup.CREATURE, ModEntities.RED_PANDA, 30, 1, 3);
+
+        SpawnRestriction.register(ModEntities.RED_PANDA, SpawnLocationTypes.ON_GROUND, Heightmap.Type.MOTION_BLOCKING_NO_LEAVES
+                , AnimalEntity::isValidNaturalSpawn);
     }
 }

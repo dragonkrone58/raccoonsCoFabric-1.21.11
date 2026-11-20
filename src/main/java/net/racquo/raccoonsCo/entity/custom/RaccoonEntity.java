@@ -682,6 +682,7 @@ public class RaccoonEntity extends TameableEntity {
         if (!(grabbedStack.getItem() instanceof BlockItem blockItem)) return;
         if (!(blockItem.getBlock() instanceof ConcretePowderBlock powder)) return;
 
+        //mixin used here :>
         Block hardened = ((ConcretePowderBlockAccessor) powder).raccoonsCo$getHardenedBlock();
         ItemStack output = new ItemStack(hardened.asItem(), grabbedStack.getCount());
 
